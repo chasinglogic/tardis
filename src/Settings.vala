@@ -3,6 +3,7 @@ using Granite;
 public class Tardis.Settings : Granite.Services.Settings {
 	public bool compress_backups { get; set; }
 	public bool create_snapshots { get; set; }
+	public bool backup_automatically { get; set; }
 	public int max_snapshots { get; set; }
 	public string[] directories_to_backup { get; set; }
 

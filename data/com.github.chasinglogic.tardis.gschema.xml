@@ -12,6 +12,11 @@
       </description>
     </key>
 
+    <key name="backup-automatically" type="b">
+      <default>false</default>
+      <summary>Automatically backup on a timer if a target is available.</summary>
+    </key>
+
     <key name="create-snapshots" type="b">
         <default>false</default>
         <summary>Create Snapshots</summary>
