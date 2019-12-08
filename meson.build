@@ -1,6 +1,12 @@
 # project name and programming language
 project('com.github.chasinglogic.tardis', 'vala', 'c')
 
+gettext_name = meson.project_name()
+add_project_arguments(
+    '-DGETTEXT_PACKAGE="@0@"'.format(gettext_name),
+    language:'c'
+)
+
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
 executable(
     meson.project_name(),
