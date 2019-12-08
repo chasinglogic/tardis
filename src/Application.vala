@@ -3,13 +3,30 @@ using Gtk;
 
 public class Tardis.App : Gtk.Application {
 
-	public static string APP_ID = "com.github.chasinglogic.tardis";
+	public static string ID = "com.github.chasinglogic.tardis";
 	public static GLib.ThemedIcon BACKUP_IN_PROGRESS_ICON = new GLib.ThemedIcon("emblem-synchronizing");
 	public static GLib.ThemedIcon BACKUP_IN_COMPLETED_ICON = new GLib.ThemedIcon("emblem-synchronized");
 
+	// GLib settings accessor
 	public Tardis.Settings settings;
-	public Gtk.ApplicationWindow window;
+	// Custom Widgets
+	public Tardis.Widgets.BackupStatus backup_status;
 
+	// Views
+	public Tardis.Views.DriveSelectionView drive_select_view;
+
+	// Widgets directly attached to the Application Window
+	public Gtk.ApplicationWindow window;
+	public Gtk.HeaderBar headerbar;
+	public Gtk.Box header_box;
+
+	public Gtk.Stack main_stack;
+	public Granite.Widgets.ModeButton mode_button;
+
+	// Public References
+	private int drives_view_id;
+	private int status_view_id;
+	private int folders_view_id;
 	
     public App () {
         Object (
