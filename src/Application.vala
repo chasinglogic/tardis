@@ -9,6 +9,8 @@ public class Tardis.App : Gtk.Application {
 
 	// GLib settings accessor
 	public Tardis.Settings settings;
+	public GLib.VolumeMonitor volume_monitor;
+
 	// Custom Widgets
 	public Tardis.Widgets.BackupStatus backup_status;
 
@@ -63,6 +65,10 @@ public class Tardis.App : Gtk.Application {
 
 	protected override void activate () {
 		settings = Tardis.Settings.get_instance();
+		// TODO(chasinglogic): Listen for drive connected and
+		// disconnected signals to notify user of possible new backup
+		// drives, and disconnect of known backup drives.
+		volume_monitor = GLib.VolumeMonitor.@get();
 		// Construct the main window for our Application.
 		window = new Gtk.ApplicationWindow (this);
 
@@ -98,6 +104,9 @@ public class Tardis.App : Gtk.Application {
 		// returns the right widget.
 		backup_status = new Tardis.Widgets.BackupSafe(); 
 
+		drive_select_view = new Tardis.Views.DriveSelectionView(volume_monitor, settings);
+
+		main_stack.add(drive_select_view);
 		main_stack.add(backup_status);
 
 		window.add(main_stack);
