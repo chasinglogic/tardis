@@ -34,7 +34,18 @@ public class Tardis.App : Gtk.Application {
             flags: ApplicationFlags.FLAGS_NONE
 			);
     }
-	
+
+	public void on_view_mode_change() {
+		if (mode_button.selected == drives_view_id) {
+			main_stack.set_visible_child(drive_select_view);
+		// } else if (mode_button.selected == folders_view_id) {
+			// main_stack.set_visible_child(folders_select_view);
+		} else {
+			main_stack.set_visible_child(backup_status);
+		}
+
+	}
+
 	// Store window size in gsettings when resized.
     public void on_resize() {
 		if (!window.is_maximized) {
@@ -59,12 +70,32 @@ public class Tardis.App : Gtk.Application {
 		}
     }
 
-    protected override void activate () {
-		settings = new Tardis.Settings(APP_ID);
+		settings.window_maximized = window.is_maximized;
+	}
+
+	protected override void activate () {
+		settings = Tardis.Settings.get_instance();
 		// Construct the main window for our Application.
-        window = new Gtk.ApplicationWindow (this);
-		window.title = "Tardis";
-		
+		window = new Gtk.ApplicationWindow (this);
+
+		// HeaderBar
+		headerbar = new Gtk.HeaderBar ();
+		headerbar.show_close_button = true;
+
+		mode_button = new Granite.Widgets.ModeButton();
+		mode_button.margin_end = mode_button.margin_start = 12;
+		mode_button.margin_bottom = mode_button.margin_top = 7;
+		drives_view_id = mode_button.append_text("Drives");
+		status_view_id = mode_button.append_text("Status");
+		folders_view_id = mode_button.append_text("Folders");
+		mode_button.halign = Gtk.Align.CENTER;
+		mode_button.notify["selected"].connect(on_view_mode_change);
+		mode_button.selected = drives_view_id;
+
+		headerbar.set_custom_title(mode_button);
+
+		window.set_titlebar (headerbar);
+
 		if (settings.window_maximized) {
 			window.maximize();
 		} else {
@@ -72,7 +103,13 @@ public class Tardis.App : Gtk.Application {
 			window.default_height = settings.window_height;
 		}
 
+		main_stack = new Gtk.Stack();
+		main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
+		window.add(main_stack);
+
 		window.show_all();
+
+		on_view_mode_change();
 		window.size_allocate.connect(() => { on_resize(); });
     }
 
