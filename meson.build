@@ -10,13 +10,25 @@ add_project_arguments(
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
 executable(
     meson.project_name(),
+
+    # Primary Classes
     'src/Application.vala',
     'src/Settings.vala',
+
+    # Views
+    'src/Views/DriveSelectionView.vala',
+
+    # Custom Widgets
+    'src/Widgets/SyncFoldersWidget.vala',
+    'src/Widgets/BackupStatus.vala',
+    'src/Widgets/BackupSafe.vala',
+    'src/Widgets/Row.vala',
+
     dependencies: [
       dependency('gtk+-3.0'),
       dependency('granite'),
-      dependency('unity')
     ],
+
     install: true
 )
 
