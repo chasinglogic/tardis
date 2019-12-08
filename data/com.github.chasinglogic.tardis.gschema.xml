@@ -44,6 +44,13 @@
         <summary>Directories to backup</summary>
     </key>
 
+    <key name="backup-targets" type="as">
+        <default>[]</default>
+        <summary>
+          Where to backup to. Is either a Disk UUID or a folder.
+        </summary>
+    </key>
+
     <key name="window-height" type="i">
         <default>500</default>
         <summary>Last known window height</summary>
