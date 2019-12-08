@@ -93,6 +93,13 @@ public class Tardis.App : Gtk.Application {
 
 		main_stack = new Gtk.Stack();
 		main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
+
+		// TODO(chasinglogic): Write a get_backup_state function which
+		// returns the right widget.
+		backup_status = new Tardis.Widgets.BackupSafe(); 
+
+		main_stack.add(backup_status);
+
 		window.add(main_stack);
 
 		window.show_all();
