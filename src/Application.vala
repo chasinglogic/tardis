@@ -47,28 +47,16 @@ public class Tardis.App : Gtk.Application {
 	}
 
 	// Store window size in gsettings when resized.
-    public void on_resize() {
+	public void on_resize() {
 		if (!window.is_maximized) {
-			stdout.printf("Window isn't maximized\n");
 			int width;
 			int height;
-			stdout.printf("Getting window size\n");
 			window.get_size(out width, out height);
-			stdout.printf("Window size: %d / %d\n", width, height);
-			stdout.printf("Seetings window size: %d / %d\n", settings.window_width, settings.window_width);
 			if (settings.window_height != height || settings.window_width != width) {
 				settings.window_height = height;
 				settings.window_width = width;
 			}
-
-			if (settings.window_maximized) {
-				settings.window_maximized = false;
-			}
-			
-		} else if (!settings.window_maximized) {
-			settings.window_maximized = true;
 		}
-    }
 
 		settings.window_maximized = window.is_maximized;
 	}
