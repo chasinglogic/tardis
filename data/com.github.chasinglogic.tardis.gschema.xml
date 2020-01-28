@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema path="/com/github/chasinglogic/tardis/" id="com.github.chasinglogic.tardis">
+    <key name="first-run" type="b">
+      <default>true</default>
+      <summary></summary>
+      <description>
+        Internal setting to track if this is the first run
+        of the application.
+      </description>
+    </key>
+
     <key name="compress-backups" type="b">
       <default>false</default>
       <summary>Compress Backups</summary>
