@@ -2,7 +2,7 @@ using Granite;
 
 public class Tardis.Settings : Granite.Services.Settings {
     private static Settings? instance = null;
-    
+
     public bool compress_backups { get; set; }
     public bool create_snapshots { get; set; }
     public bool backup_automatically { get; set; }
@@ -16,19 +16,19 @@ public class Tardis.Settings : Granite.Services.Settings {
 
     public bool first_run { get; set; }
 
-    private Settings(string id) {
+    private Settings (string id) {
         base (id);
 
         if (first_run && directories_to_backup.length == 0) {
-            directories_to_backup = { GLib.Environment.get_variable("HOME") };
+            directories_to_backup = { GLib.Environment.get_variable ("HOME") };
         }
 
         first_run = false;
     }
 
-    public static Settings get_instance() {
+    public static Settings get_instance () {
         if (instance == null) {
-            instance = new Settings(Tardis.App.ID);
+            instance = new Settings (Tardis.App.ID);
         }
 
         return instance;

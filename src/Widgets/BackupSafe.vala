@@ -5,11 +5,11 @@ public class Tardis.Widgets.BackupSafe : Tardis.Widgets.BackupStatus {
 
     public Granite.Widgets.Welcome text;
 
-    public BackupSafe() {
-        text = new Granite.Widgets.Welcome(default_title, default_subtitle);
-        this.pack_start(text);
+    public BackupSafe () {
+        text = new Granite.Widgets.Welcome (default_title, default_subtitle);
+        this.pack_start (text);
 
-        // TODO(chasinglogic): Add green checkmark or other easily
+        // TODO (chasinglogic): Add green checkmark or other easily
         // identifiable success / safe symbol.
     }
 }
