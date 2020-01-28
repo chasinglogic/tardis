@@ -15,10 +15,13 @@ public class Tardis.App : Gtk.Application {
     public Tardis.Widgets.BackupStatus backup_status;
 
     // Views
-    public Tardis.Views.DriveSelectionView drive_select_view;
+    public Tardis.Views.Settings settings_view;
+
+    // Main ApplicationWindow, is static so it can be referenced by
+    // Dialogs.
+    public static Gtk.ApplicationWindow window;
 
     // Widgets directly attached to the Application Window
-    public Gtk.ApplicationWindow window;
     public Gtk.HeaderBar headerbar;
     public Gtk.Box header_box;
 
@@ -28,7 +31,6 @@ public class Tardis.App : Gtk.Application {
     // Public References
     private int drives_view_id;
     private int status_view_id;
-    private int folders_view_id;
     
     public App () {
         Object (
@@ -39,9 +41,7 @@ public class Tardis.App : Gtk.Application {
 
     public void on_view_mode_change() {
         if (mode_button.selected == drives_view_id) {
-            main_stack.set_visible_child(drive_select_view);
-        // } else if (mode_button.selected == folders_view_id) {
-            // main_stack.set_visible_child(folders_select_view);
+            main_stack.set_visible_child(settings_view);
         } else {
             main_stack.set_visible_child(backup_status);
         }
@@ -79,9 +79,8 @@ public class Tardis.App : Gtk.Application {
         mode_button = new Granite.Widgets.ModeButton();
         mode_button.margin_end = mode_button.margin_start = 12;
         mode_button.margin_bottom = mode_button.margin_top = 7;
-        drives_view_id = mode_button.append_text("Drives");
-        status_view_id = mode_button.append_text("Status");
-        folders_view_id = mode_button.append_text("Folders");
+        status_view_id = mode_button.append_text("Backups");
+        drives_view_id = mode_button.append_text("Settings");
         mode_button.halign = Gtk.Align.CENTER;
         mode_button.notify["selected"].connect(on_view_mode_change);
         mode_button.selected = drives_view_id;
@@ -104,10 +103,10 @@ public class Tardis.App : Gtk.Application {
         // returns the right widget.
         backup_status = new Tardis.Widgets.BackupSafe(); 
 
-        drive_select_view = new Tardis.Views.DriveSelectionView(volume_monitor, settings);
+        settings_view = new Tardis.Views.Settings(volume_monitor, settings);
 
-        main_stack.add(drive_select_view);
         main_stack.add(backup_status);
+        main_stack.add(settings_view);
 
         window.add(main_stack);
 

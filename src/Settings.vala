@@ -14,11 +14,16 @@ public class Tardis.Settings : Granite.Services.Settings {
     public int window_width { get; set; }
     public bool window_maximized { get; set; }
 
+    public bool first_run { get; set; }
+
     private Settings(string id) {
         base (id);
-        if (directories_to_backup.length == 0) {
+
+        if (first_run && directories_to_backup.length == 0) {
             directories_to_backup = { GLib.Environment.get_variable("HOME") };
         }
+
+        first_run = false;
     }
 
     public static Settings get_instance() {

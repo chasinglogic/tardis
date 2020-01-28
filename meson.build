@@ -7,6 +7,8 @@ add_project_arguments(
     language:'c'
 )
 
+i18n = import('i18n')
+
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
 executable(
     meson.project_name(),
@@ -14,15 +16,21 @@ executable(
     # Primary Classes
     'src/Application.vala',
     'src/Settings.vala',
+    'src/Utils.vala',
 
     # Views
-    'src/Views/DriveSelectionView.vala',
+    'src/Views/Settings.vala',
 
     # Custom Widgets
-    'src/Widgets/SyncFoldersWidget.vala',
-    'src/Widgets/BackupStatus.vala',
+    'src/Widgets/BackupFolderDisplay.vala',
+    'src/Widgets/BackupFolders.vala',
     'src/Widgets/BackupSafe.vala',
+    'src/Widgets/BackupStatus.vala',
+    'src/Widgets/DriveDisplay.vala',
+    'src/Widgets/DriveSelection.vala',
+    'src/Widgets/Grid.vala',
     'src/Widgets/Row.vala',
+    'src/Widgets/SettingsGrid.vala',
 
     dependencies: [
       dependency('gtk+-3.0'),
