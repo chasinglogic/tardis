@@ -43,6 +43,7 @@ executable(
   meson.project_name() + '.d',
 
   'src/TardisDaemon.vala',
+  'src/Dbus/Server.vala',
 
   dependencies: [
     dependency('gio-2.0'),
