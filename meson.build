@@ -9,14 +9,58 @@ add_project_arguments(
 
 i18n = import('i18n')
 
+utils = shared_library(
+  'tardis_utils',
+  'src/Utils.vala',
+
+  dependencies: [
+    dependency('gtk+-3.0'),
+    dependency('granite'),
+  ],
+)
+
+settings = shared_library(
+  'tardis_settings',
+  'src/Settings.vala',
+
+  dependencies: [
+    dependency('gtk+-3.0'),
+    dependency('granite'),
+  ],
+)
+
+dbus = shared_library(
+  'tardis_dbus',
+  'src/Dbus/Message.vala',
+
+  dependencies: [
+    dependency('json-glib-1.0'),
+    dependency('granite'),
+  ],
+)
+
+executable(
+  meson.project_name() + '.d',
+
+  'src/TardisDaemon.vala',
+
+  dependencies: [
+    dependency('gio-2.0'),
+    dependency('granite'),
+  ],
+
+  link_with: [
+    settings,
+    utils,
+  ]
+)
+
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
 executable(
     meson.project_name(),
 
     # Primary Classes
     'src/Application.vala',
-    'src/Settings.vala',
-    'src/Utils.vala',
 
     # Views
     'src/Views/Settings.vala',
@@ -31,6 +75,11 @@ executable(
     'src/Widgets/Grid.vala',
     'src/Widgets/Row.vala',
     'src/Widgets/SettingsGrid.vala',
+
+    link_with: [
+      utils,
+      settings,
+    ],
 
     dependencies: [
       dependency('gtk+-3.0'),

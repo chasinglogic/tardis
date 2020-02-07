@@ -3,9 +3,9 @@ using Gtk;
 
 public class Tardis.App : Gtk.Application {
 
-    public static string ID = "com.github.chasinglogic.tardis";
-    public static GLib.ThemedIcon BACKUP_IN_PROGRESS_ICON = new GLib.ThemedIcon ("emblem-synchronizing");
-    public static GLib.ThemedIcon BACKUP_IN_COMPLETED_ICON = new GLib.ThemedIcon ("emblem-synchronized");
+    public static string id = "com.github.chasinglogic.tardis";
+    public static GLib.ThemedIcon backup_in_progress_icon = new GLib.ThemedIcon ("emblem-synchronizing");
+    public static GLib.ThemedIcon backup_completed_icon = new GLib.ThemedIcon ("emblem-synchronized");
 
     // GLib settings accessor
     public Tardis.Settings settings;
@@ -91,7 +91,12 @@ public class Tardis.App : Gtk.Application {
 
         if (settings.window_maximized) {
             window.maximize ();
-        } else {
+        } else if (settings.first_run) {
+			window.default_width = 800;
+			window.default_height = 800;
+			settings.window_width = 800;
+			settings.window_height = 800;
+		} else {
             window.default_width = settings.window_width;
             window.default_height = settings.window_height;
         }

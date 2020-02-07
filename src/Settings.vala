@@ -2,6 +2,7 @@ using Granite;
 
 public class Tardis.Settings : Granite.Services.Settings {
     private static Settings? instance = null;
+    private static string id = "com.github.chasinglogic.tardis";
 
     public bool compress_backups { get; set; }
     public bool create_snapshots { get; set; }
@@ -18,17 +19,11 @@ public class Tardis.Settings : Granite.Services.Settings {
 
     private Settings (string id) {
         base (id);
-
-        if (first_run && directories_to_backup.length == 0) {
-            directories_to_backup = { GLib.Environment.get_variable ("HOME") };
-        }
-
-        first_run = false;
     }
 
     public static Settings get_instance () {
         if (instance == null) {
-            instance = new Settings (Tardis.App.ID);
+            instance = new Settings (id);
         }
 
         return instance;
