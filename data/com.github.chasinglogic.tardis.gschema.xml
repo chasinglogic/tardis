@@ -10,69 +10,57 @@
       </description>
     </key>
 
-    <key name="compress-backups" type="b">
+    <key name="automatic-backups" type="b">
       <default>false</default>
-      <summary>Compress Backups</summary>
-      <description>
-        After backup has completed syncing compress it as a GZipped
-        tar file. Note that this often makes backups take much longer
-        and the disk will still be required to have enough space to
-        hold the backup uncompressed.
-      </description>
+      <summary>Automatically backup whenever a target is available.</summary>
     </key>
 
-    <key name="backup-automatically" type="b">
-      <default>false</default>
-      <summary>Automatically backup on a timer if a target is available.</summary>
+    <key name="last-backup" type="x">
+      <default>0</default>
+      <summary>Used to track the last time a backup was run.</summary>
     </key>
 
-    <key name="create-snapshots" type="b">
-        <default>false</default>
-        <summary>Create Snapshots</summary>
-        <description>
-            Before creating a new backup snapshot the existing
-            backup. It will be compressed and stored with the date it
-            was taken. If this would make the total number of
-            snapshots greater than maximum-snapshots then the oldest
-            snapshot will be deleted.
-        </description>
+    <key name="last-backup-sources" type="as">
+      <default>[]</default>
+      <summary>
+        List of files we backed up last.
+      </summary>
     </key>
 
-    <key name="max-snapshots" type="i">
-      <default>3</default>
-      <summary>Maximum Snapshots</summary>
-      <description>
-          Maximum number of snapshots to keep. When a new snapshot
-          would be created that would cause the current total to be
-          greater than this number we delete the oldest snapshot.
-      </description>
+    <key name="backup-data" type="b">
+      <default>true</default>
+      <summary>
+        Indicates whether or not to backup all non-hidden home directories. Plus the .var directory containing Flatpaks
+      </summary>
     </key>
 
-    <key name="directories-to-backup" type="as">
-        <default>[]</default>
-        <summary>Directories to backup</summary>
+    <key name="backup-configuration" type="b">
+      <default>true</default>
+      <summary>
+        Indicates whether or not to backup all hidden home directories.
+      </summary>
     </key>
 
     <key name="backup-targets" type="as">
-        <default>[]</default>
-        <summary>
-          Where to backup to. Is either a Disk UUID or a folder.
-        </summary>
+      <default>[]</default>
+      <summary>
+        Where to backup to. Is either a Disk UUID or a folder.
+      </summary>
     </key>
 
     <key name="window-height" type="i">
-        <default>500</default>
-        <summary>Last known window height</summary>
+      <default>500</default>
+      <summary>Last known window height</summary>
     </key>
 
     <key name="window-width" type="i">
-        <default>500</default>
-        <summary>Last known window width</summary>
+      <default>500</default>
+      <summary>Last known window width</summary>
     </key>
 
     <key name="window-maximized" type="b">
-        <default>false</default>
-        <summary>If window was maximized last</summary>
+      <default>false</default>
+      <summary>If window was maximized last</summary>
     </key>
   </schema>
 </schemalist>
