@@ -1,15 +1,20 @@
-public class Tardis.Widgets.BackupSafe : Tardis.Widgets.BackupStatus {
+public class Tardis.Widgets.BackupSafe : Gtk.Box {
 
-    public static string default_title = "You're backups are up to date!";
-    public static string default_subtitle = "Your data is safe.";
+    public static string title = "You're backups are up to date!";
+    public static string subtitle = "Your data is safe.";
 
     public Granite.Widgets.Welcome text;
+    public Gtk.Image icon;
 
     public BackupSafe () {
-        text = new Granite.Widgets.Welcome (default_title, default_subtitle);
+        orientation = Gtk.Orientation.VERTICAL;
+
+        text = new Granite.Widgets.Welcome (title, subtitle);
         this.pack_start (text);
 
-        // TODO (chasinglogic): Add green checkmark or other easily
-        // identifiable success / safe symbol.
+        icon = new Gtk.Image ();
+        icon.gicon = new ThemedIcon ("process-completed");
+        icon.pixel_size = 64;
+        this.pack_start(icon);
     }
 }
