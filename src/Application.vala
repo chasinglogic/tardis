@@ -1,6 +1,5 @@
 using Gtk;
 
-
 public class Tardis.App : Gtk.Application {
 
     public static string id = "com.github.chasinglogic.tardis";
@@ -14,9 +13,6 @@ public class Tardis.App : Gtk.Application {
     // Custom Widgets
     public Tardis.Widgets.BackupStatus backup_status;
 
-    // Views
-    public Tardis.Views.Settings settings_view;
-
     // Main ApplicationWindow, is static so it can be referenced by
     // Dialogs.
     public static Gtk.ApplicationWindow window;
@@ -25,7 +21,9 @@ public class Tardis.App : Gtk.Application {
     public Gtk.HeaderBar headerbar;
     public Gtk.Box header_box;
 
-    public Gtk.Stack main_stack;
+    public Gtk.Stack status_box;
+    public Gtk.Label title;
+
     public Granite.Widgets.ModeButton mode_button;
 
     // Public References
@@ -39,13 +37,8 @@ public class Tardis.App : Gtk.Application {
             );
     }
 
-    public void on_view_mode_change () {
-        if (mode_button.selected == drives_view_id) {
-            main_stack.set_visible_child (settings_view);
-        } else {
-            main_stack.set_visible_child (backup_status);
-        }
-
+    public void set_backup_status(Gtk.Widget new_status) {
+        status_box.set_visible_child(new_status);
     }
 
     // Store window size in gsettings when resized.
@@ -76,16 +69,9 @@ public class Tardis.App : Gtk.Application {
         headerbar = new Gtk.HeaderBar ();
         headerbar.show_close_button = true;
 
-        mode_button = new Granite.Widgets.ModeButton ();
-        mode_button.margin_end = mode_button.margin_start = 12;
-        mode_button.margin_bottom = mode_button.margin_top = 7;
-        status_view_id = mode_button.append_text ("Backups");
-        drives_view_id = mode_button.append_text ("Settings");
-        mode_button.halign = Gtk.Align.CENTER;
-        mode_button.notify["selected"].connect (on_view_mode_change);
-        mode_button.selected = drives_view_id;
+        title = new Gtk.Label("Tardis");
 
-        headerbar.set_custom_title (mode_button);
+        headerbar.set_custom_title (title);
 
         window.set_titlebar (headerbar);
 
@@ -101,23 +87,17 @@ public class Tardis.App : Gtk.Application {
             window.default_height = settings.window_height;
         }
 
-        main_stack = new Gtk.Stack ();
-        main_stack.transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT;
+        status_box = new Gtk.Stack ();
+        backup_status = new Tardis.Widgets.BackupStatus (this,
+                                                         volume_monitor,
+                                                         settings);
 
-        // TODO (chasinglogic): Write a get_backup_state function which
-        // returns the right widget.
-        backup_status = new Tardis.Widgets.BackupSafe ();
-
-        settings_view = new Tardis.Views.Settings (volume_monitor, settings);
-
-        main_stack.add (backup_status);
-        main_stack.add (settings_view);
-
-        window.add (main_stack);
+        window.add (status_box);
+        backup_status.get_backup_status.begin ();
 
         window.show_all ();
 
-        on_view_mode_change ();
+
         window.size_allocate.connect (() => { on_resize (); });
     }
 
