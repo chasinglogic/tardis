@@ -41,7 +41,7 @@ public class Tardis.Widgets.BackupStatus  {
         // 86400 is 24 hours in seconds
         var 24_hours = 86400;
 
-        if (settings.last_backup == 0 || (curtime - settings.last_backup) > 24_hours) {
+        if (settings.last_backup == 0 || (settings.last_backup - curtime) > 24_hours) {
             backup_is_necessary = true;
         } else {
             backup_is_necessary =
@@ -73,7 +73,7 @@ public class Tardis.Widgets.BackupStatus  {
             try {
                 GLib.FileUtils.get_contents(last_backup_tag, out content);
                 int64 last_backup_time = content.to_int();
-                if ((curtime - last_backup_time) > 24_hours) {
+                if ((last_backup_time - curtime) > 24_hours) {
                     backup_is_necessary = true;
                     break;
                 }
