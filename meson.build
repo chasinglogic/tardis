@@ -9,82 +9,30 @@ add_project_arguments(
 
 i18n = import('i18n')
 
-utils = shared_library(
-  'tardis_utils',
-  'src/Utils.vala',
-
-  dependencies: [
-    dependency('gtk+-3.0'),
-    dependency('granite'),
-  ],
-)
-
-settings = shared_library(
-  'tardis_settings',
-  'src/Settings.vala',
-
-  dependencies: [
-    dependency('gtk+-3.0'),
-    dependency('granite'),
-  ],
-)
-
-dbus = shared_library(
-  'tardis_dbus',
-  'src/Dbus/Message.vala',
-
-  dependencies: [
-    dependency('json-glib-1.0'),
-    dependency('granite'),
-  ],
-)
-
-executable(
-  meson.project_name() + '.d',
-
-  'src/TardisDaemon.vala',
-  'src/Dbus/Server.vala',
-
-  dependencies: [
-    dependency('gio-2.0'),
-    dependency('granite'),
-  ],
-
-  link_with: [
-    settings,
-    utils,
-  ]
-)
-
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
 executable(
     meson.project_name(),
 
     # Primary Classes
     'src/Application.vala',
+    'src/Backups.vala',
+    'src/Settings.vala',
 
-    # Views
-    'src/Views/Settings.vala',
+    'src/Utils.vala',
 
     # Custom Widgets
-    'src/Widgets/BackupFolderDisplay.vala',
-    'src/Widgets/BackupFolders.vala',
-    'src/Widgets/BackupSafe.vala',
     'src/Widgets/BackupStatus.vala',
-    'src/Widgets/DriveDisplay.vala',
-    'src/Widgets/DriveSelection.vala',
-    'src/Widgets/Grid.vala',
-    'src/Widgets/Row.vala',
-    'src/Widgets/SettingsGrid.vala',
 
-    link_with: [
-      utils,
-      settings,
-    ],
+    'src/Widgets/BackupSafe.vala',
+    'src/Widgets/BackupUnsafe.vala',
+    'src/Widgets/BackupNeeded.vala',
+    'src/Widgets/BackupInProgress.vala',
+    'src/Widgets/BackupStatusCalculating.vala',
 
     dependencies: [
       dependency('gtk+-3.0'),
       dependency('granite'),
+      dependency('gio-2.0'),
     ],
 
     install: true
