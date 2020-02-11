@@ -16,7 +16,6 @@ executable(
     # Primary Classes
     'src/Application.vala',
     'src/Backups.vala',
-    'src/Settings.vala',
 
     'src/Utils.vala',
 
