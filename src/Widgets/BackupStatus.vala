@@ -1,30 +1,37 @@
 using GLib;
 
 public class Tardis.Widgets.BackupStatus  {
-    private VolumeMonitor vm;
     private Tardis.App app;
     private GLib.Settings settings;
     private Tardis.Backups backups;
-    private Gtk.Button backup_button;
 
-    public Tardis.Widgets.BackupSafe safe;
-    public Tardis.Widgets.BackupUnsafe unsafe;
+    public Tardis.Widgets.BackupMessage safe;
+    public Tardis.Widgets.BackupMessage unsafe;
+    public Tardis.Widgets.BackupMessage error;
     public Tardis.Widgets.BackupNeeded out_of_date;
     public Tardis.Widgets.BackupNeeded missing_files;
     public Tardis.Widgets.BackupInProgress in_progress;
     public Tardis.Widgets.BackupInProgress calculating;
 
-    public BackupStatus(Tardis.App app, VolumeMonitor vm,
-                        GLib.Settings settings) {
+    public BackupStatus(Tardis.App app,
+                        GLib.Settings settings, Tardis.Backups backups) {
         this.app = app;
-        this.vm = vm;
         this.settings = settings;
-        this.backups = new Tardis.Backups (vm, settings);
-        safe = new Tardis.Widgets.BackupSafe ();
+        this.backups = backups;
+
+        safe = new Tardis.Widgets.BackupMessage ("Your backups are up to date.",
+                                              "Your data is safe.",
+                                              "process-completed");
         app.status_box.add(safe);
-        unsafe = new Tardis.Widgets.BackupUnsafe ();
+        error = new Tardis.Widgets.BackupMessage ("An error has occurred while trying to load backup drives.",
+                                                  "Please report this bug upstream.",
+                                                  "process-stop");
+        app.status_box.add(error);
+        unsafe = new Tardis.Widgets.BackupMessage ("A backup is needed and no backup drives are available.",
+                                                   "You should plug in or add a new backup drive",
+                                                   "process-stop");
         app.status_box.add(unsafe);
-        in_progress = new Tardis.Widgets.BackupInProgress ();
+        in_progress = new Tardis.Widgets.BackupInProgress ("Backing up your data...");
         app.status_box.add(in_progress);
         calculating = new Tardis.Widgets.BackupInProgress ("Checking if your backups are up to date...");
         app.status_box.add(calculating);
@@ -43,7 +50,7 @@ public class Tardis.Widgets.BackupStatus  {
 
         settings.changed.connect((key) => {
             if (key == "backup-configuration" || key == "backup-data") {
-                get_backup_status ();
+                get_backup_status.begin ();
             }
         });
     }
@@ -62,12 +69,25 @@ public class Tardis.Widgets.BackupStatus  {
         if (last_known_backup == 0 || (last_known_backup - curtime) > 24_hours) {
             longer_than_24_hours = true;
         } else {
-            differing_files =
-                !Tardis.Utils.array_not_equal(backups.get_sources (true), settings.get_strv("last-backup-sources"));
+            try {
+                differing_files =
+                    !Tardis.Utils.array_not_equal(backups.get_sources (true), settings.get_strv("last-backup-sources"));
+
+            } catch (GLib.Error e) {
+                GLib.print("Unable to load backup sources: %s\n", e.message);
+            }
         }
 
         var backup_is_necessary = longer_than_24_hours || differing_files;
-        var available_backup_drives = yield backups.get_available_backup_drives ();
+        Mount[] available_backup_drives;
+        try {
+            available_backup_drives = yield backups.get_available_backup_drives ();
+        } catch (GLib.Error e) {
+            GLib.print("Unexpected error: %s\n", e.message);
+            app.set_backup_status (error);
+            return;
+        }
+
         if (backup_is_necessary && available_backup_drives.length == 0) {
             app.set_backup_status(unsafe);
             return;

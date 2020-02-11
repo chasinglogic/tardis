@@ -22,7 +22,7 @@ public class Tardis.Backups {
         return backup_sources;
     }
 
-    public void load_sources() throws GLib.FileError {
+    public void load_sources() throws GLib.Error {
         var home_dir = Environment.get_home_dir();
         var home_dir_listing = Dir.open(home_dir);
         backup_sources = {};
@@ -47,7 +47,7 @@ public class Tardis.Backups {
         }
     }
 
-    public async Mount[] get_available_backup_drives() {
+    public async Mount[] get_available_backup_drives() throws GLib.Error {
         Mount[] results = {};
 
         foreach (string target in settings.get_strv ("backup-targets")) {
@@ -76,7 +76,7 @@ public class Tardis.Backups {
         return results;
     }
 
-    public async bool restore(Mount mount) throws GLib.FileError {
+    public async bool restore(Mount mount) throws GLib.Error {
         var backup_path = get_backups_path(mount);
         if (backup_path == null) {
             return false;
@@ -95,7 +95,7 @@ public class Tardis.Backups {
         return yield subproc.wait_async();
     }
 
-    public async int backup() throws GLib.FileError {
+    public async int backup() throws GLib.Error {
         if (backup_sources == null || backup_sources.length == 0) {
             load_sources();
         }
@@ -118,6 +118,8 @@ public class Tardis.Backups {
             if (Tardis.Utils.contains_str(currently_backing_up, backup_path)) {
                 continue;
             }
+
+            FileUtils.set_contents(backup_tag_file, curtime.to_string ());
 
             currently_backing_up += backup_path;
 
@@ -156,7 +158,7 @@ public class Tardis.Backups {
         return backup_path;
     }
 
-    private async bool do_backup(string backup_path) {
+    private async bool do_backup(string backup_path) throws GLib.Error {
         // See 'man rsync' for more detail.
         string[] argv = {
             "rsync",

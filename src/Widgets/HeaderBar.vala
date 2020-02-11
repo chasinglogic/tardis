@@ -3,13 +3,19 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
     public Gtk.MenuButton menu_button;
     public Gtk.Popover backup_settings_popover;
 
+    private Tardis.Backups backups;
+
     // TODO: add restore button
     // TODO: add new drive button
     public HeaderBar(GLib.Settings settings,
-                     Tardis.Widgets.BackupStatus status) {
+                     Tardis.Widgets.BackupStatus status,
+                     Tardis.Backups backups) {
+
+        this.backups = backups;
         show_close_button = true;
 
         var backup_data = new Tardis.Widgets.SettingToggler (
+            // Add spaces to make switches line up
             _("Backup Data"),
             _("Indicates backups should include all non-hidden directories. It is recommended to leave this setting on."),
             settings,
@@ -25,7 +31,9 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
 
         var backup_configuration = new Tardis.Widgets.SettingToggler (
             _("Backup Configuration"),
-            _("Indicates backups should include hidden directories. This is recommended for most users however, can sometimes cause issues when restoring backups."),
+            _("Indicates backups should include hidden directories. This is " +
+              "recommended for most users however, can sometimes cause issues " +
+              "when restoring backups."),
             settings,
             "backup-configuration"
         );
@@ -78,6 +86,32 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         title_label = new Gtk.Label("<b>Tardis</b>");
         title_label.use_markup = true;
         set_custom_title(title_label);
+
+        var restore_button = new Gtk.MenuButton ();
+        restore_button.image = new Gtk.Image.from_icon_name (
+            "document-open-recent",
+             Gtk.IconSize.LARGE_TOOLBAR
+        );
+        restore_button.tooltip_text = _("Restore from Backup");
+        // restore_button.clicked.connect (() => {
+        //     var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
+        //         "Are you sure?",
+        //         "",
+        //         "applications-development",
+        //         Gtk.ButtonsType.CLOSE
+        //     );
+        // });
+
+        var add_target_button = new Gtk.MenuButton ();
+        // TODO: make a new icon that is drive-harddisk with a + sign
+        add_target_button.image = new Gtk.Image.from_icon_name (
+            "insert-object",
+             Gtk.IconSize.LARGE_TOOLBAR
+        );
+        add_target_button.tooltip_text = _("Add a new Backup drive");
+
+        pack_start(restore_button);
+        pack_start(add_target_button);
         pack_end (menu_button);
     }
 }

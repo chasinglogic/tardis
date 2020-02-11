@@ -10,21 +10,20 @@ public class Tardis.App : Gtk.Application {
     public GLib.Settings settings;
     public GLib.VolumeMonitor volume_monitor;
 
+    public Tardis.Backups backups;
+
     // Custom Widgets
     public Tardis.Widgets.BackupStatus backup_status;
+    public Tardis.Widgets.HeaderBar headerbar;
 
     // Main ApplicationWindow, is static so it can be referenced by
     // Dialogs.
     public static Gtk.ApplicationWindow window;
 
     // Widgets directly attached to the Application Window
-    public Tardis.Widgets.HeaderBar headerbar;
     public Gtk.Box header_box;
-
     public Gtk.Stack status_box;
     public Gtk.Label title;
-
-    public Granite.Widgets.ModeButton mode_button;
 
     public App () {
         Object (
@@ -75,25 +74,31 @@ public class Tardis.App : Gtk.Application {
         }
 
         status_box = new Gtk.Stack ();
+
+        backups = new Tardis.Backups (volume_monitor, settings);
+
         backup_status = new Tardis.Widgets.BackupStatus (this,
-                                                         volume_monitor,
-                                                         settings);
+                                                         settings,
+                                                         backups);
 
         window.add (status_box);
         backup_status.get_backup_status.begin ();
 
+        volume_monitor.volume_added.connect(() => backup_status.get_backup_status.begin ());
+        volume_monitor.volume_removed.connect(() => backup_status.get_backup_status.begin ());
+
         // HeaderBar
-        headerbar = new Tardis.Widgets.HeaderBar (settings, backup_status);
+        headerbar = new Tardis.Widgets.HeaderBar (settings, backup_status, backups);
         window.set_titlebar (headerbar);
 
         window.show_all ();
-
-
         window.size_allocate.connect (() => { on_resize (); });
     }
 
     public static int main (string[] args) {
         var app = new Tardis.App ();
-        return app.run (args);
+        var return_code = app.run (args);
+        app.settings.set_boolean ("first-run", false);
+        return return_code;
     }
 }
