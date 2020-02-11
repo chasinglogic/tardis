@@ -18,17 +18,13 @@ public class Tardis.App : Gtk.Application {
     public static Gtk.ApplicationWindow window;
 
     // Widgets directly attached to the Application Window
-    public Gtk.HeaderBar headerbar;
+    public Tardis.Widgets.HeaderBar headerbar;
     public Gtk.Box header_box;
 
     public Gtk.Stack status_box;
     public Gtk.Label title;
 
     public Granite.Widgets.ModeButton mode_button;
-
-    // Public References
-    private int drives_view_id;
-    private int status_view_id;
 
     public App () {
         Object (
@@ -65,16 +61,6 @@ public class Tardis.App : Gtk.Application {
         // Construct the main window for our Application.
         window = new Gtk.ApplicationWindow (this);
 
-        // HeaderBar
-        headerbar = new Gtk.HeaderBar ();
-        headerbar.show_close_button = true;
-
-        title = new Gtk.Label("Tardis");
-
-        headerbar.set_custom_title (title);
-
-        window.set_titlebar (headerbar);
-
         if (settings.window_maximized) {
             window.maximize ();
         } else if (settings.first_run) {
@@ -94,6 +80,10 @@ public class Tardis.App : Gtk.Application {
 
         window.add (status_box);
         backup_status.get_backup_status.begin ();
+
+        // HeaderBar
+        headerbar = new Tardis.Widgets.HeaderBar (settings, backup_status);
+        window.set_titlebar (headerbar);
 
         window.show_all ();
 

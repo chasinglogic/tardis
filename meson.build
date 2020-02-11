@@ -21,13 +21,15 @@ executable(
     'src/Utils.vala',
 
     # Custom Widgets
+    'src/Widgets/HeaderBar.vala',
+    'src/Widgets/SettingToggler.vala',
+
     'src/Widgets/BackupStatus.vala',
 
     'src/Widgets/BackupSafe.vala',
     'src/Widgets/BackupUnsafe.vala',
     'src/Widgets/BackupNeeded.vala',
     'src/Widgets/BackupInProgress.vala',
-    'src/Widgets/BackupStatusCalculating.vala',
 
     dependencies: [
       dependency('gtk+-3.0'),
