@@ -5,10 +5,10 @@ using GLib;
 // TODO closing the app should reap rsync processes
 public class Tardis.Backups {
     private string[] backup_sources;
-    private Tardis.Settings settings;
+    private GLib.Settings settings;
     private VolumeMonitor vm;
 
-    public Backups(VolumeMonitor vm, Tardis.Settings settings) {
+    public Backups(VolumeMonitor vm, GLib.Settings settings) {
         this.settings = settings;
         this.vm = vm;
         this.backup_sources = null;
@@ -33,16 +33,16 @@ public class Tardis.Backups {
                 continue;
             }
 
-            if (settings.backup_data && name[0] != '.') {
+            if (settings.get_boolean ("backup-data") && name[0] != '.') {
                 backup_sources += path;
-            } else if (settings.backup_configuration && name[0] == '.') {
+            } else if (settings.get_boolean ("backup-configuration") && name[0] == '.') {
                 backup_sources += path;
             }
         }
 
         // Always backup flatpaks since they could store data in their
         // container. (For example the Zeal flatpak behaves this way)
-        if (!settings.backup_configuration) {
+        if (!settings.get_boolean ("backup-configuration")) {
             backup_sources += Path.build_filename(home_dir, ".var");
         }
     }
@@ -50,7 +50,7 @@ public class Tardis.Backups {
     public async Mount[] get_available_backup_drives() {
         Mount[] results = {};
 
-        foreach (string target in settings.backup_targets) {
+        foreach (string target in settings.get_strv ("backup-targets")) {
             var volume = vm.get_volume_for_uuid(target);
 
             // TODO handle the case that backup_target could be a folder, we
@@ -101,8 +101,8 @@ public class Tardis.Backups {
         }
 
         var curtime = get_monotonic_time();
-        settings.last_backup = curtime;
-        settings.last_backup_sources = backup_sources;
+        settings.set_int64("last-backup", curtime);
+        settings.set_strv("last-backup-sources", backup_sources);
 
         string[] currently_backing_up = {};
 

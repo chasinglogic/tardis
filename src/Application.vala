@@ -3,11 +3,11 @@ using Gtk;
 public class Tardis.App : Gtk.Application {
 
     public static string id = "com.github.chasinglogic.tardis";
-    public static GLib.ThemedIcon backup_in_progress_icon = new GLib.ThemedIcon ("emblem-synchronizing");
-    public static GLib.ThemedIcon backup_completed_icon = new GLib.ThemedIcon ("emblem-synchronized");
+    public static int default_window_height = 800;
+    public static int default_window_width = 800;
 
     // GLib settings accessor
-    public Tardis.Settings settings;
+    public GLib.Settings settings;
     public GLib.VolumeMonitor volume_monitor;
 
     // Custom Widgets
@@ -28,7 +28,7 @@ public class Tardis.App : Gtk.Application {
 
     public App () {
         Object (
-            application_id: "com.github.chasinglogic.tardis",
+            application_id: id,
             flags: ApplicationFlags.FLAGS_NONE
             );
     }
@@ -43,34 +43,35 @@ public class Tardis.App : Gtk.Application {
             int width;
             int height;
             window.get_size (out width, out height);
-            if (settings.window_height != height || settings.window_width != width) {
-                settings.window_height = height;
-                settings.window_width = width;
+            if (settings.get_int("window-height") != height || settings.get_int("window-width") != width) {
+                settings.set_int("window-height", height);
+                settings.set_int("window-width", width);
             }
         }
 
-        settings.window_maximized = window.is_maximized;
+        settings.set_boolean("window-maximized", window.is_maximized);
     }
 
     protected override void activate () {
-        settings = Tardis.Settings.get_instance ();
+        settings = new GLib.Settings (id);
+
         // TODO (chasinglogic): Listen for drive connected and
         // disconnected signals to notify user of possible new backup
         // drives, and disconnect of known backup drives.
         volume_monitor = GLib.VolumeMonitor.@get ();
+
         // Construct the main window for our Application.
         window = new Gtk.ApplicationWindow (this);
+        if (settings.get_boolean("first-run")) {
+            settings.set_int("window-width", default_window_width);
+            settings.set_int("window-height", default_window_height);
+        }
 
-        if (settings.window_maximized) {
+        if (settings.get_boolean("window-maximized")) {
             window.maximize ();
-        } else if (settings.first_run) {
-			window.default_width = 800;
-			window.default_height = 800;
-			settings.window_width = 800;
-			settings.window_height = 800;
-		} else {
-            window.default_width = settings.window_width;
-            window.default_height = settings.window_height;
+        } else {
+            window.default_width = settings.get_int("window-width");
+            window.default_height = settings.get_int("window-height");
         }
 
         status_box = new Gtk.Stack ();

@@ -3,7 +3,7 @@ using GLib;
 public class Tardis.Widgets.BackupStatus  {
     private VolumeMonitor vm;
     private Tardis.App app;
-    private Tardis.Settings settings;
+    private GLib.Settings settings;
     private Tardis.Backups backups;
     private Gtk.Button backup_button;
 
@@ -15,7 +15,7 @@ public class Tardis.Widgets.BackupStatus  {
     public Tardis.Widgets.BackupInProgress calculating;
 
     public BackupStatus(Tardis.App app, VolumeMonitor vm,
-                        Tardis.Settings settings) {
+                        GLib.Settings settings) {
         this.app = app;
         this.vm = vm;
         this.settings = settings;
@@ -41,6 +41,11 @@ public class Tardis.Widgets.BackupStatus  {
         );
         app.status_box.add(missing_files);
 
+        settings.changed.connect((key) => {
+            if (key == "backup-configuration" || key == "backup-data") {
+                get_backup_status ();
+            }
+        });
     }
 
     public async void get_backup_status() {
@@ -53,11 +58,12 @@ public class Tardis.Widgets.BackupStatus  {
         // 86400 is 24 hours in seconds
         var 24_hours = 86400;
 
-        if (settings.last_backup == 0 || (settings.last_backup - curtime) > 24_hours) {
+        var last_known_backup = settings.get_int64("last-backup");
+        if (last_known_backup == 0 || (last_known_backup - curtime) > 24_hours) {
             longer_than_24_hours = true;
         } else {
             differing_files =
-                !Tardis.Utils.array_not_equal(backups.get_sources (true), settings.last_backup_sources);
+                !Tardis.Utils.array_not_equal(backups.get_sources (true), settings.get_strv("last-backup-sources"));
         }
 
         var backup_is_necessary = longer_than_24_hours || differing_files;
@@ -100,7 +106,8 @@ public class Tardis.Widgets.BackupStatus  {
             }
         }
 
-        if ((longer_than_24_hours || differing_files) && settings.automatic_backups) {
+        if ((longer_than_24_hours || differing_files) &&
+            settings.get_boolean("automatic-backups")) {
             start_backup ();
         } else if (longer_than_24_hours) {
             app.set_backup_status(out_of_date);
