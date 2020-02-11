@@ -1,7 +1,4 @@
 public class Tardis.Widgets.BackupInProgress : Gtk.Box {
-
-    public static string title = "Backup in progress...";
-
     public Gtk.Label title_label;
     public Gtk.Spinner spinner;
     public Gtk.Grid content;
@@ -9,7 +6,7 @@ public class Tardis.Widgets.BackupInProgress : Gtk.Box {
     // TODO show per-target backup progress using spinners and process-completed
     // icons. Requires changes to Backups.vala
 
-    public BackupInProgress () {
+    public BackupInProgress (string? title = "Backup in progress...") {
         get_style_context ().add_class (Gtk.STYLE_CLASS_VIEW);
         get_style_context ().add_class (Granite.STYLE_CLASS_WELCOME);
 

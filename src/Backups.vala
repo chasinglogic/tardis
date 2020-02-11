@@ -14,8 +14,8 @@ public class Tardis.Backups {
         this.backup_sources = null;
     }
 
-    public string[] get_sources () throws GLib.Error {
-        if (backup_sources.length == 0) {
+    public string[] get_sources (bool? force_reload = false) throws GLib.Error {
+        if (backup_sources.length == 0 || force_reload) {
             load_sources ();
         }
 
@@ -76,6 +76,25 @@ public class Tardis.Backups {
         return results;
     }
 
+    public async bool restore(Mount mount) throws GLib.FileError {
+        var backup_path = get_backups_path(mount);
+        if (backup_path == null) {
+            return false;
+        }
+
+        string[] argv = {"rsync", "-a"};
+        if (Environment.get_variable("TARDIS_DEBUG") == "1") {
+            argv += "-v";
+        }
+
+        var slash_home = Path.get_dirname (Environment.get_home_dir ());
+        argv += backup_path;
+        argv += slash_home;
+
+        var subproc = new Subprocess.newv(argv, SubprocessFlags.NONE);
+        return yield subproc.wait_async();
+    }
+
     public async int backup() throws GLib.FileError {
         if (backup_sources == null || backup_sources.length == 0) {
             load_sources();
@@ -92,6 +111,10 @@ public class Tardis.Backups {
             var backup_path = get_backups_path(mount, true);
             var backup_tag_file = get_backup_tag_file(mount);
 
+            // It's possible for multiple targets to point to the same mount and
+            // other strange bad states get us here. So we prevent creating
+            // multiple rsync processes to the same location by storing what
+            // we've already began a backup to.
             if (Tardis.Utils.contains_str(currently_backing_up, backup_path)) {
                 continue;
             }

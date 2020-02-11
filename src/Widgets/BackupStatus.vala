@@ -9,9 +9,10 @@ public class Tardis.Widgets.BackupStatus  {
 
     public Tardis.Widgets.BackupSafe safe;
     public Tardis.Widgets.BackupUnsafe unsafe;
-    public Tardis.Widgets.BackupNeeded needed;
+    public Tardis.Widgets.BackupNeeded out_of_date;
+    public Tardis.Widgets.BackupNeeded missing_files;
     public Tardis.Widgets.BackupInProgress in_progress;
-    public Tardis.Widgets.BackupStatusCalculating calculating;
+    public Tardis.Widgets.BackupInProgress calculating;
 
     public BackupStatus(Tardis.App app, VolumeMonitor vm,
                         Tardis.Settings settings) {
@@ -25,75 +26,90 @@ public class Tardis.Widgets.BackupStatus  {
         app.status_box.add(unsafe);
         in_progress = new Tardis.Widgets.BackupInProgress ();
         app.status_box.add(in_progress);
-        calculating = new Tardis.Widgets.BackupStatusCalculating ();
+        calculating = new Tardis.Widgets.BackupInProgress ("Checking if your backups are up to date...");
         app.status_box.add(calculating);
 
-        needed = new Tardis.Widgets.BackupNeeded (this);
-        app.status_box.add(needed);
+        out_of_date = new Tardis.Widgets.BackupNeeded (
+            this,
+            "You haven't backed up in over 24 hours"
+        );
+        app.status_box.add(out_of_date);
+
+        missing_files = new Tardis.Widgets.BackupNeeded (
+            this,
+            "We've detected that there are differing\nfiles between your system and backup."
+        );
+        app.status_box.add(missing_files);
 
     }
 
     public async void get_backup_status() {
         app.set_backup_status(calculating);
 
-        var backup_is_necessary = false;
+        var longer_than_24_hours = false;
+        var differing_files = false;
         var curtime = get_monotonic_time();
+
         // 86400 is 24 hours in seconds
         var 24_hours = 86400;
 
         if (settings.last_backup == 0 || (settings.last_backup - curtime) > 24_hours) {
-            backup_is_necessary = true;
+            longer_than_24_hours = true;
         } else {
-            backup_is_necessary =
-                !Tardis.Utils.array_not_equal(backups.get_sources (), settings.last_backup_sources);
+            differing_files =
+                !Tardis.Utils.array_not_equal(backups.get_sources (true), settings.last_backup_sources);
         }
 
+        var backup_is_necessary = longer_than_24_hours || differing_files;
         var available_backup_drives = yield backups.get_available_backup_drives ();
         if (backup_is_necessary && available_backup_drives.length == 0) {
             app.set_backup_status(unsafe);
             return;
         }
 
-        foreach (GLib.Mount mount in  available_backup_drives) {
-            if (mount == null) {
-                continue;
-            }
+        // If we've already determined a backup is necessary then no reason to
+        // scan available drives.
+        if (!backup_is_necessary) {
+            foreach (GLib.Mount mount in  available_backup_drives) {
+                if (mount == null) {
+                    continue;
+                }
 
-            var backup_path = Tardis.Backups.get_backups_path(mount);
+                var backup_path = Tardis.Backups.get_backups_path(mount);
 
-            // This means we found a drive which is a backup target but has
-            // never had a backup.
-            if (backup_path == null) {
-                backup_is_necessary = true;
-                break;
-            }
-
-            var last_backup_tag = Tardis.Backups.get_backup_tag_file(mount);
-            string content;
-            try {
-                GLib.FileUtils.get_contents(last_backup_tag, out content);
-                int64 last_backup_time = content.to_int();
-                if ((last_backup_time - curtime) > 24_hours) {
-                    backup_is_necessary = true;
+                // This means we found a drive which is a backup target but has
+                // never had a backup.
+                if (backup_path == null) {
+                    differing_files = true;
                     break;
                 }
-            } catch (GLib.FileError e) {
-                // TODO handle this error
-                continue;
+
+                var last_backup_tag = Tardis.Backups.get_backup_tag_file(mount);
+                string content;
+                try {
+                    GLib.FileUtils.get_contents(last_backup_tag, out content);
+                    int64 last_backup_time = int.parse(content);
+                    if ((last_backup_time - curtime) > 24_hours) {
+                        longer_than_24_hours = true;
+                        break;
+                    }
+                } catch (GLib.FileError e) {
+                    // TODO handle this error
+                    continue;
+                }
             }
         }
 
-        if (backup_is_necessary) {
-            if (settings.automatic_backups) {
-                start_backup ();
-            } else {
-                app.set_backup_status(needed);
-            }
-
-            return;
+        if ((longer_than_24_hours || differing_files) && settings.automatic_backups) {
+            start_backup ();
+        } else if (longer_than_24_hours) {
+            app.set_backup_status(out_of_date);
+        } else if (differing_files) {
+            app.set_backup_status(missing_files);
+        } else {
+            app.set_backup_status(safe);
         }
 
-        app.set_backup_status(safe);
     }
 
     public void start_backup () {

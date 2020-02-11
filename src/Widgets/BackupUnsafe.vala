@@ -1,7 +1,7 @@
 public class Tardis.Widgets.BackupUnsafe : Gtk.Box {
 
     public static string title = "You haven't backed up in 24 hours and no backup drives are available.";
-    public static string subtitle = "Plug in a backup drive to automatically start a backup.";
+    public static string subtitle = "You should plug in or add a new backup drive.";
 
     public Granite.Widgets.Welcome text;
     public Gtk.Image icon;

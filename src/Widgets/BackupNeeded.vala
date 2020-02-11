@@ -6,8 +6,8 @@ public class Tardis.Widgets.BackupNeeded : Gtk.Box {
     public Granite.Widgets.Welcome text;
     public Granite.Widgets.WelcomeButton button;
 
-    public BackupNeeded (Tardis.Widgets.BackupStatus status) {
-        text = new Granite.Widgets.Welcome (title, subtitle);
+    public BackupNeeded (Tardis.Widgets.BackupStatus status, string reason) {
+        text = new Granite.Widgets.Welcome (reason, subtitle);
 
         var icon = new Gtk.Image ();
         icon.gicon = new ThemedIcon ("folder-download");
