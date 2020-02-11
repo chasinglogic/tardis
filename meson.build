@@ -25,8 +25,7 @@ executable(
 
     'src/Widgets/BackupStatus.vala',
 
-    'src/Widgets/BackupSafe.vala',
-    'src/Widgets/BackupUnsafe.vala',
+    'src/Widgets/BackupMessage.vala',
     'src/Widgets/BackupNeeded.vala',
     'src/Widgets/BackupInProgress.vala',
 
