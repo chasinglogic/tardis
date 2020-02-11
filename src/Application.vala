@@ -3,8 +3,8 @@ using Gtk;
 public class Tardis.App : Gtk.Application {
 
     public static string id = "com.github.chasinglogic.tardis";
-    public static int default_window_height = 800;
-    public static int default_window_width = 800;
+    public static int default_window_height = 600;
+    public static int default_window_width = 850;
 
     // GLib settings accessor
     public GLib.Settings settings;
