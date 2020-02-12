@@ -26,15 +26,15 @@ public class Tardis.Utils {
         return false;
     }
 
-    // Remove items from list which are in exclude_list
-    public static string[] remove_from (string[] list, string[] exclude_list) {
-        if (exclude_list.length == 0) {
+    // Remove item from list
+    public static string[] remove_from (string[] list, string item) {
+        if (!contains_str(list, item)) {
             return list;
         }
 
-        string[] new_list = new string[list.length - exclude_list.length];
+        string[] new_list = new string[list.length - 1];
         foreach (string element in list) {
-            if (Tardis.Utils.contains_str (exclude_list, element)) {
+            if (element == item) {
                 continue;
             }
 

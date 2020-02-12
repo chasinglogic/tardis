@@ -51,7 +51,8 @@ public class Tardis.Backups {
         Mount[] results = {};
 
         foreach (string target in settings.get_strv ("backup-targets")) {
-            var volume = vm.get_volume_for_uuid(target);
+            var split = target.split("%%%");
+            var volume = vm.get_volume_for_uuid(split[0]);
 
             // TODO handle the case that backup_target could be a folder, we
             // don't support this in Views/Settings yet however.

@@ -1,18 +1,26 @@
 public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
-    public Gtk.Label title_label;
-    public Gtk.MenuButton menu_button;
-    public Gtk.Popover backup_settings_popover;
+    private Gtk.MenuButton menu_button;
+    private Gtk.Popover backup_settings_popover;
+    private Gtk.Popover add_target_popover;
+    private GLib.Settings settings;
+    private GLib.VolumeMonitor vm;
+    private Gtk.Box add_target_menu;
+    private Gtk.MenuButton add_target_button;
 
     private Tardis.Backups backups;
 
     // TODO: add restore button
     // TODO: add new drive button
     public HeaderBar(GLib.Settings settings,
+                     GLib.VolumeMonitor vm,
                      Tardis.Widgets.BackupStatus status,
-                     Tardis.Backups backups) {
-
+                     Tardis.Backups backups,
+                     Gtk.Widget mode_button) {
+        this.vm = vm;
         this.backups = backups;
+        this.settings = settings;
         show_close_button = true;
+        set_custom_title(mode_button);
 
         var backup_data = new Tardis.Widgets.SettingToggler (
             // Add spaces to make switches line up
@@ -83,16 +91,12 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         backup_settings_popover.add (menu_grid);
         menu_button.popover = backup_settings_popover;
 
-        title_label = new Gtk.Label("<b>Tardis</b>");
-        title_label.use_markup = true;
-        set_custom_title(title_label);
-
-        var restore_button = new Gtk.MenuButton ();
-        restore_button.image = new Gtk.Image.from_icon_name (
-            "document-open-recent",
-             Gtk.IconSize.LARGE_TOOLBAR
-        );
-        restore_button.tooltip_text = _("Restore from Backup");
+        // var restore_button = new Gtk.Button ();
+        // restore_button.image = new Gtk.Image.from_icon_name (
+        //     "document-open-recent",
+        //      Gtk.IconSize.LARGE_TOOLBAR
+        // );
+        // restore_button.tooltip_text = _("Restore from Backup");
         // restore_button.clicked.connect (() => {
         //     var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
         //         "Are you sure?",
@@ -102,16 +106,87 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         //     );
         // });
 
-        var add_target_button = new Gtk.MenuButton ();
-        // TODO: make a new icon that is drive-harddisk with a + sign
+        add_target_menu = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
+        add_target_menu.margin = 12;
+
+        add_target_popover = new Gtk.Popover (null);
+        add_target_popover.add (add_target_menu);
+
+        add_target_button = new Gtk.MenuButton ();
         add_target_button.image = new Gtk.Image.from_icon_name (
-            "insert-object",
+            "drive-harddisk",
              Gtk.IconSize.LARGE_TOOLBAR
         );
-        add_target_button.tooltip_text = _("Add a new Backup drive");
+        add_target_button.tooltip_text = _("Add Backup Drives");
+        add_target_button.popover = add_target_popover;
+        build_add_target_menu ();
 
-        pack_start(restore_button);
+        // pack_start(restore_button);
         pack_start(add_target_button);
         pack_end (menu_button);
     }
+
+    public void build_add_target_menu () {
+        var volumes = vm.get_volumes ();
+        if (volumes.length() == 0) {
+            add_target_button.set_popover (null);
+            return;
+        }
+
+        // Remove everything first
+        add_target_menu.@foreach ((child) => {
+            add_target_menu.remove(child);
+        });
+        var new_drives = false;
+        var backup_targets = settings.get_strv("backup-targets");
+
+        foreach (Volume vol in volumes) {
+            var name = vol.get_drive ().get_name ();
+            var uuid = vol.get_uuid ();
+            // Create a string of the form "0000-0000-0000%%%Some really
+            // nice display name"
+            var target = "%s%%%%%%%s".printf(uuid, name);
+
+            // TODO handle this case
+            if (uuid == null) {
+                GLib.print("%s had a null uuid.\n", name);
+                continue;
+            }
+
+            if (Tardis.Utils.contains_str(backup_targets, target)) {
+                continue;
+            }
+
+            new_drives = true;
+
+            var item_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+            var icon = new Gtk.Image.from_gicon (vol.get_icon (), Gtk.IconSize.SMALL_TOOLBAR);
+            var label = new Gtk.Label (name);
+            item_box.add(icon);
+            item_box.add(label);
+
+            var item_button = new Gtk.ModelButton ();
+            item_button.tooltip_text = _("Make %s a backup drive.".printf(name));
+            item_button.get_child ().destroy ();
+            item_button.add (item_box);
+            item_button.clicked.connect (() => {
+                var old_targets = settings.get_strv("backup-targets");
+                old_targets += target;
+                settings.set_strv("backup-targets", old_targets);
+                drive_added ();
+                build_add_target_menu ();
+            });
+
+            add_target_menu.add (item_button);
+        }
+
+        add_target_menu.show_all ();
+        if (new_drives) {
+            add_target_button.set_popover (add_target_popover);
+        } else {
+            add_target_button.set_popover (null);
+        }
+    }
+
+    public signal void drive_added ();
 }

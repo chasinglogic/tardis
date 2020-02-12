@@ -22,31 +22,31 @@ public class Tardis.Widgets.BackupStatus  {
         safe = new Tardis.Widgets.BackupMessage ("Your backups are up to date.",
                                               "Your data is safe.",
                                               "process-completed");
-        app.status_box.add(safe);
+        app.status_stack.add(safe);
         error = new Tardis.Widgets.BackupMessage ("An error has occurred while trying to load backup drives.",
                                                   "Please report this bug upstream.",
                                                   "process-stop");
-        app.status_box.add(error);
+        app.status_stack.add(error);
         unsafe = new Tardis.Widgets.BackupMessage ("A backup is needed and no backup drives are available.",
                                                    "You should plug in or add a new backup drive",
                                                    "process-stop");
-        app.status_box.add(unsafe);
+        app.status_stack.add(unsafe);
         in_progress = new Tardis.Widgets.BackupInProgress ("Backing up your data...");
-        app.status_box.add(in_progress);
+        app.status_stack.add(in_progress);
         calculating = new Tardis.Widgets.BackupInProgress ("Checking if your backups are up to date...");
-        app.status_box.add(calculating);
+        app.status_stack.add(calculating);
 
         out_of_date = new Tardis.Widgets.BackupNeeded (
             this,
             "You haven't backed up in over 24 hours"
         );
-        app.status_box.add(out_of_date);
+        app.status_stack.add(out_of_date);
 
         missing_files = new Tardis.Widgets.BackupNeeded (
             this,
             "We've detected that there are differing\nfiles between your system and backup."
         );
-        app.status_box.add(missing_files);
+        app.status_stack.add(missing_files);
 
         settings.changed.connect((key) => {
             if (key == "backup-configuration" || key == "backup-data") {

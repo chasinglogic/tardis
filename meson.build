@@ -25,6 +25,9 @@ executable(
 
     'src/Widgets/BackupStatus.vala',
 
+    'src/Widgets/DriveManager.vala',
+    'src/Widgets/DriveDisplay.vala',
+
     'src/Widgets/BackupMessage.vala',
     'src/Widgets/BackupNeeded.vala',
     'src/Widgets/BackupInProgress.vala',

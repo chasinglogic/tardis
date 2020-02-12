@@ -11,6 +11,7 @@ public class Tardis.App : Gtk.Application {
     public GLib.VolumeMonitor volume_monitor;
 
     public Tardis.Backups backups;
+    public Tardis.Widgets.DriveManager drive_manager;
 
     // Custom Widgets
     public Tardis.Widgets.BackupStatus backup_status;
@@ -21,9 +22,13 @@ public class Tardis.App : Gtk.Application {
     public static Gtk.ApplicationWindow window;
 
     // Widgets directly attached to the Application Window
-    public Gtk.Box header_box;
-    public Gtk.Stack status_box;
+    public Gtk.Stack main_stack;
+    public Gtk.Stack status_stack;
     public Gtk.Label title;
+    public Granite.Widgets.ModeButton view_mode;
+
+    public int drive_manager_id;
+    public int backup_status_id;
 
     public App () {
         Object (
@@ -33,7 +38,7 @@ public class Tardis.App : Gtk.Application {
     }
 
     public void set_backup_status(Gtk.Widget new_status) {
-        status_box.set_visible_child(new_status);
+        status_stack.set_visible_child(new_status);
     }
 
     // Store window size in gsettings when resized.
@@ -73,7 +78,14 @@ public class Tardis.App : Gtk.Application {
             window.default_height = settings.get_int("window-height");
         }
 
-        status_box = new Gtk.Stack ();
+        main_stack = new Gtk.Stack ();
+        main_stack.set_transition_type (Gtk.StackTransitionType.SLIDE_LEFT_RIGHT);
+
+        status_stack = new Gtk.Stack ();
+        main_stack.add (status_stack);
+
+        drive_manager = new Tardis.Widgets.DriveManager (volume_monitor, settings);
+        main_stack.add (drive_manager);
 
         backups = new Tardis.Backups (volume_monitor, settings);
 
@@ -81,18 +93,45 @@ public class Tardis.App : Gtk.Application {
                                                          settings,
                                                          backups);
 
-        window.add (status_box);
         backup_status.get_backup_status.begin ();
 
-        volume_monitor.volume_added.connect(() => backup_status.get_backup_status.begin ());
-        volume_monitor.volume_removed.connect(() => backup_status.get_backup_status.begin ());
+        view_mode = new Granite.Widgets.ModeButton ();
+        view_mode.margin_end = view_mode.margin_start = 12;
+        view_mode.margin_bottom = view_mode.margin_top = 7;
+        backup_status_id = view_mode.append_text (_("Backups"));
+        drive_manager_id = view_mode.append_text (C_("view", "Manage Drives"));
+        view_mode.notify["selected"].connect (on_view_mode_changed);
+        view_mode.selected = backup_status_id;
 
         // HeaderBar
-        headerbar = new Tardis.Widgets.HeaderBar (settings, backup_status, backups);
-        window.set_titlebar (headerbar);
+        headerbar = new Tardis.Widgets.HeaderBar (settings, volume_monitor, backup_status, backups, view_mode);
+        headerbar.drive_added.connect(() => drive_manager.reload_drive_list ());
+        drive_manager.drive_removed.connect(() => headerbar.build_add_target_menu ());
 
+
+        volume_monitor.volume_added.connect(() => {
+            backup_status.get_backup_status.begin ();
+            headerbar.build_add_target_menu ();
+        });
+
+        volume_monitor.volume_removed.connect(() => {
+            backup_status.get_backup_status.begin ();
+            headerbar.build_add_target_menu ();
+        });
+
+
+        window.set_titlebar (headerbar);
+        window.add (main_stack);
         window.show_all ();
         window.size_allocate.connect (() => { on_resize (); });
+    }
+
+    public void on_view_mode_changed () {
+        if (view_mode.selected == backup_status_id) {
+            main_stack.set_visible_child (status_stack);
+        } else if (view_mode.selected == drive_manager_id) {
+            main_stack.set_visible_child (drive_manager);
+        }
     }
 
     public static int main (string[] args) {
