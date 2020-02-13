@@ -10,12 +10,12 @@ public class Tardis.App : Gtk.Application {
     public GLib.Settings settings;
     public GLib.VolumeMonitor volume_monitor;
 
-    public Tardis.Backups backups;
-    public Tardis.Widgets.DriveManager drive_manager;
+    public Tardis.BackupTargetManager target_manager;
 
     // Custom Widgets
     public Tardis.Widgets.BackupStatus backup_status;
     public Tardis.Widgets.HeaderBar headerbar;
+    public Tardis.Widgets.DriveManager drive_manager;
 
     // Main ApplicationWindow, is static so it can be referenced by
     // Dialogs.
@@ -58,11 +58,8 @@ public class Tardis.App : Gtk.Application {
 
     protected override void activate () {
         settings = new GLib.Settings (id);
-
-        // TODO (chasinglogic): Listen for drive connected and
-        // disconnected signals to notify user of possible new backup
-        // drives, and disconnect of known backup drives.
         volume_monitor = GLib.VolumeMonitor.@get ();
+        target_manager = new Tardis.BackupTargetManager (settings);
 
         // Construct the main window for our Application.
         window = new Gtk.ApplicationWindow (this);
@@ -87,13 +84,9 @@ public class Tardis.App : Gtk.Application {
         drive_manager = new Tardis.Widgets.DriveManager (volume_monitor, settings);
         main_stack.add (drive_manager);
 
-        backups = new Tardis.Backups (volume_monitor, settings);
-
         backup_status = new Tardis.Widgets.BackupStatus (this,
                                                          settings,
-                                                         backups);
-
-        backup_status.get_backup_status.begin ();
+                                                         target_manager);
 
         view_mode = new Granite.Widgets.ModeButton ();
         view_mode.margin_end = view_mode.margin_start = 12;
@@ -104,10 +97,49 @@ public class Tardis.App : Gtk.Application {
         view_mode.selected = backup_status_id;
 
         // HeaderBar
-        headerbar = new Tardis.Widgets.HeaderBar (settings, volume_monitor, backup_status, backups, view_mode);
-        headerbar.drive_added.connect(() => drive_manager.reload_drive_list ());
-        drive_manager.drive_removed.connect(() => headerbar.build_add_target_menu ());
+        headerbar = new Tardis.Widgets.HeaderBar (settings, volume_monitor, backup_status, target_manager);
 
+        // Cross the Signals
+        backup_status.get_backup_status.begin ();
+
+        target_manager.target_added.connect (() => {
+            backup_status.main_view.list_targets ();
+            backup_status.get_backup_status.begin ();
+        });
+
+        target_manager.target_removed.connect (() => {
+            backup_status.main_view.list_targets ();
+            backup_status.get_backup_status.begin ();
+            headerbar.build_add_target_menu ();
+        });
+
+        backup_status.main_view.drive_removed.connect ((target) => {
+            target_manager.remove_target (target);
+        });
+
+        backup_status.main_view.restore_from.connect ((target) => {
+            target_manager.restore_from (target);
+        });
+
+        target_manager.backup_started.connect ((target) => {
+            backup_status.main_view.set_status (target.id,
+                                                DriveStatusType.IN_PROGRESS);
+        });
+
+        target_manager.backup_complete.connect ((target) => {
+            backup_status.main_view.set_status (target.id,
+                                                DriveStatusType.SAFE);
+        });
+
+        target_manager.backup_all_completed.connect (() => {
+            backup_status.get_backup_status.begin ();
+        });
+
+        settings.changed.connect((key) => {
+            if (key == "backup-configuration" || key == "backup-data") {
+                backup_status.get_backup_status.begin ();
+            }
+        });
 
         volume_monitor.volume_added.connect(() => {
             backup_status.get_backup_status.begin ();
@@ -138,6 +170,7 @@ public class Tardis.App : Gtk.Application {
         var app = new Tardis.App ();
         var return_code = app.run (args);
         app.settings.set_boolean ("first-run", false);
+        app.target_manager.write_state ();
         return return_code;
     }
 }
