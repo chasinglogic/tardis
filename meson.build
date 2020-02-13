@@ -16,6 +16,8 @@ executable(
     # Primary Classes
     'src/Application.vala',
     'src/Backups.vala',
+    'src/BackupTargetManager.vala',
+    'src/BackupTarget.vala',
 
     'src/Utils.vala',
 
@@ -25,9 +27,13 @@ executable(
 
     'src/Widgets/BackupStatus.vala',
 
+    # TODO remove these two
     'src/Widgets/DriveManager.vala',
     'src/Widgets/DriveDisplay.vala',
 
+    'src/Widgets/DriveStatus.vala',
+
+    'src/Widgets/MainView.vala',
     'src/Widgets/BackupMessage.vala',
     'src/Widgets/BackupNeeded.vala',
     'src/Widgets/BackupInProgress.vala',
@@ -36,6 +42,7 @@ executable(
       dependency('gtk+-3.0'),
       dependency('granite'),
       dependency('gio-2.0'),
+      dependency('json-glib-1.0'),
     ],
 
     install: true
@@ -52,6 +59,22 @@ install_data(
     join_paths('data', meson.project_name() + '.appdata.xml'),
     install_dir: join_paths(get_option('datadir'), 'metainfo')
 )
+
+icon_sizes = ['48', '64', '128']
+icon_names = [meson.project_name(), meson.project_name() + '.add-backup-drive']
+foreach i : icon_sizes
+  foreach name : icon_names
+      install_data(
+          join_paths('data', 'icons', i, name + '.svg'),
+          install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', i + 'x' + i, 'apps')
+      )
+
+      install_data(
+          join_paths('data', 'icons', i, name + '.svg'),
+          install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', i + 'x' + i + '@2', 'apps')
+      )
+  endforeach
+endforeach
 
 install_data(
   join_paths('data', meson.project_name() + '.gschema.xml'),
