@@ -15,18 +15,6 @@
       <summary>Automatically backup whenever a target is available.</summary>
     </key>
 
-    <key name="last-backup" type="x">
-      <default>0</default>
-      <summary>Used to track the last time a backup was run.</summary>
-    </key>
-
-    <key name="last-backup-sources" type="as">
-      <default>[]</default>
-      <summary>
-        List of files we backed up last.
-      </summary>
-    </key>
-
     <key name="backup-data" type="b">
       <default>true</default>
       <summary>
@@ -38,13 +26,6 @@
       <default>true</default>
       <summary>
         Indicates whether or not to backup all hidden home directories.
-      </summary>
-    </key>
-
-    <key name="backup-targets" type="as">
-      <default>[]</default>
-      <summary>
-        Where to backup to. Is either a Disk UUID or a folder.
       </summary>
     </key>
 
