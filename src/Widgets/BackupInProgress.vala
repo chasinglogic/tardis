@@ -6,7 +6,7 @@ public class Tardis.Widgets.BackupInProgress : Gtk.Box {
     // TODO show per-target backup progress using spinners and process-completed
     // icons. Requires changes to Backups.vala to emit those signals
 
-    public BackupInProgress (string title) {
+    public BackupInProgress (string title, bool? use_spinner = true) {
         get_style_context ().add_class (Gtk.STYLE_CLASS_VIEW);
         get_style_context ().add_class (Granite.STYLE_CLASS_WELCOME);
 
@@ -15,16 +15,18 @@ public class Tardis.Widgets.BackupInProgress : Gtk.Box {
         title_label.hexpand = true;
         title_label.get_style_context ().add_class (Granite.STYLE_CLASS_H1_LABEL);
 
-        spinner = new Gtk.Spinner ();
-        spinner.set_size_request(64, 64);
-
         content = new Gtk.Grid ();
         content.expand = true;
         content.row_spacing = 12;
         content.orientation = Gtk.Orientation.VERTICAL;
         content.valign = Gtk.Align.CENTER;
         content.add (title_label);
-        content.add (spinner);
+
+        if (use_spinner) {
+            spinner = new Gtk.Spinner ();
+            spinner.set_size_request(64, 64);
+            content.add (spinner);
+        }
 
         add (content);
     }

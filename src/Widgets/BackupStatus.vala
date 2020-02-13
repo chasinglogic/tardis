@@ -3,126 +3,132 @@ using GLib;
 public class Tardis.Widgets.BackupStatus  {
     private Tardis.App app;
     private GLib.Settings settings;
-    private Tardis.Backups backups;
+    private Tardis.BackupTargetManager backups;
 
-    public Tardis.Widgets.BackupMessage safe;
-    public Tardis.Widgets.BackupMessage unsafe;
-    public Tardis.Widgets.BackupMessage error;
-    public Tardis.Widgets.BackupNeeded out_of_date;
-    public Tardis.Widgets.BackupNeeded missing_files;
-    public Tardis.Widgets.BackupInProgress in_progress;
-    public Tardis.Widgets.BackupInProgress calculating;
+    private GLib.ThemedIcon notification_icon;
+
+    private Gtk.Stack message_stack;
+    private Tardis.Widgets.BackupMessage safe_msg;
+    private Tardis.Widgets.BackupMessage unsafe_msg;
+    private Tardis.Widgets.BackupMessage in_progress;
+    private Tardis.Widgets.BackupMessage calculating;
+    private Tardis.Widgets.BackupMessage out_of_date_msg;
+    private Tardis.Widgets.BackupMessage missing_files_msg;
+
+    public Tardis.Widgets.MainView main_view;
 
     public BackupStatus(Tardis.App app,
-                        GLib.Settings settings, Tardis.Backups backups) {
+                        GLib.Settings settings, Tardis.BackupTargetManager backups) {
         this.app = app;
         this.settings = settings;
         this.backups = backups;
+        notification_icon = new GLib.ThemedIcon ("com.github.chasinglogic.tardis");
 
-        safe = new Tardis.Widgets.BackupMessage ("Your backups are up to date.",
-                                              "Your data is safe.",
-                                              "process-completed");
-        app.status_stack.add(safe);
-        error = new Tardis.Widgets.BackupMessage ("An error has occurred while trying to load backup drives.",
-                                                  "Please report this bug upstream.",
-                                                  "process-stop");
-        app.status_stack.add(error);
-        unsafe = new Tardis.Widgets.BackupMessage ("A backup is needed and no backup drives are available.",
-                                                   "You should plug in or add a new backup drive",
-                                                   "process-stop");
-        app.status_stack.add(unsafe);
-        in_progress = new Tardis.Widgets.BackupInProgress ("Backing up your data...");
-        app.status_stack.add(in_progress);
-        calculating = new Tardis.Widgets.BackupInProgress ("Checking if your backups are up to date...");
-        app.status_stack.add(calculating);
-
-        out_of_date = new Tardis.Widgets.BackupNeeded (
-            this,
-            "You haven't backed up in over 24 hours"
+        safe_msg = new Tardis.Widgets.BackupMessage (
+            "Your backups are up to date.",
+            "Your data is safe."
         );
-        app.status_stack.add(out_of_date);
 
-        missing_files = new Tardis.Widgets.BackupNeeded (
-            this,
-            "We've detected that there are differing\nfiles between your system and backup."
+        unsafe_msg = new Tardis.Widgets.BackupMessage (
+            "A backup is needed and no backup drives are available.",
+            "You should plug in or add a new backup drive"
         );
-        app.status_stack.add(missing_files);
 
-        settings.changed.connect((key) => {
-            if (key == "backup-configuration" || key == "backup-data") {
-                get_backup_status.begin ();
-            }
-        });
+        out_of_date_msg = new Tardis.Widgets.BackupMessage (
+            "You haven't backed up in over 24 hours.",
+            "Press the 'Start Backup' button to backup to all available targets."
+        );
+
+        missing_files_msg = new Tardis.Widgets.BackupMessage (
+            "We've detected that there are differing\nfiles between your system and backup.",
+            ""
+        );
+
+        in_progress = new Tardis.Widgets.BackupMessage ("Backup in progress...", "Please don't unplug any storage devices.");
+        calculating = new Tardis.Widgets.BackupMessage ("Checking if your backups are up to date...", "This may take a moment");
+
+        message_stack = new Gtk.Stack ();
+        message_stack.margin = 24;
+        message_stack.add (safe_msg);
+        message_stack.add (unsafe_msg);
+        message_stack.add (out_of_date_msg);
+        message_stack.add (missing_files_msg);
+        message_stack.add(calculating);
+        message_stack.add(in_progress);
+
+        main_view = new Tardis.Widgets.MainView (message_stack, backups, settings);
+        app.status_stack.add(main_view);
+    }
+
+    public void missing_files () {
+        message_stack.set_visible_child (missing_files_msg);
+    }
+
+    public void out_of_date () {
+        message_stack.set_visible_child (out_of_date_msg);
+    }
+
+    public void safe () {
+        message_stack.set_visible_child (safe_msg);
+    }
+
+    public void unsafe () {
+        message_stack.set_visible_child (unsafe_msg);
     }
 
     public async void get_backup_status() {
-        app.set_backup_status(calculating);
+        message_stack.set_visible_child(calculating);
 
         var longer_than_24_hours = false;
         var differing_files = false;
-        var curtime = get_monotonic_time();
 
-        // 86400 is 24 hours in seconds
-        var 24_hours = 86400;
-
-        var last_known_backup = settings.get_int64("last-backup");
-        if (last_known_backup == 0 || (last_known_backup - curtime) > 24_hours) {
-            longer_than_24_hours = true;
-        } else {
-            try {
-                differing_files =
-                    !Tardis.Utils.array_not_equal(backups.get_sources (true), settings.get_strv("last-backup-sources"));
-
-            } catch (GLib.Error e) {
-                GLib.print("Unable to load backup sources: %s\n", e.message);
+        var backup_sources = backups.get_sources (true);
+        foreach (Tardis.BackupTarget target in backups.get_targets ()) {
+            if (target.out_of_date ()) {
+                longer_than_24_hours = true;
+                continue;
             }
+
+            GLib.print("bs length: %d\n", target.last_backup_sources.length);
+            if (target.last_backup_sources.length != backup_sources.length) {
+                target.tag_as_dirty ();
+                differing_files = true;
+                continue;
+            }
+
+            var mount = yield backups.get_mount_for_target (target);
+            if (mount == null) {
+                target.tag_as_clean ();
+                continue;
+            }
+
+            var backup_path = Tardis.Backups.get_backups_path(mount);
+            // This means we found a drive which is a backup target but has
+            // never had a backup.
+            if (backup_path == null) {
+                target.tag_as_dirty ();
+                differing_files = true;
+                continue;
+            }
+
+            // Remove any differing files tags if we found none.
+            target.tag_as_clean ();
         }
 
-        var backup_is_necessary = longer_than_24_hours || differing_files;
-        Mount[] available_backup_drives;
-        try {
-            available_backup_drives = yield backups.get_available_backup_drives ();
-        } catch (GLib.Error e) {
-            GLib.print("Unexpected error: %s\n", e.message);
-            app.set_backup_status (error);
-            return;
-        }
+        // Update target list with newly detected drive state.
+        main_view.list_targets ();
 
-        if (backup_is_necessary && available_backup_drives.length == 0) {
-            app.set_backup_status(unsafe);
-            return;
-        }
-
-        // If we've already determined a backup is necessary then no reason to
-        // scan available drives.
-        if (!backup_is_necessary) {
-            foreach (GLib.Mount mount in  available_backup_drives) {
-                if (mount == null) {
-                    continue;
+        if (longer_than_24_hours || differing_files) {
+            try {
+                var available_backup_drives = yield backups.get_available_backup_drives ();
+                if (available_backup_drives.length == 0) {
+                    this.unsafe ();
                 }
-
-                var backup_path = Tardis.Backups.get_backups_path(mount);
-
-                // This means we found a drive which is a backup target but has
-                // never had a backup.
-                if (backup_path == null) {
-                    differing_files = true;
-                    break;
-                }
-
-                var last_backup_tag = Tardis.Backups.get_backup_tag_file(mount);
-                string content;
-                try {
-                    GLib.FileUtils.get_contents(last_backup_tag, out content);
-                    int64 last_backup_time = int.parse(content);
-                    if ((last_backup_time - curtime) > 24_hours) {
-                        longer_than_24_hours = true;
-                        break;
-                    }
-                } catch (GLib.FileError e) {
-                    // TODO handle this error
-                    continue;
-                }
+            } catch (GLib.Error e) {
+                // TODO provide an API to show an error message info bar via
+                // Application
+                // app.set_backup_status (error);
+                return;
             }
         }
 
@@ -130,31 +136,29 @@ public class Tardis.Widgets.BackupStatus  {
             settings.get_boolean("automatic-backups")) {
             start_backup ();
         } else if (longer_than_24_hours) {
-            app.set_backup_status(out_of_date);
+            this.out_of_date ();
         } else if (differing_files) {
-            app.set_backup_status(missing_files);
+            this.missing_files ();
         } else {
-            app.set_backup_status(safe);
+            this.safe ();
         }
-
     }
 
     public void start_backup () {
-        app.set_backup_status (in_progress);
-        in_progress.spinner.start ();
+        message_stack.set_visible_child (in_progress);
         var starting_backup = new GLib.Notification("Starting Backup!");
+        starting_backup.set_icon (notification_icon);
         starting_backup.set_body("Please do not unplug any storage devices.");
         app.send_notification( "com.github.chasinglogic.tardis", starting_backup);
 
-        backups.backup.begin((obj, res) => {
+        // TODO be granular
+        backups.backup_all.begin((obj, res) => {
             var stopping_backup = new Notification("Backup Complete!");
+            stopping_backup.set_icon (notification_icon);
             stopping_backup.set_body("Your data is safe!");
             app.send_notification( "com.github.chasinglogic.tardis", stopping_backup);
 
-            app.set_backup_status(safe);
+            this.safe ();
         });
     }
 }
-
-
-

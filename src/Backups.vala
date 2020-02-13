@@ -5,17 +5,18 @@ using GLib;
 // TODO closing the app should reap rsync processes
 public class Tardis.Backups {
     private string[] backup_sources;
-    private GLib.Settings settings;
-    private VolumeMonitor vm;
 
-    public Backups(VolumeMonitor vm, GLib.Settings settings) {
-        this.settings = settings;
-        this.vm = vm;
+    private bool backup_data;
+    private bool backup_configuration;
+
+    public Backups(bool backup_data, bool backup_configuration) {
+        this.backup_data = backup_data;
+        this.backup_configuration = backup_configuration;
         this.backup_sources = null;
     }
 
     public string[] get_sources (bool? force_reload = false) throws GLib.Error {
-        if (backup_sources.length == 0 || force_reload) {
+        if (backup_sources == null || backup_sources.length == 0 || force_reload) {
             load_sources ();
         }
 
@@ -33,48 +34,25 @@ public class Tardis.Backups {
                 continue;
             }
 
-            if (settings.get_boolean ("backup-data") && name[0] != '.') {
+            if (backup_data && name[0] != '.') {
                 backup_sources += path;
-            } else if (settings.get_boolean ("backup-configuration") && name[0] == '.') {
+            } else if (backup_configuration && name[0] == '.') {
                 backup_sources += path;
             }
         }
 
         // Always backup flatpaks since they could store data in their
         // container. (For example the Zeal flatpak behaves this way)
-        if (!settings.get_boolean ("backup-configuration")) {
+        if (!backup_configuration) {
             backup_sources += Path.build_filename(home_dir, ".var");
         }
-    }
 
-    public async Mount[] get_available_backup_drives() throws GLib.Error {
-        Mount[] results = {};
-
-        foreach (string target in settings.get_strv ("backup-targets")) {
-            var split = target.split("%%%");
-            var volume = vm.get_volume_for_uuid(split[0]);
-
-            // TODO handle the case that backup_target could be a folder, we
-            // don't support this in Views/Settings yet however.
-            if (volume == null) {
-                continue;
-            }
-
-            var mount = volume.get_mount();
-            if (mount == null) {
-                yield volume.mount(MountMountFlags.NONE, null);
-                mount = volume.get_mount();
-
-                // TODO error here instead of silently skipping
-                if (mount == null) {
-                    continue;
-                }
-            }
-
-            results += mount;
+        // Always include our own state so when the user wants to restore they
+        // get their backup drives back.
+        if (!backup_configuration) {
+            backup_sources +=
+                Path.build_filename(Environment.get_user_config_dir (), "Tardis");
         }
-
-        return results;
     }
 
     public async bool restore(Mount mount) throws GLib.Error {
@@ -96,51 +74,8 @@ public class Tardis.Backups {
         return yield subproc.wait_async();
     }
 
-    public async int backup() throws GLib.Error {
-        if (backup_sources == null || backup_sources.length == 0) {
-            load_sources();
-        }
-
-        var curtime = get_monotonic_time();
-        settings.set_int64("last-backup", curtime);
-        settings.set_strv("last-backup-sources", backup_sources);
-
-        string[] currently_backing_up = {};
-
-        var mounts = yield get_available_backup_drives();
-        foreach (Mount mount in mounts) {
-            var backup_path = get_backups_path(mount, true);
-            var backup_tag_file = get_backup_tag_file(mount);
-
-            // It's possible for multiple targets to point to the same mount and
-            // other strange bad states get us here. So we prevent creating
-            // multiple rsync processes to the same location by storing what
-            // we've already began a backup to.
-            if (Tardis.Utils.contains_str(currently_backing_up, backup_path)) {
-                continue;
-            }
-
-            FileUtils.set_contents(backup_tag_file, curtime.to_string ());
-
-            currently_backing_up += backup_path;
-
-            // TODO handle rsync errors
-            yield do_backup(backup_path);
-        }
-
-        return 0;
-    }
-
-    public static string get_backup_tag_file(Mount mount) {
-        return Path.build_filename(
-            mount.get_root ().get_path (),
-            "Tardis",
-            "." + Environment.get_user_name()
-            + "_last_backup");
-    }
-
     public static string? get_backups_path(Mount mount,
-                                          bool? create_if_not_found = false) {
+                                           bool? create_if_not_found = false) {
         var root = mount.get_root().get_path();
         var backup_root = Path.build_filename(root, "Tardis", "Backups");
         try {
@@ -159,7 +94,9 @@ public class Tardis.Backups {
         return backup_path;
     }
 
-    private async bool do_backup(string backup_path) throws GLib.Error {
+    public async bool backup(Mount mount) throws GLib.Error {
+        var backup_path = get_backups_path(mount, true);
+
         // See 'man rsync' for more detail.
         string[] argv = {
             "rsync",
@@ -186,7 +123,7 @@ public class Tardis.Backups {
             argv += "-v";
         }
 
-        foreach (string src in backup_sources) {
+        foreach (string src in get_sources ()) {
             if (src != null) {
                 argv += src;
             }

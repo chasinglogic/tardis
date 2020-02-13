@@ -7,20 +7,24 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
     private Gtk.Box add_target_menu;
     private Gtk.MenuButton add_target_button;
 
-    private Tardis.Backups backups;
+    private Tardis.BackupTargetManager backup_target_manager;
 
     // TODO: add restore button
     // TODO: add new drive button
     public HeaderBar(GLib.Settings settings,
                      GLib.VolumeMonitor vm,
                      Tardis.Widgets.BackupStatus status,
-                     Tardis.Backups backups,
-                     Gtk.Widget mode_button) {
+                     Tardis.BackupTargetManager backup_target_manager) {
+
         this.vm = vm;
-        this.backups = backups;
         this.settings = settings;
+        this.backup_target_manager = backup_target_manager;
+
         show_close_button = true;
-        set_custom_title(mode_button);
+
+        var title = new Gtk.Label ("<b>Tardis</b>");
+        title.use_markup = true;
+        set_custom_title(title);
 
         var backup_data = new Tardis.Widgets.SettingToggler (
             // Add spaces to make switches line up
@@ -91,20 +95,15 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         backup_settings_popover.add (menu_grid);
         menu_button.popover = backup_settings_popover;
 
-        // var restore_button = new Gtk.Button ();
-        // restore_button.image = new Gtk.Image.from_icon_name (
-        //     "document-open-recent",
-        //      Gtk.IconSize.LARGE_TOOLBAR
-        // );
-        // restore_button.tooltip_text = _("Restore from Backup");
-        // restore_button.clicked.connect (() => {
-        //     var message_dialog = new Granite.MessageDialog.with_image_from_icon_name (
-        //         "Are you sure?",
-        //         "",
-        //         "applications-development",
-        //         Gtk.ButtonsType.CLOSE
-        //     );
-        // });
+        var backup_button = new Gtk.Button ();
+        backup_button.image = new Gtk.Image.from_icon_name (
+            "folder-download",
+             Gtk.IconSize.LARGE_TOOLBAR
+        );
+        backup_button.tooltip_text = _("Start a Backup");
+        backup_button.clicked.connect (() => {
+            backup_target_manager.backup_all.begin ();
+        });
 
         add_target_menu = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
         add_target_menu.margin = 12;
@@ -113,15 +112,17 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         add_target_popover.add (add_target_menu);
 
         add_target_button = new Gtk.MenuButton ();
-        add_target_button.image = new Gtk.Image.from_icon_name (
-            "drive-harddisk",
+        var add_target_image = new Gtk.Image.from_icon_name (
+            "com.github.chasinglogic.tardis.add-backup-drive",
              Gtk.IconSize.LARGE_TOOLBAR
         );
+        add_target_image.set_pixel_size(24);
+        add_target_button.image = add_target_image;
         add_target_button.tooltip_text = _("Add Backup Drives");
         add_target_button.popover = add_target_popover;
         build_add_target_menu ();
 
-        // pack_start(restore_button);
+        pack_start(backup_button);
         pack_start(add_target_button);
         pack_end (menu_button);
     }
@@ -138,22 +139,19 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
             add_target_menu.remove(child);
         });
         var new_drives = false;
-        var backup_targets = settings.get_strv("backup-targets");
+        var backup_targets = backup_target_manager.get_target_ids ();
 
         foreach (Volume vol in volumes) {
             var name = vol.get_drive ().get_name ();
             var uuid = vol.get_uuid ();
-            // Create a string of the form "0000-0000-0000%%%Some really
-            // nice display name"
-            var target = "%s%%%%%%%s".printf(uuid, name);
 
             // TODO handle this case
             if (uuid == null) {
-                GLib.print("%s had a null uuid.\n", name);
                 continue;
             }
 
-            if (Tardis.Utils.contains_str(backup_targets, target)) {
+            // TODO needs to be updated to handle objects
+            if (Tardis.Utils.contains_str(backup_targets, uuid)) {
                 continue;
             }
 
@@ -170,9 +168,7 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
             item_button.get_child ().destroy ();
             item_button.add (item_box);
             item_button.clicked.connect (() => {
-                var old_targets = settings.get_strv("backup-targets");
-                old_targets += target;
-                settings.set_strv("backup-targets", old_targets);
+                backup_target_manager.add_volume (vol);
                 drive_added ();
                 build_add_target_menu ();
             });

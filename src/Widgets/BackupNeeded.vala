@@ -1,6 +1,5 @@
 public class Tardis.Widgets.BackupNeeded : Gtk.Box {
 
-    public static string title = "You haven't backed up in 24 hours.";
     public static string subtitle = "Press 'Start Backup' below to begin a backup.";
 
     public Granite.Widgets.Welcome text;
