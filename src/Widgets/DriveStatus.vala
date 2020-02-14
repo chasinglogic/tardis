@@ -6,12 +6,11 @@ public enum DriveStatusType {
 }
 
 public class Tardis.Widgets.DriveStatus : Gtk.Box {
-    public Gtk.Grid button_grid;
-    public Gtk.Label button_title;
-    public Gtk.Label button_description;
-    public Gtk.Image drive_icon;
-    public Gtk.Image status_icon;
-    public Gtk.Spinner in_progress;
+    private Gtk.Grid button_grid;
+    private Gtk.Label button_title;
+    private Gtk.Image drive_icon;
+    private Gtk.Image status_icon;
+    private Gtk.Spinner in_progress;
 
     private DriveStatusType last_status;
 
@@ -19,16 +18,6 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
 
     public DriveStatus (Tardis.BackupTarget target) {
         this.target = target;
-        redraw ();
-    }
-
-    public signal void drive_removed (BackupTarget target);
-    public signal void restore_from (BackupTarget target);
-
-    public void redraw () {
-        get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
-        margin_top = 6;
-        margin_bottom = 6;
 
         // Title label
         button_title = new Gtk.Label (target.display_name);
@@ -122,16 +111,19 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
         action_grid.attach (remove_button, 0, 0, 2, 2);
         action_grid.attach (restore_button, 2, 0, 2, 2);
 
-        add (button_grid);
-        add (action_grid);
-        orientation = Gtk.Orientation.HORIZONTAL;
-        hexpand = true;
-
         if (target.out_of_date ()) {
             set_status (DriveStatusType.NEEDS_BACKUP);
         } else {
             set_status (DriveStatusType.SAFE);
         }
+
+        get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+        margin_top = 6;
+        margin_bottom = 6;
+        hexpand = true;
+        orientation = Gtk.Orientation.HORIZONTAL;
+        add (button_grid);
+        add (action_grid);
     }
 
     public void set_status (DriveStatusType status) {
@@ -187,4 +179,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
         button_grid.attach (status_icon, 0, 0, 1, 2);
         button_grid.show_all ();
     }
+
+    public signal void drive_removed (BackupTarget target);
+    public signal void restore_from (BackupTarget target);
 }
