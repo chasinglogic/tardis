@@ -122,7 +122,9 @@ public class Tardis.App : Gtk.Application {
             main_view.set_status(target.id, DriveStatusType.NEEDS_BACKUP);
         });
 
+        target_manager.target_added.connect ((target) => {
             backup_status.get_backup_status.begin ();
+            main_view.add_target (target);
         });
 
         target_manager.target_removed.connect (() => {
