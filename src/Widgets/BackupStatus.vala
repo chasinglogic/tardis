@@ -46,19 +46,20 @@ public class Tardis.Widgets.BackupStatus  {
         foreach (Tardis.BackupTarget target in backups.get_targets ()) {
             if (target.out_of_date ()) {
                 longer_than_24_hours = true;
+                target_needs_backup (target);
                 continue;
             }
 
             GLib.print("bs length: %d\n", target.last_backup_sources.length);
             if (target.last_backup_sources.length != backup_sources.length) {
-                target.tag_as_dirty ();
+                target_needs_backup (target);
                 differing_files = true;
                 continue;
             }
 
             var mount = yield backups.get_mount_for_target (target);
             if (mount == null) {
-                target.tag_as_clean ();
+                target_is_backed_up (target);
                 continue;
             }
 
@@ -66,13 +67,13 @@ public class Tardis.Widgets.BackupStatus  {
             // This means we found a drive which is a backup target but has
             // never had a backup.
             if (backup_path == null) {
-                target.tag_as_dirty ();
+                target_needs_backup (target);
                 differing_files = true;
                 continue;
             }
 
             // Remove any differing files tags if we found none.
-            target.tag_as_clean ();
+            target_is_backed_up (target);
         }
 
         if (longer_than_24_hours || differing_files) {
@@ -111,4 +112,7 @@ public class Tardis.Widgets.BackupStatus  {
             app.send_notification( "com.github.chasinglogic.tardis", stopping_backup);
         });
     }
+
+    public signal void target_needs_backup (BackupTarget target);
+    public signal void target_is_backed_up (BackupTarget target);
 }

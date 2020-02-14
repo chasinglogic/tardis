@@ -114,10 +114,14 @@ public class Tardis.App : Gtk.Application {
         headerbar = new Tardis.Widgets.HeaderBar (settings, volume_monitor, backup_status, target_manager);
 
         // Cross the Signals
-        backup_status.get_backup_status.begin ();
+        backup_status.target_is_backed_up.connect((target) => {
+            main_view.set_status(target.id, DriveStatusType.SAFE);
+        });
 
-        target_manager.target_added.connect (() => {
-            backup_status.main_view.list_targets ();
+        backup_status.target_needs_backup.connect((target) => {
+            main_view.set_status(target.id, DriveStatusType.NEEDS_BACKUP);
+        });
+
             backup_status.get_backup_status.begin ();
         });
 
