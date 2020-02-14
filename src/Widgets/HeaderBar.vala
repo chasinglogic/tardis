@@ -122,8 +122,44 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         add_target_button.popover = add_target_popover;
         build_add_target_menu ();
 
+        var info_button = new Gtk.Button ();
+        info_button.image = new Gtk.Image.from_icon_name ("dialog-information",
+                                                          Gtk.IconSize.LARGE_TOOLBAR);
+        info_button.clicked.connect(() => {
+            var dialog = new Gtk.Dialog ();
+            dialog.set_transient_for (Tardis.App.window);
+
+            var diag_box = dialog.get_content_area ();
+            diag_box.orientation = Gtk.Orientation.VERTICAL;
+            diag_box.margin = 12;
+
+            var diag_title = new Gtk.Label (null);
+            diag_title.use_markup = true;
+            diag_title.margin = 6;
+            diag_title.set_markup(
+                "<b>%s v%s</b>\n".printf(_("Tardis"), Tardis.App.version) +
+                _("A simple and powerful backup application."));
+
+            var diag_body = new Gtk.Label (null);
+            diag_body.margin = 6;
+            diag_body.set_text(
+                _("Tardis is brought to you by the work of these fine folks:\n" +
+                  "\n    - Mathew Robinson (Lead Developer)" +
+                  "\n    - Robert Green (UX Architect)" +
+                  "\n    - Our open source contributors" +
+                  "\n    - Anyone who has paid for this application" +
+                  "\n\nBased on the awesome work of the Elementary OS team.")
+            );
+
+            diag_box.add(diag_title);
+            diag_box.add(diag_body);
+
+            dialog.show_all ();
+        });
+
         pack_start(backup_button);
         pack_start(add_target_button);
+        pack_end (info_button);
         pack_end (menu_button);
     }
 
