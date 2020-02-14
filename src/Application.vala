@@ -71,7 +71,7 @@ public class Tardis.App : Gtk.Application {
         main_view = new Tardis.Widgets.MainView (target_manager, settings);
 
         // HeaderBar
-        headerbar = new Tardis.Widgets.HeaderBar (settings, volume_monitor, target_manager);
+        headerbar = new Tardis.Widgets.HeaderBar (volume_monitor, target_manager);
 
         // Cross the Signals
         backup_status.target_is_backed_up.connect ((target) => {

@@ -9,8 +9,7 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
 
     private Tardis.BackupTargetManager backup_target_manager;
 
-    public HeaderBar (GLib.Settings settings,
-                     GLib.VolumeMonitor vm,
+    public HeaderBar (GLib.VolumeMonitor vm,
                      Tardis.BackupTargetManager backup_target_manager) {
 
         this.vm = vm;
