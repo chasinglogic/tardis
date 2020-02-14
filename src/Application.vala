@@ -93,7 +93,7 @@ public class Tardis.App : Gtk.Application {
             }
         });
 
-        backup_status.calculating.connect(() => {
+        backup_status.calculating.connect (() => {
             main_view.set_all (DriveStatusType.IN_PROGRESS);
         });
 
