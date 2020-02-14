@@ -59,7 +59,8 @@ public class Tardis.App : Gtk.Application {
     protected override void activate () {
         settings = new GLib.Settings (id);
         volume_monitor = GLib.VolumeMonitor.@get ();
-        target_manager = new Tardis.BackupTargetManager (settings);
+
+        target_manager = new Tardis.BackupTargetManager (settings, volume_monitor);
 
         // Construct the main window for our Application.
         window = new Gtk.ApplicationWindow (this);

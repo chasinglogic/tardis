@@ -8,9 +8,9 @@ public class Tardis.BackupTargetManager {
     private GLib.VolumeMonitor vm;
     private Tardis.BackupTarget[] targets;
 
-    public BackupTargetManager (GLib.Settings settings) {
+    public BackupTargetManager (GLib.Settings settings, GLib.VolumeMonitor vm) {
         this.settings = settings;
-        vm = GLib.VolumeMonitor.@get ();
+        this.vm = vm;
         targets = new BackupTarget[0];
 
         state_file = Path.build_filename (
