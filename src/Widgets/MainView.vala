@@ -1,30 +1,19 @@
 public class Tardis.Widgets.MainView : Gtk.Box {
-    public Gtk.Grid content;
-    public Gtk.Grid drive_window_content;
-    public Gtk.ScrolledWindow drive_window;
+    private Gtk.Grid content;
+    private Gtk.Grid drive_window_content;
+    private Gtk.ScrolledWindow drive_window;
+
     private Tardis.BackupTargetManager target_manager;
 
-    public MainView (Tardis.BackupTargetManager target_manager, GLib.Settings settings) {
+    public MainView (Tardis.BackupTargetManager target_manager) {
         this.target_manager = target_manager;
-
-        orientation = Gtk.Orientation.VERTICAL;
-
-        get_style_context ().add_class (Gtk.STYLE_CLASS_VIEW);
-
-        content = new Gtk.Grid ();
-        content.expand = true;
-        content.orientation = Gtk.Orientation.VERTICAL;
 
         var title_label = new Gtk.Label ("Backups");
         title_label.margin = 12;
         title_label.get_style_context ().add_class (Granite.STYLE_CLASS_H1_LABEL);
 
-        content.add (title_label);
-
         var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
-        content.add (separator);
 
-        drive_window = new Gtk.ScrolledWindow (null, null);
         drive_window_content = new Gtk.Grid ();
         drive_window_content.expand = true;
         drive_window_content.margin = 12;
@@ -35,9 +24,18 @@ public class Tardis.Widgets.MainView : Gtk.Box {
         }
         drive_window_content.show_all ();
 
-
+        drive_window = new Gtk.ScrolledWindow (null, null);
         drive_window.add (drive_window_content);
+
+        content = new Gtk.Grid ();
+        content.expand = true;
+        content.orientation = Gtk.Orientation.VERTICAL;
+        content.add (title_label);
+        content.add (separator);
         content.add (drive_window);
+
+        orientation = Gtk.Orientation.VERTICAL;
+        get_style_context ().add_class (Gtk.STYLE_CLASS_VIEW);
         add (content);
     }
 
