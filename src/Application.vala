@@ -5,8 +5,8 @@ public class Tardis.App : Gtk.Application {
     public static string id = "com.github.chasinglogic.tardis";
     public static string version = "1.0.0";
 
-    public static int default_window_height = 600;
-    public static int default_window_width = 850;
+    public static int default_window_height = 512;
+    public static int default_window_width = 700;
 
     // GLib settings accessor
     public GLib.Settings settings;
