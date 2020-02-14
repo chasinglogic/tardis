@@ -150,7 +150,6 @@ public class Tardis.BackupTargetManager {
             yield do_backup (backups, target);
         }
 
-        backup_all_completed ();
         write_state ();
     }
 
@@ -212,6 +211,5 @@ public class Tardis.BackupTargetManager {
     public signal void target_added ();
 
     public signal void backup_started (BackupTarget target);
-    public signal void backup_all_completed ();
     public signal void backup_complete (BackupTarget target);
 }
