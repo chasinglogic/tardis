@@ -100,21 +100,6 @@ public class Tardis.Widgets.BackupStatus {
         }
     }
 
-    public void start_backup () {
-        var starting_backup = new GLib.Notification ("Starting Backup!");
-        starting_backup.set_icon (notification_icon);
-        starting_backup.set_body ("Please do not unplug any storage devices.");
-        app.send_notification ( "com.github.chasinglogic.tardis", starting_backup);
-
-        // TODO be granular
-        backups.backup_all.begin ((obj, res) => {
-            var stopping_backup = new Notification ("Backup Complete!");
-            stopping_backup.set_icon (notification_icon);
-            stopping_backup.set_body ("Your data is safe!");
-            app.send_notification ( "com.github.chasinglogic.tardis", stopping_backup);
-        });
-    }
-
     public signal void target_needs_backup (BackupTarget target);
     public signal void target_is_backed_up (BackupTarget target);
 }
