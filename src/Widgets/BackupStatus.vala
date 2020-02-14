@@ -18,11 +18,8 @@ public class Tardis.Widgets.BackupStatus  {
         this.backups = backups;
         notification_icon = new GLib.ThemedIcon ("com.github.chasinglogic.tardis");
 
-        // TODO maybe add "I have connected a backup drive button";
         unsafe_msg = "A backup is needed and no backup drives are available.";
-
-        // TODO put the start backup button in the info bar
-        out_of_date_msg = "We've detected your backups are out of date. Press the 'Start Backup' button to backup to all available targets.";
+        out_of_date_msg = "We've detected some of your backups are out of date.";
         in_progress = "Backup in progress. Please don't unplug any storage devices.";
     }
 
