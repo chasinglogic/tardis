@@ -6,10 +6,6 @@
   <a href="https://appcenter.elementary.io/com.github.chasinglogic.tardis"><img src="https://appcenter.elementary.io/badge.svg?new" alt="Get it on AppCenter" /></a>
 </div>
 
-## Installation
-
-<a href="https://appcenter.elementary.io/com.github.chasinglogic.tardis"><img src="https://appcenter.elementary.io/badge.svg?new" alt="Get it on AppCenter" /></a>
-
 ## Building
 
 The following dependencies are required to build Tardis:
