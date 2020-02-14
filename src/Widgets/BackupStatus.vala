@@ -45,7 +45,6 @@ public class Tardis.Widgets.BackupStatus  {
                 continue;
             }
 
-            GLib.print("bs length: %d\n", target.last_backup_sources.length);
             if (target.last_backup_sources.length != backup_sources.length) {
                 target_needs_backup (target);
                 differing_files = true;

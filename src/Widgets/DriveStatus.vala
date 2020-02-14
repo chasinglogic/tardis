@@ -183,7 +183,6 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
         status_icon = new Gtk.Image.from_icon_name (icon_name,
                                                     Gtk.IconSize.SMALL_TOOLBAR);
         status_icon.set_pixel_size (48);
-        GLib.print("setting status to icon: %s\n", icon_name);
 
         button_grid.attach (status_icon, 0, 0, 1, 2);
         button_grid.show_all ();
