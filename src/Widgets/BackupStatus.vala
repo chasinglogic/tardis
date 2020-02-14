@@ -37,7 +37,7 @@ public class Tardis.Widgets.BackupStatus  {
     }
 
     public async void get_backup_status() {
-        message_stack.set_visible_child(calculating);
+        app.main_view.set_all (DriveStatusType.IN_PROGRESS);
 
         var longer_than_24_hours = false;
         var differing_files = false;
