@@ -63,23 +63,7 @@ public class Tardis.App : Gtk.Application {
     protected override void activate () {
         settings = new GLib.Settings (id);
         volume_monitor = GLib.VolumeMonitor.@get ();
-
         target_manager = new Tardis.BackupTargetManager (settings, volume_monitor);
-
-        // Construct the main window for our Application.
-        window = new Gtk.ApplicationWindow (this);
-        if (settings.get_boolean ("first-run")) {
-            settings.set_int ("window-width", default_window_width);
-            settings.set_int ("window-height", default_window_height);
-        }
-
-        if (settings.get_boolean ("window-maximized")) {
-            window.maximize ();
-        } else {
-            window.default_width = settings.get_int ("window-width");
-            window.default_height = settings.get_int ("window-height");
-        }
-
 
 
         backup_status = new Tardis.BackupStatus (target_manager);
@@ -220,6 +204,20 @@ public class Tardis.App : Gtk.Application {
         window_box.add (warning_bar);
         window_box.add (error_bar);
         window_box.add (main_view);
+
+        // Construct the main window for our Application.
+        window = new Gtk.ApplicationWindow (this);
+        if (settings.get_boolean ("first-run")) {
+            settings.set_int ("window-width", default_window_width);
+            settings.set_int ("window-height", default_window_height);
+        }
+
+        if (settings.get_boolean ("window-maximized")) {
+            window.maximize ();
+        } else {
+            window.default_width = settings.get_int ("window-width");
+            window.default_height = settings.get_int ("window-height");
+        }
 
         window.set_titlebar (headerbar);
         window.add (window_box);
