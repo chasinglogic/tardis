@@ -25,14 +25,6 @@ public class Tardis.Widgets.MainView : Gtk.Box {
         content.add (separator);
 
         drive_window = new Gtk.ScrolledWindow (null, null);
-        drive_window.margin = 12;
-        var half_height = settings.get_int ("window-width") / 2;
-        var half_width = settings.get_int ("window-width") / 2;
-        drive_window.max_content_width = half_width;
-        drive_window.min_content_width = half_width;
-        drive_window.max_content_height = half_height;
-        drive_window.min_content_height = half_height;
-
         drive_window_content = new Gtk.Grid ();
         drive_window_content.expand = true;
         drive_window_content.margin = 12;
