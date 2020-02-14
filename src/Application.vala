@@ -25,11 +25,6 @@ public class Tardis.App : Gtk.Application {
     public static Gtk.ApplicationWindow window;
 
     // Widgets directly attached to the Application Window
-    public Gtk.Stack main_stack;
-    public Gtk.Stack status_stack;
-    public Gtk.Label title;
-    public Granite.Widgets.ModeButton view_mode;
-
     public Gtk.InfoBar error_bar;
     public Gtk.Label error_msg_label;
 
@@ -39,18 +34,11 @@ public class Tardis.App : Gtk.Application {
     public Gtk.InfoBar info_bar;
     public Gtk.Label info_msg_label;
 
-    public int drive_manager_id;
-    public int backup_status_id;
-
     public App () {
         Object (
             application_id: id,
             flags: ApplicationFlags.FLAGS_NONE
             );
-    }
-
-    public void set_backup_status(Gtk.Widget new_status) {
-        status_stack.set_visible_child(new_status);
     }
 
     // Store window size in gsettings when resized.
@@ -87,28 +75,13 @@ public class Tardis.App : Gtk.Application {
             window.default_height = settings.get_int("window-height");
         }
 
-        main_stack = new Gtk.Stack ();
-        main_stack.set_transition_type (Gtk.StackTransitionType.SLIDE_LEFT_RIGHT);
 
-        status_stack = new Gtk.Stack ();
-        main_stack.add (status_stack);
-
-        drive_manager = new Tardis.Widgets.DriveManager (volume_monitor, settings);
-        main_stack.add (drive_manager);
 
         backup_status = new Tardis.Widgets.BackupStatus (this,
                                                          settings,
                                                          target_manager);
 
-        view_mode = new Granite.Widgets.ModeButton ();
-        view_mode.margin_end = view_mode.margin_start = 12;
-        view_mode.margin_bottom = view_mode.margin_top = 7;
-        backup_status_id = view_mode.append_text (_("Backups"));
-        drive_manager_id = view_mode.append_text (C_("view", "Manage Drives"));
-        view_mode.notify["selected"].connect (on_view_mode_changed);
-        view_mode.selected = backup_status_id;
         main_view = new Tardis.Widgets.MainView (target_manager, settings);
-        main_stack.add (main_view);
 
         // HeaderBar
         headerbar = new Tardis.Widgets.HeaderBar (settings, volume_monitor, backup_status, target_manager);
@@ -219,7 +192,7 @@ public class Tardis.App : Gtk.Application {
         window_box.add (info_bar);
         window_box.add (warning_bar);
         window_box.add (error_bar);
-        window_box.add (main_stack);
+        window_box.add (main_view);
 
         window.set_titlebar (headerbar);
         window.add(window_box);
@@ -251,14 +224,6 @@ public class Tardis.App : Gtk.Application {
 
     public void hide_info () {
         info_bar.revealed = false;
-    }
-
-    public void on_view_mode_changed () {
-        if (view_mode.selected == backup_status_id) {
-            main_stack.set_visible_child (status_stack);
-        } else if (view_mode.selected == drive_manager_id) {
-            main_stack.set_visible_child (drive_manager);
-        }
     }
 
     public static int main (string[] args) {
