@@ -15,8 +15,6 @@ public class Tardis.Widgets.BackupStatus  {
     private Tardis.Widgets.BackupMessage out_of_date_msg;
     private Tardis.Widgets.BackupMessage missing_files_msg;
 
-    public Tardis.Widgets.MainView main_view;
-
     public BackupStatus(Tardis.App app,
                         GLib.Settings settings, Tardis.BackupTargetManager backups) {
         this.app = app;
@@ -56,8 +54,6 @@ public class Tardis.Widgets.BackupStatus  {
         message_stack.add(calculating);
         message_stack.add(in_progress);
 
-        main_view = new Tardis.Widgets.MainView (message_stack, backups, settings);
-        app.status_stack.add(main_view);
     }
 
     public void missing_files () {
@@ -114,9 +110,6 @@ public class Tardis.Widgets.BackupStatus  {
             // Remove any differing files tags if we found none.
             target.tag_as_clean ();
         }
-
-        // Update target list with newly detected drive state.
-        main_view.list_targets ();
 
         if (longer_than_24_hours || differing_files) {
             try {

@@ -18,6 +18,7 @@ public class Tardis.App : Gtk.Application {
     public Tardis.Widgets.BackupStatus backup_status;
     public Tardis.Widgets.HeaderBar headerbar;
     public Tardis.Widgets.DriveManager drive_manager;
+    public Tardis.Widgets.MainView main_view;
 
     // Main ApplicationWindow, is static so it can be referenced by
     // Dialogs.
@@ -97,6 +98,8 @@ public class Tardis.App : Gtk.Application {
         drive_manager_id = view_mode.append_text (C_("view", "Manage Drives"));
         view_mode.notify["selected"].connect (on_view_mode_changed);
         view_mode.selected = backup_status_id;
+        main_view = new Tardis.Widgets.MainView (target_manager, settings);
+        main_stack.add (main_view);
 
         // HeaderBar
         headerbar = new Tardis.Widgets.HeaderBar (settings, volume_monitor, backup_status, target_manager);
