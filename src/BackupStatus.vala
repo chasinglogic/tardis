@@ -1,38 +1,12 @@
-using GLib;
-
-public class Tardis.Widgets.BackupStatus {
-    private Tardis.App app;
-    private GLib.Settings settings;
+public class Tardis.BackupStatus {
     private Tardis.BackupTargetManager backups;
 
-    private GLib.ThemedIcon notification_icon;
-
-    private string out_of_date_msg;
-    private string unsafe_msg;
-    private string in_progress;
-
-    public BackupStatus (Tardis.App app,
-                        GLib.Settings settings, Tardis.BackupTargetManager backups) {
-        this.app = app;
-        this.settings = settings;
+    public BackupStatus (Tardis.BackupTargetManager backups) {
         this.backups = backups;
-        notification_icon = new GLib.ThemedIcon ("com.github.chasinglogic.tardis");
-
-        unsafe_msg = "A backup is needed and no backup drives are available.";
-        out_of_date_msg = "We've detected some of your backups are out of date.";
-        in_progress = "Backup in progress. Please don't unplug any storage devices.";
-    }
-
-    public void out_of_date () {
-        app.warning_message (out_of_date_msg, null);
-    }
-
-    public void unsafe () {
-        app.warning_message (unsafe_msg, null);
     }
 
     public async void get_backup_status () {
-        app.main_view.set_all (DriveStatusType.IN_PROGRESS);
+        calculating ();
 
         var longer_than_24_hours = false;
         var differing_files = false;
@@ -82,23 +56,22 @@ public class Tardis.Widgets.BackupStatus {
             try {
                 var available_backup_drives = yield backups.get_available_backup_drives ();
                 if (available_backup_drives.length == 0) {
-                    this.unsafe ();
+                    unsafe (null);
                 }
             } catch (GLib.Error e) {
-                // TODO provide an API to show an error message info bar via
-                // Application
-                // app.set_backup_status (error);
+                unsafe (e.message);
                 return;
             }
         }
 
-        if ((longer_than_24_hours || differing_files) &&
-            settings.get_boolean ("automatic-backups")) {
-            start_backup ();
-        } else if (longer_than_24_hours || differing_files) {
-            this.out_of_date ();
+        if (longer_than_24_hours || differing_files) {
+            out_of_date ();
         }
     }
+
+    public signal void calculating ();
+    public signal void unsafe (string? message);
+    public signal void out_of_date ();
 
     public signal void target_needs_backup (BackupTarget target);
     public signal void target_is_backed_up (BackupTarget target);

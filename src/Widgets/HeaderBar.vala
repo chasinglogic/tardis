@@ -13,7 +13,6 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
     // TODO: add new drive button
     public HeaderBar (GLib.Settings settings,
                      GLib.VolumeMonitor vm,
-                     Tardis.Widgets.BackupStatus status,
                      Tardis.BackupTargetManager backup_target_manager) {
 
         this.vm = vm;

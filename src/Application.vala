@@ -8,6 +8,10 @@ public class Tardis.App : Gtk.Application {
     public static int default_window_height = 512;
     public static int default_window_width = 700;
 
+    public static string unsafe_msg = "A backup is needed and no backup drives are available.";
+    public static string out_of_date_msg = "We've detected some of your backups are out of date.";
+    public static string in_progress = "Backup in progress. Please don't unplug any storage devices.";
+
     // Main ApplicationWindow, is static so it can be referenced by Dialogs.
     public static Gtk.ApplicationWindow window;
 
@@ -18,9 +22,9 @@ public class Tardis.App : Gtk.Application {
 
     // Main classes
     public Tardis.BackupTargetManager target_manager;
+    public Tardis.BackupStatus backup_status;
 
     // Custom Widgets
-    public Tardis.Widgets.BackupStatus backup_status;
     public Tardis.Widgets.HeaderBar headerbar;
     public Tardis.Widgets.MainView main_view;
 
@@ -78,14 +82,12 @@ public class Tardis.App : Gtk.Application {
 
 
 
-        backup_status = new Tardis.Widgets.BackupStatus (this,
-                                                         settings,
-                                                         target_manager);
+        backup_status = new Tardis.BackupStatus (target_manager);
 
         main_view = new Tardis.Widgets.MainView (target_manager, settings);
 
         // HeaderBar
-        headerbar = new Tardis.Widgets.HeaderBar (settings, volume_monitor, backup_status, target_manager);
+        headerbar = new Tardis.Widgets.HeaderBar (settings, volume_monitor, target_manager);
 
         // Cross the Signals
         backup_status.target_is_backed_up.connect ((target) => {
@@ -162,6 +164,26 @@ public class Tardis.App : Gtk.Application {
         volume_monitor.volume_removed.connect (() => {
             backup_status.get_backup_status.begin ();
             headerbar.build_add_target_menu ();
+        });
+
+        backup_status.out_of_date.connect (() => {
+            if (settings.get_boolean ("automatic_backups")) {
+                target_manager.backup_all.begin ();
+            } else {
+                warning_message (out_of_date_msg, null);
+            }
+        });
+
+        backup_status.unsafe.connect ((msg) => {
+            if (msg != null) {
+                error_message (msg);
+            } else {
+                error_message (unsafe_msg);
+            }
+        });
+
+        backup_status.calculating.connect(() => {
+            main_view.set_all (DriveStatusType.IN_PROGRESS);
         });
 
         backup_status.get_backup_status.begin ();

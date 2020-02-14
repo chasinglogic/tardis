@@ -18,12 +18,12 @@ executable(
     'src/Backups.vala',
     'src/BackupTargetManager.vala',
     'src/BackupTarget.vala',
+    'src/BackupStatus.vala',
     'src/Utils.vala',
 
     # Custom Widgets
     'src/Widgets/HeaderBar.vala',
     'src/Widgets/SettingToggler.vala',
-    'src/Widgets/BackupStatus.vala',
     'src/Widgets/DriveStatus.vala',
     'src/Widgets/MainView.vala',
 
