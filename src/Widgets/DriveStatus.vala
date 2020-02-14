@@ -26,13 +26,15 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
     public signal void restore_from (BackupTarget target);
 
     public void redraw () {
+        get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+        margin_top = 6;
+        margin_bottom = 6;
+
         // Title label
         button_title = new Gtk.Label (target.display_name);
         button_title.get_style_context ().add_class (Granite.STYLE_CLASS_H3_LABEL);
         button_title.halign = Gtk.Align.START;
         button_title.valign = Gtk.Align.END;
-
-        get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
 
         // Drive icon
         drive_icon = new Gtk.Image.from_icon_name (target.icon_name, Gtk.IconSize.SMALL_TOOLBAR);
