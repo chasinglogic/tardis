@@ -186,6 +186,8 @@ public class Tardis.App : Gtk.Application {
             headerbar.build_add_target_menu ();
         });
 
+        backup_status.get_backup_status.begin ();
+
         error_msg_label = new Gtk.Label (null);
         error_msg_label.use_markup = true;
 
