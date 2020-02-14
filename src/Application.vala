@@ -8,20 +8,21 @@ public class Tardis.App : Gtk.Application {
     public static int default_window_height = 512;
     public static int default_window_width = 700;
 
+    // Main ApplicationWindow, is static so it can be referenced by Dialogs.
+    public static Gtk.ApplicationWindow window;
+
     // GLib settings accessor
     public GLib.Settings settings;
+    // VolumeMonitor for interacting with drives
     public GLib.VolumeMonitor volume_monitor;
 
+    // Main classes
     public Tardis.BackupTargetManager target_manager;
 
     // Custom Widgets
     public Tardis.Widgets.BackupStatus backup_status;
     public Tardis.Widgets.HeaderBar headerbar;
     public Tardis.Widgets.MainView main_view;
-
-    // Main ApplicationWindow, is static so it can be referenced by
-    // Dialogs.
-    public static Gtk.ApplicationWindow window;
 
     // Widgets directly attached to the Application Window
     public Gtk.InfoBar error_bar;
