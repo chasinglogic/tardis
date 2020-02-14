@@ -1,10 +1,12 @@
 public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
-    private Gtk.MenuButton menu_button;
-    private Gtk.Popover backup_settings_popover;
-    private Gtk.Popover add_target_popover;
     private GLib.VolumeMonitor vm;
+
     private Gtk.Box add_target_menu;
     private Gtk.MenuButton add_target_button;
+    private Gtk.Popover add_target_popover;
+
+    private Gtk.MenuButton backup_settings_button;
+    private Gtk.Popover backup_settings_popover;
 
     private Tardis.BackupTargetManager backup_target_manager;
 
@@ -15,11 +17,8 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         this.vm = vm;
         this.backup_target_manager = backup_target_manager;
 
-        show_close_button = true;
-
         var title = new Gtk.Label ("<b>Tardis</b>");
         title.use_markup = true;
-        set_custom_title (title);
 
         var backup_data = new Tardis.Widgets.SettingToggler (
             // Add spaces to make switches line up
@@ -70,9 +69,9 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
                 return Gdk.EVENT_STOP;
         });
 
-        menu_button = new Gtk.MenuButton ();
-        menu_button.image = new Gtk.Image.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR);
-        menu_button.tooltip_text = _("Backup Settings");
+        backup_settings_button = new Gtk.MenuButton ();
+        backup_settings_button.image = new Gtk.Image.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR);
+        backup_settings_button.tooltip_text = _("Backup Settings");
 
         var menu_grid = new Gtk.Grid ();
         menu_grid.margin_top = 12;
@@ -89,7 +88,7 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
 
         backup_settings_popover = new Gtk.Popover (null);
         backup_settings_popover.add (menu_grid);
-        menu_button.popover = backup_settings_popover;
+        backup_settings_button.popover = backup_settings_popover;
 
         var backup_button = new Gtk.Button ();
         backup_button.image = new Gtk.Image.from_icon_name (
@@ -153,10 +152,12 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
             dialog.show_all ();
         });
 
+        show_close_button = true;
+        set_custom_title (title);
         pack_start (backup_button);
         pack_start (add_target_button);
         pack_end (info_button);
-        pack_end (menu_button);
+        pack_end (backup_settings_button);
     }
 
     public void build_add_target_menu () {
