@@ -20,7 +20,7 @@ public class Tardis.BackupTargetManager {
             );
 
         if (!FileUtils.test (Path.get_dirname (state_file), FileTest.EXISTS)) {
-            DirUtils.create (Path.get_dirname (state_file), 0755);
+            DirUtils.create_with_parents (Path.get_dirname (state_file), 0755);
         }
 
         if (FileUtils.test (state_file, FileTest.EXISTS)) {
@@ -58,12 +58,11 @@ public class Tardis.BackupTargetManager {
 
     public void write_state () {
         Json.Builder builder = new Json.Builder ();
-        builder.begin_array ();
 
+        builder.begin_array ();
         foreach (BackupTarget target in targets) {
             target.build_json (builder);
         }
-
         builder.end_array ();
 
         Json.Generator generator = new Json.Generator ();
