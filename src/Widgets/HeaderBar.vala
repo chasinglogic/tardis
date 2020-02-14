@@ -9,8 +9,6 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
 
     private Tardis.BackupTargetManager backup_target_manager;
 
-    // TODO: add restore button
-    // TODO: add new drive button
     public HeaderBar (GLib.Settings settings,
                      GLib.VolumeMonitor vm,
                      Tardis.BackupTargetManager backup_target_manager) {
