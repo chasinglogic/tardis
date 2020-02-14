@@ -75,14 +75,18 @@ public class Tardis.Backups {
     }
 
     public static string? get_backups_path(Mount mount,
-                                           bool? create_if_not_found = false) {
+                                           bool? create_if_not_found = false)
+        throws GLib.FileError {
         var root = mount.get_root().get_path();
         var backup_root = Path.build_filename(root, "Tardis", "Backups");
         try {
             Dir.open(backup_root);
         } catch(GLib.FileError e) {
             if (create_if_not_found) {
-                DirUtils.create(backup_root, 0755);
+                var exit_code = DirUtils.create_with_parents(backup_root, 0755);
+                if (exit_code != 0) {
+                    throw new GLib.FileError.ACCES ("Unable to create backup paths, make sure you have permissions to the drive.");
+                }
             } else {
                 return null;
             }
