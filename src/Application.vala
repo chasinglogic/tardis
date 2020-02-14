@@ -63,15 +63,10 @@ public class Tardis.App : Gtk.Application {
     protected override void activate () {
         settings = new GLib.Settings (id);
         volume_monitor = GLib.VolumeMonitor.@get ();
-        target_manager = new Tardis.BackupTargetManager (settings, volume_monitor);
-
-
+        target_manager = new Tardis.BackupTargetManager (volume_monitor, settings);
         backup_status = new Tardis.BackupStatus (target_manager);
-
         main_view = new Tardis.Widgets.MainView (target_manager, settings);
-
-        // HeaderBar
-        headerbar = new Tardis.Widgets.HeaderBar (volume_monitor, target_manager);
+        headerbar = new Tardis.Widgets.HeaderBar (volume_monitor, target_manager, settings);
 
         // Cross the Signals
         backup_status.target_is_backed_up.connect ((target) => {

@@ -2,7 +2,6 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
     private Gtk.MenuButton menu_button;
     private Gtk.Popover backup_settings_popover;
     private Gtk.Popover add_target_popover;
-    private GLib.Settings settings;
     private GLib.VolumeMonitor vm;
     private Gtk.Box add_target_menu;
     private Gtk.MenuButton add_target_button;
@@ -10,10 +9,10 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
     private Tardis.BackupTargetManager backup_target_manager;
 
     public HeaderBar (GLib.VolumeMonitor vm,
-                     Tardis.BackupTargetManager backup_target_manager) {
+                      Tardis.BackupTargetManager backup_target_manager,
+                      GLib.Settings settings) {
 
         this.vm = vm;
-        this.settings = settings;
         this.backup_target_manager = backup_target_manager;
 
         show_close_button = true;

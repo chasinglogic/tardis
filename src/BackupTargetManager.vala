@@ -4,12 +4,12 @@ public class Tardis.BackupTargetManager {
     private string state_file;
 
     private GLib.Settings settings;
-    private Tardis.Backups backups;
     private GLib.VolumeMonitor vm;
+
+    private Tardis.Backups backups;
     private Tardis.BackupTarget[] targets;
 
-    public BackupTargetManager (GLib.Settings settings, GLib.VolumeMonitor vm) {
-        this.settings = settings;
+    public BackupTargetManager (GLib.VolumeMonitor vm, GLib.Settings settings) {
         this.vm = vm;
         targets = new BackupTarget[0];
 
