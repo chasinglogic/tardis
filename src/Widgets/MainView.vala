@@ -59,7 +59,11 @@ public class Tardis.Widgets.MainView : Gtk.Box {
         drive_window_content.add (drive_status);
     }
 
-        drive_window_content.show_all ();
+    public void set_all (DriveStatusType status) {
+        drive_window_content.@foreach((child) => {
+            var status_widget = (Tardis.Widgets.DriveStatus) child;
+            status_widget.set_status (status);
+        });
     }
 
     public void set_status (string id, DriveStatusType status) {
