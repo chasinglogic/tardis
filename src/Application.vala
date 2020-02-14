@@ -151,7 +151,7 @@ public class Tardis.App : Gtk.Application {
         });
 
         backup_status.out_of_date.connect (() => {
-            if (settings.get_boolean ("automatic_backups")) {
+            if (settings.get_boolean ("automatic-backups")) {
                 target_manager.backup_all.begin ();
             } else {
                 warning_message (out_of_date_msg, null);
