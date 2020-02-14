@@ -1,18 +1,12 @@
 public class Tardis.BackupTarget : GLib.Object {
+    // 86400 is 24 hours in seconds
+    private static int64 24_hours = 86400;
+
     public string id;
     public string display_name;
     public string icon_name;
     public int64 last_backup_time;
     public string[] last_backup_sources;
-
-    private bool differing_files;
-
-    // 86400 is 24 hours in seconds
-    private static int64 24_hours = 86400;
-
-    construct {
-        differing_files = false;
-    }
 
     public BackupTarget (
         string id,
@@ -41,25 +35,28 @@ public class Tardis.BackupTarget : GLib.Object {
             backup_sources += array.get_string_element (idx);
             idx += 1;
         }
+
         this.last_backup_sources = backup_sources;
+        // Resize back down to the known length to prevent nulls.
         this.last_backup_sources.resize ((int) length);
     }
 
     public BackupTarget.from_volume (GLib.Volume volume) {
-        last_backup_time = 0;
-        display_name = volume.get_drive ().get_name ();
-        last_backup_sources = new string[0];
+        this.last_backup_time = 0;
+        this.display_name = volume.get_drive ().get_name ();
+        this.last_backup_sources = new string[0];
 
+        // Try to get icon name
         var icon = new Gtk.Image.from_gicon (volume.get_icon (), Gtk.IconSize.SMALL_TOOLBAR);
         string gicon_name;
         icon.get_icon_name (out gicon_name, null);
-
         if (gicon_name != null) {
             icon_name = gicon_name;
         } else {
             icon_name = "drive-removable-media";
         }
 
+        // Try to get a unique id
         var uuid = volume.get_uuid ();
         if (uuid != null) {
             id = uuid;
@@ -95,11 +92,6 @@ public class Tardis.BackupTarget : GLib.Object {
         builder.end_array ();
 
         builder.end_object ();
-    }
-
-    public string repr () {
-        return "ID: %s Name: %s Icon: %s Last Backup: %ld\n".printf (
-            id, display_name, icon_name, (long) last_backup_time);
     }
 
     public bool out_of_date () {
