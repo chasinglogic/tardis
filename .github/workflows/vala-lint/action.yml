@@ -1,0 +1,24 @@
+name: 'Vala Lint'
+description: 'Lint vala code using vala-lint'
+inputs:
+  dir:
+    description: 'Source code directory'
+    required: false
+    default: '.'
+  conf:
+    description: 'Configuration file'
+    required: false
+  fail:
+    description: 'Whether to fail the build if the linter detects any errors'
+    required: false
+    default: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.dir }}
+    - ${{ inputs.conf }}
+    - ${{ inputs.fail }}
+branding:
+  icon: 'check-square'
+  color: 'purple'

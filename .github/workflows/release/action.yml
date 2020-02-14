@@ -1,0 +1,15 @@
+name: 'Release'
+description: 'Generate changelogs and publish new versions'
+inputs:
+  release_branch:
+    description: 'the name of the stable release branch'
+    required: false
+    default: 'stable'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.release_branch }}
+branding:
+  icon: 'git-pull-request'
+  color: 'green'
