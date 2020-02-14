@@ -4,20 +4,22 @@ public class Tardis.Widgets.MainView : Gtk.Box {
     public Gtk.ScrolledWindow drive_window;
     private Tardis.BackupTargetManager target_manager;
 
-    public MainView (Gtk.Widget message_area, Tardis.BackupTargetManager target_manager, GLib.Settings settings) {
+    public MainView (Tardis.BackupTargetManager target_manager, GLib.Settings settings) {
         this.target_manager = target_manager;
 
         orientation = Gtk.Orientation.VERTICAL;
 
         get_style_context ().add_class (Gtk.STYLE_CLASS_VIEW);
-        get_style_context ().add_class (Granite.STYLE_CLASS_WELCOME);
 
         content = new Gtk.Grid ();
         content.expand = true;
-        content.margin = 12;
         content.orientation = Gtk.Orientation.VERTICAL;
-        content.valign = Gtk.Align.CENTER;
-        content.add (message_area);
+
+        var title_label = new Gtk.Label ("Backups");
+        title_label.margin = 12;
+        title_label.get_style_context ().add_class (Granite.STYLE_CLASS_H1_LABEL);
+
+        content.add (title_label);
 
         var separator = new Gtk.Separator(Gtk.Orientation.HORIZONTAL);
         content.add (separator);
