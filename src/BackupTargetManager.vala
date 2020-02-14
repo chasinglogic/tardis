@@ -8,7 +8,7 @@ public class Tardis.BackupTargetManager {
     private GLib.VolumeMonitor vm;
     private Tardis.BackupTarget[] targets;
 
-    public BackupTargetManager (GLib.Settings settings) throws GLib.FileError {
+    public BackupTargetManager (GLib.Settings settings) {
         this.settings = settings;
         vm = GLib.VolumeMonitor.@get ();
         targets = new BackupTarget[0];
@@ -25,14 +25,18 @@ public class Tardis.BackupTargetManager {
 
         if (FileUtils.test(state_file, FileTest.EXISTS)) {
             var parser = new Json.Parser ();
-            parser.load_from_file(state_file);
-            var root = parser.get_root ().get_array ();
-            if (root != null) {
-                var real = (Json.Array) root;
-                real.foreach_element((_arr, _idx, obj) => {
-                    var t = new BackupTarget.from_json((Json.Object) obj.get_object ());
-                    targets += t;
-                });
+            try {
+                parser.load_from_file(state_file);
+                var root = parser.get_root ().get_array ();
+                if (root != null) {
+                    var real = (Json.Array) root;
+                    real.foreach_element((_arr, _idx, obj) => {
+                        var t = new BackupTarget.from_json((Json.Object) obj.get_object ());
+                        targets += t;
+                    });
+                }
+            } catch (GLib.Error e) {
+                GLib.print("Failed to load state! %s\n", e.message);
             }
         }
     }
@@ -68,7 +72,11 @@ public class Tardis.BackupTargetManager {
 
         string targets_json = generator.to_data (null);
 
-        FileUtils.set_contents(state_file, targets_json, -1);
+        try {
+            FileUtils.set_contents(state_file, targets_json, -1);
+        } catch (GLib.FileError e) {
+            save_error (e.message);
+        }
     }
 
     public void add_volume(GLib.Volume volume) {
@@ -88,7 +96,11 @@ public class Tardis.BackupTargetManager {
             return;
         }
 
-        yield backups.restore (mount);
+        try {
+            yield backups.restore (mount);
+        } catch (GLib.Error e) {
+            backup_error (target, e.message);
+        }
     }
 
     public async int do_backup (Tardis.Backups backups, Tardis.BackupTarget target) {
@@ -106,8 +118,13 @@ public class Tardis.BackupTargetManager {
             return -1;
         }
 
-        var sources = backups.get_sources ();
-        target.last_backup_sources = sources;
+        try {
+            var sources = backups.get_sources ();
+            target.last_backup_sources = sources;
+        } catch (GLib.Error e) {
+            backup_error (target, e.message);
+            return -1;
+        }
 
         var curtime = get_monotonic_time ();
         target.last_backup_time = curtime;
@@ -130,7 +147,12 @@ public class Tardis.BackupTargetManager {
 
     public string[] get_sources (bool? force_reload = false) {
         var backups = get_backups ();
-        return backups.get_sources (force_reload);
+        try {
+            return backups.get_sources (force_reload);
+        } catch (GLib.Error e) {
+            save_error (e.message);
+            return new string[0];
+        }
     }
 
     public async void backup_all () {
@@ -166,7 +188,13 @@ public class Tardis.BackupTargetManager {
 
         // If it was null try to mount it
         if (mount == null) {
-            yield volume.mount (MountMountFlags.NONE, null);
+            try {
+                yield volume.mount (MountMountFlags.NONE, null);
+            } catch (GLib.Error e) {
+                backup_error (target, e.message);
+                return null;
+            }
+
             mount = volume.get_mount ();
         }
 
@@ -209,6 +237,7 @@ public class Tardis.BackupTargetManager {
         }
     }
 
+    public signal void save_error (string err_msg);
     public signal void backup_error (BackupTarget target, string err_msg);
 
     public signal void target_removed (BackupTarget target);

@@ -7,11 +7,9 @@ public class Tardis.Widgets.BackupStatus  {
 
     private GLib.ThemedIcon notification_icon;
 
-    private string safe_msg;
+    private string out_of_date_msg;
     private string unsafe_msg;
     private string in_progress;
-    private string out_of_date_msg;
-    private string missing_files_msg;
 
     public BackupStatus(Tardis.App app,
                         GLib.Settings settings, Tardis.BackupTargetManager backups) {
@@ -63,7 +61,15 @@ public class Tardis.Widgets.BackupStatus  {
                 continue;
             }
 
-            var backup_path = Tardis.Backups.get_backups_path(mount);
+            string? backup_path = null;
+            try {
+                backup_path = Tardis.Backups.get_backups_path(mount);
+            } catch (GLib.Error e) {
+                // Because create_if_not_found is false here we never will
+                // encounter this code path. This is here to silence a false
+                // compiler warning.
+            }
+
             // This means we found a drive which is a backup target but has
             // never had a backup.
             if (backup_path == null) {

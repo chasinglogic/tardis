@@ -110,7 +110,7 @@ public class Tardis.App : Gtk.Application {
         });
 
         main_view.restore_from.connect ((target) => {
-            target_manager.restore_from (target);
+            target_manager.restore_from.begin (target);
         });
 
         target_manager.backup_started.connect ((target) => {
@@ -140,6 +140,10 @@ public class Tardis.App : Gtk.Application {
 
         target_manager.backup_error.connect((target, err_msg) => {
             main_view.set_status (target.id, DriveStatusType.BACKUP_ERROR);
+            this.error_message (err_msg);
+        });
+
+        target_manager.save_error.connect((err_msg) => {
             this.error_message (err_msg);
         });
 
