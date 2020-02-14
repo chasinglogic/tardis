@@ -1,6 +1,7 @@
 public enum DriveStatusType {
-    NEEDS_BACKUP,
     SAFE,
+    BACKUP_ERROR,
+    NEEDS_BACKUP,
     IN_PROGRESS,
 }
 
@@ -11,6 +12,8 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
     public Gtk.Image drive_icon;
     public Gtk.Image status_icon;
     public Gtk.Spinner in_progress;
+
+    private DriveStatusType last_status;
 
     public BackupTarget target;
 
@@ -146,23 +149,41 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
             in_progress.set_size_request(52, 52);
             button_grid.attach (in_progress, 0, 0, 1, 2);
             button_grid.show_all ();
+            last_status = status;
             return;
         }
 
-        string icon_name = "dialog-warning";
-        switch (status) {
-            case DriveStatusType.NEEDS_BACKUP:
-                icon_name = "process-stop";
-                break;
-            case DriveStatusType.SAFE:
-                icon_name = "process-completed";
-                break;
+        string icon_name = "";
+
+        // If we're going to anything other than SAFE from ERROR then remain in
+        // the error state.
+        if (
+            last_status == DriveStatusType.BACKUP_ERROR &&
+            status != DriveStatusType.SAFE
+        ) {
+            icon_name = "process-stop";
+        } else {
+            switch (status) {
+                case DriveStatusType.NEEDS_BACKUP:
+                    icon_name = "dialog-warning";
+                    break;
+                case DriveStatusType.BACKUP_ERROR:
+                    icon_name = "process-stop";
+                    break;
+                case DriveStatusType.SAFE:
+                    icon_name = "process-completed";
+                    break;
+            }
         }
+
+        last_status = status;
 
         status_icon = new Gtk.Image.from_icon_name (icon_name,
                                                     Gtk.IconSize.SMALL_TOOLBAR);
-        button_grid.attach (status_icon, 0, 0, 1, 2);
         status_icon.set_pixel_size (48);
+        GLib.print("setting status to icon: %s\n", icon_name);
+
+        button_grid.attach (status_icon, 0, 0, 1, 2);
         button_grid.show_all ();
     }
 }
