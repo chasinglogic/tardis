@@ -18,25 +18,14 @@ executable(
     'src/Backups.vala',
     'src/BackupTargetManager.vala',
     'src/BackupTarget.vala',
-
     'src/Utils.vala',
 
     # Custom Widgets
     'src/Widgets/HeaderBar.vala',
     'src/Widgets/SettingToggler.vala',
-
     'src/Widgets/BackupStatus.vala',
-
-    # TODO remove these two
-    'src/Widgets/DriveManager.vala',
-    'src/Widgets/DriveDisplay.vala',
-
     'src/Widgets/DriveStatus.vala',
-
     'src/Widgets/MainView.vala',
-    'src/Widgets/BackupMessage.vala',
-    'src/Widgets/BackupNeeded.vala',
-    'src/Widgets/BackupInProgress.vala',
 
     dependencies: [
       dependency('gtk+-3.0'),
