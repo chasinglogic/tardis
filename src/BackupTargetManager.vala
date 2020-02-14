@@ -78,7 +78,7 @@ public class Tardis.BackupTargetManager {
     public void add_target (Tardis.BackupTarget target) {
         targets += target;
         write_state ();
-        target_added ();
+        target_added (target);
     }
 
     public async void restore_from(Tardis.BackupTarget target) {
@@ -189,10 +189,11 @@ public class Tardis.BackupTargetManager {
     }
 
     public void remove_target(BackupTarget target_to_remove) {
-        var new_length = targets.length - 1;
-        BackupTarget[] new_targets = new BackupTarget[new_length];
+        BackupTarget[] new_targets = new BackupTarget[targets.length - 1];
+        BackupTarget? removed_target = null;
         foreach (BackupTarget target in targets) {
             if (target.id == target_to_remove.id) {
+                removed_target = target;
                 continue;
             }
 
@@ -200,15 +201,18 @@ public class Tardis.BackupTargetManager {
         }
 
         targets = new_targets;
+
         // If we actually removed something
-        if (new_targets.length <= new_length) {
-            target_removed ();
+        if (removed_target != null) {
+            target_removed (removed_target);
             write_state ();
         }
     }
 
-    public signal void target_removed ();
-    public signal void target_added ();
+    public signal void backup_error (BackupTarget target, string err_msg);
+
+    public signal void target_removed (BackupTarget target);
+    public signal void target_added (BackupTarget target);
 
     public signal void backup_started (BackupTarget target);
     public signal void backup_complete (BackupTarget target);
