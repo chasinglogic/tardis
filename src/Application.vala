@@ -128,7 +128,6 @@ public class Tardis.App : Gtk.Application {
         });
 
         target_manager.target_removed.connect (() => {
-            backup_status.main_view.list_targets ();
             backup_status.get_backup_status.begin ();
             headerbar.build_add_target_menu ();
         });
