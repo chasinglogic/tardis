@@ -77,14 +77,24 @@ public class Tardis.App : Gtk.Application {
             main_view.set_status (target.id, DriveStatusType.NEEDS_BACKUP);
         });
 
-        target_manager.target_added.connect ((target) => {
-            backup_status.get_backup_status.begin ();
-            main_view.add_target (target);
+        backup_status.out_of_date.connect (() => {
+            if (settings.get_boolean ("automatic-backups")) {
+                target_manager.backup_all.begin ();
+            } else {
+                warning_message (out_of_date_msg, null);
+            }
         });
 
-        target_manager.target_removed.connect (() => {
-            backup_status.get_backup_status.begin ();
-            headerbar.build_add_target_menu ();
+        backup_status.unsafe.connect ((msg) => {
+            if (msg != null) {
+                error_message (msg);
+            } else {
+                error_message (unsafe_msg);
+            }
+        });
+
+        backup_status.calculating.connect(() => {
+            main_view.set_all (DriveStatusType.IN_PROGRESS);
         });
 
         main_view.drive_removed.connect ((target) => {
@@ -93,6 +103,16 @@ public class Tardis.App : Gtk.Application {
 
         main_view.restore_from.connect ((target) => {
             target_manager.restore_from.begin (target);
+        });
+
+        target_manager.target_added.connect ((target) => {
+            backup_status.get_backup_status.begin ();
+            main_view.add_target (target);
+        });
+
+        target_manager.target_removed.connect (() => {
+            backup_status.get_backup_status.begin ();
+            headerbar.build_add_target_menu ();
         });
 
         target_manager.backup_started.connect ((target) => {
@@ -143,26 +163,6 @@ public class Tardis.App : Gtk.Application {
         volume_monitor.volume_removed.connect (() => {
             backup_status.get_backup_status.begin ();
             headerbar.build_add_target_menu ();
-        });
-
-        backup_status.out_of_date.connect (() => {
-            if (settings.get_boolean ("automatic-backups")) {
-                target_manager.backup_all.begin ();
-            } else {
-                warning_message (out_of_date_msg, null);
-            }
-        });
-
-        backup_status.unsafe.connect ((msg) => {
-            if (msg != null) {
-                error_message (msg);
-            } else {
-                error_message (unsafe_msg);
-            }
-        });
-
-        backup_status.calculating.connect(() => {
-            main_view.set_all (DriveStatusType.IN_PROGRESS);
         });
 
         backup_status.get_backup_status.begin ();
