@@ -17,7 +17,6 @@ public class Tardis.App : Gtk.Application {
     // Custom Widgets
     public Tardis.Widgets.BackupStatus backup_status;
     public Tardis.Widgets.HeaderBar headerbar;
-    public Tardis.Widgets.DriveManager drive_manager;
     public Tardis.Widgets.MainView main_view;
 
     // Main ApplicationWindow, is static so it can be referenced by
@@ -47,13 +46,13 @@ public class Tardis.App : Gtk.Application {
             int width;
             int height;
             window.get_size (out width, out height);
-            if (settings.get_int("window-height") != height || settings.get_int("window-width") != width) {
-                settings.set_int("window-height", height);
-                settings.set_int("window-width", width);
+            if (settings.get_int ("window-height") != height || settings.get_int ("window-width") != width) {
+                settings.set_int ("window-height", height);
+                settings.set_int ("window-width", width);
             }
         }
 
-        settings.set_boolean("window-maximized", window.is_maximized);
+        settings.set_boolean ("window-maximized", window.is_maximized);
     }
 
     protected override void activate () {
@@ -63,16 +62,16 @@ public class Tardis.App : Gtk.Application {
 
         // Construct the main window for our Application.
         window = new Gtk.ApplicationWindow (this);
-        if (settings.get_boolean("first-run")) {
-            settings.set_int("window-width", default_window_width);
-            settings.set_int("window-height", default_window_height);
+        if (settings.get_boolean ("first-run")) {
+            settings.set_int ("window-width", default_window_width);
+            settings.set_int ("window-height", default_window_height);
         }
 
-        if (settings.get_boolean("window-maximized")) {
+        if (settings.get_boolean ("window-maximized")) {
             window.maximize ();
         } else {
-            window.default_width = settings.get_int("window-width");
-            window.default_height = settings.get_int("window-height");
+            window.default_width = settings.get_int ("window-width");
+            window.default_height = settings.get_int ("window-height");
         }
 
 
@@ -87,12 +86,12 @@ public class Tardis.App : Gtk.Application {
         headerbar = new Tardis.Widgets.HeaderBar (settings, volume_monitor, backup_status, target_manager);
 
         // Cross the Signals
-        backup_status.target_is_backed_up.connect((target) => {
-            main_view.set_status(target.id, DriveStatusType.SAFE);
+        backup_status.target_is_backed_up.connect ((target) => {
+            main_view.set_status (target.id, DriveStatusType.SAFE);
         });
 
-        backup_status.target_needs_backup.connect((target) => {
-            main_view.set_status(target.id, DriveStatusType.NEEDS_BACKUP);
+        backup_status.target_needs_backup.connect ((target) => {
+            main_view.set_status (target.id, DriveStatusType.NEEDS_BACKUP);
         });
 
         target_manager.target_added.connect ((target) => {
@@ -119,8 +118,8 @@ public class Tardis.App : Gtk.Application {
                 info_message ("Backup in progress. Please do not unplug any storage devices.");
             }
 
-            var notification = new Notification (_("Backup started!"));
-            notification.set_body (_("Backing up to: %s").printf(target.display_name));
+            var notification = new Notification (_ ("Backup started!"));
+            notification.set_body (_ ("Backing up to: %s").printf (target.display_name));
             this.send_notification (id, notification);
 
             main_view.set_status (target.id, DriveStatusType.IN_PROGRESS);
@@ -133,32 +132,32 @@ public class Tardis.App : Gtk.Application {
                 info_bar.hide ();
             }
 
-            var notification = new Notification (_("Backup complete!"));
-            notification.set_body (_("%s is now up to date.").printf(target.display_name));
+            var notification = new Notification (_ ("Backup complete!"));
+            notification.set_body (_ ("%s is now up to date.").printf (target.display_name));
             this.send_notification (id, notification);
         });
 
-        target_manager.backup_error.connect((target, err_msg) => {
+        target_manager.backup_error.connect ((target, err_msg) => {
             main_view.set_status (target.id, DriveStatusType.BACKUP_ERROR);
             this.error_message (err_msg);
         });
 
-        target_manager.save_error.connect((err_msg) => {
+        target_manager.save_error.connect ((err_msg) => {
             this.error_message (err_msg);
         });
 
-        settings.changed.connect((key) => {
+        settings.changed.connect ((key) => {
             if (key == "backup-configuration" || key == "backup-data") {
                 backup_status.get_backup_status.begin ();
             }
         });
 
-        volume_monitor.volume_added.connect(() => {
+        volume_monitor.volume_added.connect (() => {
             backup_status.get_backup_status.begin ();
             headerbar.build_add_target_menu ();
         });
 
-        volume_monitor.volume_removed.connect(() => {
+        volume_monitor.volume_removed.connect (() => {
             backup_status.get_backup_status.begin ();
             headerbar.build_add_target_menu ();
         });
@@ -199,31 +198,31 @@ public class Tardis.App : Gtk.Application {
         window_box.add (main_view);
 
         window.set_titlebar (headerbar);
-        window.add(window_box);
+        window.add (window_box);
         window.show_all ();
         window.size_allocate.connect (() => { on_resize (); });
     }
 
     public void error_message (string msg) {
-        error_msg_label.set_markup ("<b>%s</b>".printf(msg));
+        error_msg_label.set_markup ("<b>%s</b>".printf (msg));
         error_bar.revealed = true;
-        error_bar.response.connect((_id) => error_bar.hide ());
+        error_bar.response.connect ((_id) => error_bar.hide ());
     }
 
     public void warning_message (string msg, Gtk.Widget? action) {
-        warning_msg_label.set_markup ("<b>%s</b>".printf(msg));
+        warning_msg_label.set_markup ("<b>%s</b>".printf (msg));
         warning_bar.revealed = true;
-        warning_bar.response.connect((_id) => warning_bar.hide ());
+        warning_bar.response.connect ((_id) => warning_bar.hide ());
     }
 
     public void hide_warning () {
         warning_bar.hide ();
     }
 
-    public void info_message(string msg) {
-        info_msg_label.set_markup ("<b>%s</b>".printf(msg));
+    public void info_message (string msg) {
+        info_msg_label.set_markup ("<b>%s</b>".printf (msg));
         info_bar.revealed = true;
-        info_bar.response.connect((_id) => info_bar.hide ());
+        info_bar.response.connect ((_id) => info_bar.hide ());
     }
 
     public void hide_info () {

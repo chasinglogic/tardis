@@ -1,13 +1,13 @@
 // Common business logic which does not directly change display properties.
 public class Tardis.Utils {
 
-    public static bool array_not_equal(string[] arr1, string[] arr2) {
+    public static bool array_not_equal (string[] arr1, string[] arr2) {
         if (arr1.length != arr2.length) {
             return false;
         }
 
         foreach (string element in arr1) {
-            if (!Tardis.Utils.contains_str(arr2, element)) {
+            if (!Tardis.Utils.contains_str (arr2, element)) {
                 return false;
             }
         }
@@ -28,7 +28,7 @@ public class Tardis.Utils {
 
     // Remove item from list
     public static string[] remove_from (string[] list, string item) {
-        if (!contains_str(list, item)) {
+        if (!contains_str (list, item)) {
             return list;
         }
 

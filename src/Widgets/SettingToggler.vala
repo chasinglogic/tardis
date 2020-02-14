@@ -2,7 +2,7 @@ public class Tardis.Widgets.SettingToggler : Gtk.Grid {
 
     public Gtk.Switch toggler_switch;
 
-    public SettingToggler(string name, string description, GLib.Settings settings, string setting_name) {
+    public SettingToggler (string name, string description, GLib.Settings settings, string setting_name) {
             var toggler_switch_label = new Gtk.Label (name);
             toggler_switch_label.halign = Gtk.Align.START;
             toggler_switch_label.vexpand = true;
@@ -11,7 +11,7 @@ public class Tardis.Widgets.SettingToggler : Gtk.Grid {
             toggler_switch.valign = Gtk.Align.START;
             toggler_switch.halign = Gtk.Align.END;
             toggler_switch.hexpand = true;
-            settings.bind(setting_name, toggler_switch, "active", GLib.SettingsBindFlags.DEFAULT);
+            settings.bind (setting_name, toggler_switch, "active", GLib.SettingsBindFlags.DEFAULT);
 
             var toggler_switch_description = new Gtk.Label
                 ("<small>%s</small>".printf (description));

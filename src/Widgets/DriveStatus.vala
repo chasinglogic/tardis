@@ -54,12 +54,12 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
         action_grid.orientation = Gtk.Orientation.HORIZONTAL;
 
         var remove_button = new Gtk.Button.from_icon_name ("user-trash");
-        remove_button.set_size_request(24, 24);
+        remove_button.set_size_request (24, 24);
         remove_button.tooltip_text = "Stop backing up to this hard drive.";
         remove_button.clicked.connect (() => {
-            var dialog = new Granite.MessageDialog.with_image_from_icon_name(
-                _("You are about to stop backing up to this drive"),
-                _("This will not remove any existing backups on this drive but " +
+            var dialog = new Granite.MessageDialog.with_image_from_icon_name (
+                _ ("You are about to stop backing up to this drive"),
+                _ ("This will not remove any existing backups on this drive but " +
                   "will prevent future backups from being stored there. If you " +
                   "would like to also delete the backups you can remove the " +
                   "Tardis folder from the drive after removal from Tardis."),
@@ -72,10 +72,10 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
 
             var nope = new Gtk.Button.with_label ("Cancel");
 
-            dialog.add_action_widget(nope, 0);
-            dialog.add_action_widget(really_remove, 1);
+            dialog.add_action_widget (nope, 0);
+            dialog.add_action_widget (really_remove, 1);
 
-            dialog.response.connect((response_id) => {
+            dialog.response.connect ((response_id) => {
                 if (response_id == 1) {
                     drive_removed (target);
                     this.destroy ();
@@ -86,12 +86,12 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
         });
 
         var restore_button = new Gtk.Button.from_icon_name ("edit-undo");
-        restore_button.set_size_request(24, 24);
+        restore_button.set_size_request (24, 24);
         restore_button.tooltip_text = "Restore your system from this backup drive.";
         restore_button.clicked.connect (() => {
-            var dialog = new Granite.MessageDialog.with_image_from_icon_name(
-                _("You are about to restore your system from this drive"),
-                _("This will not remove any new files on your system which " +
+            var dialog = new Granite.MessageDialog.with_image_from_icon_name (
+                _ ("You are about to restore your system from this drive"),
+                _ ("This will not remove any new files on your system which " +
                   "aren't in the backup. However, it will overwrite any " +
                   "files on your system which exist in the backup. Note " +
                   "that while a restore is running your system may " +
@@ -107,10 +107,10 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
 
             var nope = new Gtk.Button.with_label ("Cancel");
 
-            dialog.add_action_widget(nope, 0);
-            dialog.add_action_widget(really_restore, 1);
+            dialog.add_action_widget (nope, 0);
+            dialog.add_action_widget (really_restore, 1);
 
-            dialog.response.connect((response_id) => {
+            dialog.response.connect ((response_id) => {
                 if (response_id == 1) {
                     restore_from (target);
                 }
@@ -127,14 +127,14 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
         orientation = Gtk.Orientation.HORIZONTAL;
         hexpand = true;
 
-        if (target.needs_backup ()) {
+        if (target.out_of_date ()) {
             set_status (DriveStatusType.NEEDS_BACKUP);
         } else {
             set_status (DriveStatusType.SAFE);
         }
     }
 
-    public void set_status(DriveStatusType status) {
+    public void set_status (DriveStatusType status) {
         if (in_progress != null) {
             in_progress.destroy ();
         }
@@ -148,7 +148,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
             in_progress.start ();
             // Spinners are weirdly a little smaller than images so we set it's
             // size request to be a little bigger than 48.
-            in_progress.set_size_request(52, 52);
+            in_progress.set_size_request (52, 52);
             button_grid.attach (in_progress, 0, 0, 1, 2);
             button_grid.show_all ();
             last_status = status;
@@ -188,5 +188,3 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
         button_grid.show_all ();
     }
 }
-
-

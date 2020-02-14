@@ -13,30 +13,30 @@ public class Tardis.BackupTargetManager {
         vm = GLib.VolumeMonitor.@get ();
         targets = new BackupTarget[0];
 
-        state_file = Path.build_filename(
+        state_file = Path.build_filename (
             Environment.get_user_config_dir (),
             "Tardis",
             "targets.json"
             );
 
-        if (!FileUtils.test(Path.get_dirname(state_file), FileTest.EXISTS)) {
-            DirUtils.create(Path.get_dirname(state_file), 0755);
+        if (!FileUtils.test (Path.get_dirname (state_file), FileTest.EXISTS)) {
+            DirUtils.create (Path.get_dirname (state_file), 0755);
         }
 
-        if (FileUtils.test(state_file, FileTest.EXISTS)) {
+        if (FileUtils.test (state_file, FileTest.EXISTS)) {
             var parser = new Json.Parser ();
             try {
-                parser.load_from_file(state_file);
+                parser.load_from_file (state_file);
                 var root = parser.get_root ().get_array ();
                 if (root != null) {
                     var real = (Json.Array) root;
-                    real.foreach_element((_arr, _idx, obj) => {
-                        var t = new BackupTarget.from_json((Json.Object) obj.get_object ());
+                    real.foreach_element ((_arr, _idx, obj) => {
+                        var t = new BackupTarget.from_json ((Json.Object) obj.get_object ());
                         targets += t;
                     });
                 }
             } catch (GLib.Error e) {
-                GLib.print("Failed to load state! %s\n", e.message);
+                GLib.print ("Failed to load state! %s\n", e.message);
             }
         }
     }
@@ -61,7 +61,7 @@ public class Tardis.BackupTargetManager {
         builder.begin_array ();
 
         foreach (BackupTarget target in targets) {
-            target.build_json(builder);
+            target.build_json (builder);
         }
 
         builder.end_array ();
@@ -73,13 +73,13 @@ public class Tardis.BackupTargetManager {
         string targets_json = generator.to_data (null);
 
         try {
-            FileUtils.set_contents(state_file, targets_json, -1);
+            FileUtils.set_contents (state_file, targets_json, -1);
         } catch (GLib.FileError e) {
             save_error (e.message);
         }
     }
 
-    public void add_volume(GLib.Volume volume) {
+    public void add_volume (GLib.Volume volume) {
         add_target (new Tardis.BackupTarget.from_volume (volume));
     }
 
@@ -89,8 +89,8 @@ public class Tardis.BackupTargetManager {
         target_added (target);
     }
 
-    public async void restore_from(Tardis.BackupTarget target) {
-        var mount = yield get_mount_for_target(target);
+    public async void restore_from (Tardis.BackupTarget target) {
+        var mount = yield get_mount_for_target (target);
         // TODO inform user that drive couldn't be mounted for restore.
         if (mount == null) {
             return;
@@ -134,13 +134,13 @@ public class Tardis.BackupTargetManager {
     }
 
     private Tardis.Backups get_backups () {
-        return new Tardis.Backups(
-            settings.get_boolean("backup-data"),
-            settings.get_boolean("backup-configuration")
+        return new Tardis.Backups (
+            settings.get_boolean ("backup-data"),
+            settings.get_boolean ("backup-configuration")
         );
     }
 
-    public async void backup_target(Tardis.BackupTarget target) {
+    public async void backup_target (Tardis.BackupTarget target) {
         var backups = get_backups ();
         yield do_backup (backups, target);
     }
@@ -164,7 +164,7 @@ public class Tardis.BackupTargetManager {
             // other strange bad states get us here. So we prevent creating
             // multiple rsync processes to the same location by storing what
             // we've already began a backup to.
-            if (Tardis.Utils.contains_str(currently_backing_up, target.id)) {
+            if (Tardis.Utils.contains_str (currently_backing_up, target.id)) {
                 continue;
             }
 
@@ -175,8 +175,8 @@ public class Tardis.BackupTargetManager {
         write_state ();
     }
 
-    public async Mount? get_mount_for_target(BackupTarget target) {
-        var volume = vm.get_volume_for_uuid(target.id);
+    public async Mount? get_mount_for_target (BackupTarget target) {
+        var volume = vm.get_volume_for_uuid (target.id);
 
         // TODO handle the case that backup_target could be a folder, we
         // don't support this in Views/Settings yet however.
@@ -201,7 +201,7 @@ public class Tardis.BackupTargetManager {
         return mount;
     }
 
-    public async Mount[] get_available_backup_drives() throws GLib.Error {
+    public async Mount[] get_available_backup_drives () throws GLib.Error {
         Mount[] results = {};
 
         foreach (BackupTarget target in targets) {
@@ -216,7 +216,7 @@ public class Tardis.BackupTargetManager {
         return results;
     }
 
-    public void remove_target(BackupTarget target_to_remove) {
+    public void remove_target (BackupTarget target_to_remove) {
         BackupTarget[] new_targets = new BackupTarget[targets.length - 1];
         BackupTarget? removed_target = null;
         foreach (BackupTarget target in targets) {

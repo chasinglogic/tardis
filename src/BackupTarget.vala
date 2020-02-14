@@ -14,7 +14,7 @@ public class Tardis.BackupTarget : GLib.Object {
         differing_files = false;
     }
 
-    public BackupTarget(
+    public BackupTarget (
         string id,
         string display_name,
         string icon_name,
@@ -28,10 +28,10 @@ public class Tardis.BackupTarget : GLib.Object {
     }
 
     public BackupTarget.from_json (Json.Object obj) {
-        this.id = obj.get_string_member("id");
-        this.display_name = obj.get_string_member("display_name");
-        this.icon_name = obj.get_string_member("icon_name");
-        this.last_backup_time = obj.get_int_member("last_backup_time");
+        this.id = obj.get_string_member ("id");
+        this.display_name = obj.get_string_member ("display_name");
+        this.icon_name = obj.get_string_member ("icon_name");
+        this.last_backup_time = obj.get_int_member ("last_backup_time");
 
         var array = obj.get_array_member ("last_backup_sources");
         var length = array.get_length ();
@@ -68,7 +68,7 @@ public class Tardis.BackupTarget : GLib.Object {
         }
     }
 
-    public void build_json(Json.Builder builder) {
+    public void build_json (Json.Builder builder) {
         builder.begin_object ();
 
         builder.set_member_name ("id");
@@ -97,21 +97,9 @@ public class Tardis.BackupTarget : GLib.Object {
         builder.end_object ();
     }
 
-    public void tag_as_dirty () {
-        differing_files = true;
-    }
-
-    public void tag_as_clean () {
-        differing_files = false;
-    }
-
     public string repr () {
-        return "ID: %s Name: %s Icon: %s Last Backup: %ld\n".printf(
+        return "ID: %s Name: %s Icon: %s Last Backup: %ld\n".printf (
             id, display_name, icon_name, (long) last_backup_time);
-    }
-
-    public bool needs_backup () {
-        return differing_files || out_of_date ();
     }
 
     public bool out_of_date () {

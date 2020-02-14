@@ -1,6 +1,6 @@
 using GLib;
 
-public class Tardis.Widgets.BackupStatus  {
+public class Tardis.Widgets.BackupStatus {
     private Tardis.App app;
     private GLib.Settings settings;
     private Tardis.BackupTargetManager backups;
@@ -11,7 +11,7 @@ public class Tardis.Widgets.BackupStatus  {
     private string unsafe_msg;
     private string in_progress;
 
-    public BackupStatus(Tardis.App app,
+    public BackupStatus (Tardis.App app,
                         GLib.Settings settings, Tardis.BackupTargetManager backups) {
         this.app = app;
         this.settings = settings;
@@ -31,7 +31,7 @@ public class Tardis.Widgets.BackupStatus  {
         app.warning_message (unsafe_msg, null);
     }
 
-    public async void get_backup_status() {
+    public async void get_backup_status () {
         app.main_view.set_all (DriveStatusType.IN_PROGRESS);
 
         var longer_than_24_hours = false;
@@ -59,7 +59,7 @@ public class Tardis.Widgets.BackupStatus  {
 
             string? backup_path = null;
             try {
-                backup_path = Tardis.Backups.get_backups_path(mount);
+                backup_path = Tardis.Backups.get_backups_path (mount);
             } catch (GLib.Error e) {
                 // Because create_if_not_found is false here we never will
                 // encounter this code path. This is here to silence a false
@@ -93,7 +93,7 @@ public class Tardis.Widgets.BackupStatus  {
         }
 
         if ((longer_than_24_hours || differing_files) &&
-            settings.get_boolean("automatic-backups")) {
+            settings.get_boolean ("automatic-backups")) {
             start_backup ();
         } else if (longer_than_24_hours || differing_files) {
             this.out_of_date ();
@@ -101,17 +101,17 @@ public class Tardis.Widgets.BackupStatus  {
     }
 
     public void start_backup () {
-        var starting_backup = new GLib.Notification("Starting Backup!");
+        var starting_backup = new GLib.Notification ("Starting Backup!");
         starting_backup.set_icon (notification_icon);
-        starting_backup.set_body("Please do not unplug any storage devices.");
-        app.send_notification( "com.github.chasinglogic.tardis", starting_backup);
+        starting_backup.set_body ("Please do not unplug any storage devices.");
+        app.send_notification ( "com.github.chasinglogic.tardis", starting_backup);
 
         // TODO be granular
-        backups.backup_all.begin((obj, res) => {
-            var stopping_backup = new Notification("Backup Complete!");
+        backups.backup_all.begin ((obj, res) => {
+            var stopping_backup = new Notification ("Backup Complete!");
             stopping_backup.set_icon (notification_icon);
-            stopping_backup.set_body("Your data is safe!");
-            app.send_notification( "com.github.chasinglogic.tardis", stopping_backup);
+            stopping_backup.set_body ("Your data is safe!");
+            app.send_notification ( "com.github.chasinglogic.tardis", stopping_backup);
         });
     }
 
