@@ -7,13 +7,11 @@ public class Tardis.Widgets.BackupStatus  {
 
     private GLib.ThemedIcon notification_icon;
 
-    private Gtk.Stack message_stack;
-    private Tardis.Widgets.BackupMessage safe_msg;
-    private Tardis.Widgets.BackupMessage unsafe_msg;
-    private Tardis.Widgets.BackupMessage in_progress;
-    private Tardis.Widgets.BackupMessage calculating;
-    private Tardis.Widgets.BackupMessage out_of_date_msg;
-    private Tardis.Widgets.BackupMessage missing_files_msg;
+    private string safe_msg;
+    private string unsafe_msg;
+    private string in_progress;
+    private string out_of_date_msg;
+    private string missing_files_msg;
 
     public BackupStatus(Tardis.App app,
                         GLib.Settings settings, Tardis.BackupTargetManager backups) {
@@ -22,54 +20,20 @@ public class Tardis.Widgets.BackupStatus  {
         this.backups = backups;
         notification_icon = new GLib.ThemedIcon ("com.github.chasinglogic.tardis");
 
-        safe_msg = new Tardis.Widgets.BackupMessage (
-            "Your backups are up to date.",
-            "Your data is safe."
-        );
+        // TODO maybe add "I have connected a backup drive button";
+        unsafe_msg = "A backup is needed and no backup drives are available.";
 
-        unsafe_msg = new Tardis.Widgets.BackupMessage (
-            "A backup is needed and no backup drives are available.",
-            "You should plug in or add a new backup drive"
-        );
-
-        out_of_date_msg = new Tardis.Widgets.BackupMessage (
-            "You haven't backed up in over 24 hours.",
-            "Press the 'Start Backup' button to backup to all available targets."
-        );
-
-        missing_files_msg = new Tardis.Widgets.BackupMessage (
-            "We've detected that there are differing\nfiles between your system and backup.",
-            ""
-        );
-
-        in_progress = new Tardis.Widgets.BackupMessage ("Backup in progress...", "Please don't unplug any storage devices.");
-        calculating = new Tardis.Widgets.BackupMessage ("Checking if your backups are up to date...", "This may take a moment");
-
-        message_stack = new Gtk.Stack ();
-        message_stack.margin = 24;
-        message_stack.add (safe_msg);
-        message_stack.add (unsafe_msg);
-        message_stack.add (out_of_date_msg);
-        message_stack.add (missing_files_msg);
-        message_stack.add(calculating);
-        message_stack.add(in_progress);
-
-    }
-
-    public void missing_files () {
-        message_stack.set_visible_child (missing_files_msg);
+        // TODO put the start backup button in the info bar
+        out_of_date_msg = "We've detected your backups are out of date. Press the 'Start Backup' button to backup to all available targets.";
+        in_progress = "Backup in progress. Please don't unplug any storage devices.";
     }
 
     public void out_of_date () {
-        message_stack.set_visible_child (out_of_date_msg);
-    }
-
-    public void safe () {
-        message_stack.set_visible_child (safe_msg);
+        app.warning_message (out_of_date_msg, null);
     }
 
     public void unsafe () {
-        message_stack.set_visible_child (unsafe_msg);
+        app.warning_message (unsafe_msg, null);
     }
 
     public async void get_backup_status() {
@@ -128,17 +92,12 @@ public class Tardis.Widgets.BackupStatus  {
         if ((longer_than_24_hours || differing_files) &&
             settings.get_boolean("automatic-backups")) {
             start_backup ();
-        } else if (longer_than_24_hours) {
+        } else if (longer_than_24_hours || differing_files) {
             this.out_of_date ();
-        } else if (differing_files) {
-            this.missing_files ();
-        } else {
-            this.safe ();
         }
     }
 
     public void start_backup () {
-        message_stack.set_visible_child (in_progress);
         var starting_backup = new GLib.Notification("Starting Backup!");
         starting_backup.set_icon (notification_icon);
         starting_backup.set_body("Please do not unplug any storage devices.");
@@ -150,8 +109,6 @@ public class Tardis.Widgets.BackupStatus  {
             stopping_backup.set_icon (notification_icon);
             stopping_backup.set_body("Your data is safe!");
             app.send_notification( "com.github.chasinglogic.tardis", stopping_backup);
-
-            this.safe ();
         });
     }
 }

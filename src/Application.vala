@@ -30,6 +30,15 @@ public class Tardis.App : Gtk.Application {
     public Gtk.Label title;
     public Granite.Widgets.ModeButton view_mode;
 
+    public Gtk.InfoBar error_bar;
+    public Gtk.Label error_msg_label;
+
+    public Gtk.InfoBar warning_bar;
+    public Gtk.Label warning_msg_label;
+
+    public Gtk.InfoBar info_bar;
+    public Gtk.Label info_msg_label;
+
     public int drive_manager_id;
     public int backup_status_id;
 
@@ -156,11 +165,69 @@ public class Tardis.App : Gtk.Application {
             headerbar.build_add_target_menu ();
         });
 
+        error_msg_label = new Gtk.Label (null);
+        error_msg_label.use_markup = true;
+
+        error_bar = new Gtk.InfoBar ();
+        error_bar.show_close_button = true;
+        error_bar.message_type = Gtk.MessageType.ERROR;
+        error_bar.revealed = false;
+        error_bar.get_content_area ().add (error_msg_label);
+
+        warning_msg_label = new Gtk.Label (null);
+        warning_msg_label.use_markup = true;
+
+        warning_bar = new Gtk.InfoBar ();
+        warning_bar.message_type = Gtk.MessageType.WARNING;
+        warning_bar.revealed = false;
+        warning_bar.show_close_button = true;
+        warning_bar.get_content_area ().add (warning_msg_label);
+
+        info_msg_label = new Gtk.Label (null);
+        info_msg_label.use_markup = true;
+
+        info_bar = new Gtk.InfoBar ();
+        info_bar.show_close_button = true;
+        info_bar.message_type = Gtk.MessageType.INFO;
+        info_bar.revealed = false;
+        info_bar.get_content_area ().add (info_msg_label);
+
+        var window_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        window_box.add (info_bar);
+        window_box.add (warning_bar);
+        window_box.add (error_bar);
+        window_box.add (main_stack);
 
         window.set_titlebar (headerbar);
-        window.add (main_stack);
+        window.add(window_box);
         window.show_all ();
         window.size_allocate.connect (() => { on_resize (); });
+    }
+
+    public void error_message (string msg) {
+        error_msg_label.set_markup ("<b>%s</b>".printf(msg));
+        error_bar.revealed = true;
+        error_bar.response.connect((_id) => error_bar.hide ());
+    }
+
+    public void warning_message (string msg, Gtk.Widget? action) {
+        warning_msg_label.set_markup ("<b>%s</b>".printf(msg));
+        warning_bar.revealed = true;
+        warning_bar.response.connect((_id) => warning_bar.hide ());
+    }
+
+    public void hide_warning () {
+        warning_bar.hide ();
+    }
+
+    public void info_message(string msg) {
+        info_msg_label.set_markup ("<b>%s</b>".printf(msg));
+        info_bar.revealed = true;
+        info_bar.response.connect((_id) => info_bar.hide ());
+    }
+
+    public void hide_info () {
+        info_bar.revealed = false;
     }
 
     public void on_view_mode_changed () {
