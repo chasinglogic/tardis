@@ -91,15 +91,20 @@ public class Tardis.BackupTargetManager {
         yield backups.restore (mount);
     }
 
-    public async void do_backup (Tardis.Backups backups, Tardis.BackupTarget target) {
+    public async int do_backup (Tardis.Backups backups, Tardis.BackupTarget target) {
         var mount = yield get_mount_for_target (target);
         if (mount == null) {
-            return;
+            return 0;
         }
 
         backup_started (target);
 
-        yield backups.backup (mount);
+        try {
+            yield backups.backup (mount);
+        } catch (Error e) {
+            backup_error (target, e.message);
+            return -1;
+        }
 
         var sources = backups.get_sources ();
         target.last_backup_sources = sources;
@@ -108,6 +113,7 @@ public class Tardis.BackupTargetManager {
         target.last_backup_time = curtime;
 
         backup_complete (target);
+        return 0;
     }
 
     private Tardis.Backups get_backups () {
