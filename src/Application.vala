@@ -132,26 +132,42 @@ public class Tardis.App : Gtk.Application {
             headerbar.build_add_target_menu ();
         });
 
-        backup_status.main_view.drive_removed.connect ((target) => {
+        main_view.drive_removed.connect ((target) => {
             target_manager.remove_target (target);
         });
 
-        backup_status.main_view.restore_from.connect ((target) => {
+        main_view.restore_from.connect ((target) => {
             target_manager.restore_from (target);
         });
 
         target_manager.backup_started.connect ((target) => {
-            backup_status.main_view.set_status (target.id,
-                                                DriveStatusType.IN_PROGRESS);
+            hide_warning ();
+            if (!info_bar.revealed) {
+                info_message ("Backup in progress. Please do not unplug any storage devices.");
+            }
+
+            var notification = new Notification (_("Backup started!"));
+            notification.set_body (_("Backing up to: %s").printf(target.display_name));
+            this.send_notification (id, notification);
+
+            main_view.set_status (target.id, DriveStatusType.IN_PROGRESS);
         });
 
         target_manager.backup_complete.connect ((target) => {
-            backup_status.main_view.set_status (target.id,
-                                                DriveStatusType.SAFE);
+            main_view.set_status (target.id, DriveStatusType.SAFE);
+
+            if (info_bar.revealed) {
+                info_bar.hide ();
+            }
+
+            var notification = new Notification (_("Backup complete!"));
+            notification.set_body (_("%s is now up to date.").printf(target.display_name));
+            this.send_notification (id, notification);
         });
 
-        target_manager.backup_all_completed.connect (() => {
-            backup_status.get_backup_status.begin ();
+        target_manager.backup_error.connect((target, err_msg) => {
+            main_view.set_status (target.id, DriveStatusType.BACKUP_ERROR);
+            this.error_message (err_msg);
         });
 
         settings.changed.connect((key) => {
