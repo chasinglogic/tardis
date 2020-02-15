@@ -10,6 +10,7 @@ public class Tardis.BackupTargetManager {
     private List<Tardis.BackupTarget> targets;
 
     public BackupTargetManager (GLib.VolumeMonitor vm, GLib.Settings settings) {
+        this.settings = settings;
         this.vm = vm;
         targets = new List<BackupTarget> ();
 
