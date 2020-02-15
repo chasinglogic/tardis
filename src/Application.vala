@@ -194,6 +194,37 @@ public class Tardis.App : Gtk.Application {
             var icon = new GLib.ThemedIcon (id);
             notification.set_icon (icon);
             notification.set_body ("%s ".printf (target.display_name) + _("is now up to date."));
+
+            this.send_notification (id, notification);
+        });
+
+        target_manager.restore_started.connect ((target) => {
+            main_view.set_status (target.id, DriveStatusType.IN_PROGRESS);
+
+            if (info_bar.revealed) {
+                info_message ("Restore in progress. Please do not unplug any storage devices. Your system may behave strangely until the restore is complete.");
+            }
+
+            var notification = new Notification (_ ("Restore started!"));
+            var icon = new GLib.ThemedIcon (id);
+            notification.set_icon (icon);
+            notification.set_body (_("Restoring your system from: " + " %s".printf (target.display_name)));
+
+            this.send_notification (id, notification);
+        });
+
+        target_manager.restore_complete.connect ((target) => {
+            main_view.set_status (target.id, DriveStatusType.SAFE);
+
+            if (info_bar.revealed) {
+                info_bar.hide ();
+            }
+
+            var notification = new Notification (_ ("Restore complete!"));
+            var icon = new GLib.ThemedIcon (id);
+            notification.set_icon (icon);
+            notification.set_body (_("Your system data now matches: " + " %s".printf (target.display_name)));
+
             this.send_notification (id, notification);
         });
 

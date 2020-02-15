@@ -96,7 +96,9 @@ public class Tardis.BackupTargetManager {
         }
 
         try {
+            restore_started (target);
             yield backups.restore (mount);
+            restore_complete (target);
         } catch (GLib.Error e) {
             backup_error (target, e.message);
         }
@@ -211,4 +213,7 @@ public class Tardis.BackupTargetManager {
 
     public signal void backup_started (BackupTarget target);
     public signal void backup_complete (BackupTarget target);
+
+    public signal void restore_started (BackupTarget target);
+    public signal void restore_complete (BackupTarget target);
 }
