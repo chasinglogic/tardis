@@ -1,9 +1,7 @@
 public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
     private GLib.VolumeMonitor vm;
 
-    private Gtk.Box add_target_menu;
-    private Gtk.MenuButton add_target_button;
-    private Gtk.Popover add_target_popover;
+    private Gtk.Button add_target_button;
 
     private Gtk.MenuButton backup_settings_button;
     private Gtk.Popover backup_settings_popover;
@@ -100,13 +98,7 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
             backup_target_manager.backup_all.begin ();
         });
 
-        add_target_menu = new Gtk.Box (Gtk.Orientation.VERTICAL, 6);
-        add_target_menu.margin = 12;
-
-        add_target_popover = new Gtk.Popover (null);
-        add_target_popover.add (add_target_menu);
-
-        add_target_button = new Gtk.MenuButton ();
+        add_target_button = new Gtk.Button ();
         var add_target_image = new Gtk.Image.from_icon_name (
             "com.github.chasinglogic.tardis.add-backup-drive",
              Gtk.IconSize.LARGE_TOOLBAR
@@ -114,8 +106,49 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         add_target_image.set_pixel_size (24);
         add_target_button.image = add_target_image;
         add_target_button.tooltip_text = _("Add Backup Drives");
-        add_target_button.popover = add_target_popover;
-        build_add_target_menu ();
+        add_target_button.clicked.connect (() => {
+            var add_target_dlg = new Gtk.Dialog ();
+            add_target_dlg.set_default_size (200, 100);
+            add_target_dlg.set_transient_for (Tardis.App.window);
+
+            var add_target_box = add_target_dlg.get_content_area ();
+            add_target_box.margin = 12;
+
+            var add_target_selector = new Tardis.Widgets.DriveSelector (backup_target_manager, vm);
+            add_target_selector.margin = 12;
+
+            var add_target_msg = new Gtk.Label (_(
+                    "To ensure a successful backup to the selected drive, " +
+                    "make sure you have permissions to create folders " +
+                    "and files on the drive. Additionally, if the drive " +
+                    "is encrypted make sure that's already mounted via " +
+                    "the Files app."));
+            add_target_msg.margin = 12;
+            add_target_msg.wrap = true;
+            add_target_msg.max_width_chars = 20;
+
+            add_target_box.add (add_target_selector);
+            add_target_box.add (add_target_msg);
+
+            add_target_dlg.response.connect ((id) => {
+                if (id == 1) {
+                    var uuid = add_target_selector.get_active_text ();
+                    var volume = vm.get_volume_for_uuid (uuid);
+                    target_created (new Tardis.BackupTarget.from_volume (volume));
+                }
+                add_target_dlg.destroy ();
+            });
+
+            var confirm_button = new Gtk.Button.with_label ("Backup to this Drive");
+            confirm_button.get_style_context ().add_class (Gtk.STYLE_CLASS_SUGGESTED_ACTION);
+
+            var cancel_button = new Gtk.Button.with_label ("Cancel");
+
+            add_target_dlg.add_action_widget (cancel_button, 0);
+            add_target_dlg.add_action_widget (confirm_button, 1);
+
+            add_target_dlg.show_all ();
+        });
 
         var info_button = new Gtk.Button ();
         info_button.image = new Gtk.Image.from_icon_name ("dialog-information",
@@ -160,60 +193,5 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         pack_end (backup_settings_button);
     }
 
-    public void build_add_target_menu () {
-        var volumes = vm.get_volumes ();
-        if (volumes.length () == 0) {
-            add_target_button.set_popover (null);
-            return;
-        }
-
-        // Remove everything first
-        add_target_menu.@foreach ((child) => {
-            add_target_menu.remove (child);
-        });
-        var new_drives = false;
-        var backup_targets = backup_target_manager.get_target_ids ();
-
-        foreach (Volume vol in volumes) {
-            var name = vol.get_drive ().get_name ();
-            var uuid = vol.get_uuid ();
-
-            if (uuid == null) {
-                continue;
-            }
-
-            if (Tardis.Utils.contains_str (backup_targets, uuid)) {
-                continue;
-            }
-
-            new_drives = true;
-
-            var item_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
-            var icon = new Gtk.Image.from_gicon (vol.get_icon (), Gtk.IconSize.SMALL_TOOLBAR);
-            var label = new Gtk.Label (name);
-            item_box.add (icon);
-            item_box.add (label);
-
-            var item_button = new Gtk.ModelButton ();
-            item_button.tooltip_text = _("Make %s a backup drive.".printf (name));
-            item_button.get_child ().destroy ();
-            item_button.add (item_box);
-            item_button.clicked.connect (() => {
-                backup_target_manager.add_volume (vol);
-                drive_added ();
-                build_add_target_menu ();
-            });
-
-            add_target_menu.add (item_button);
-        }
-
-        add_target_menu.show_all ();
-        if (new_drives) {
-            add_target_button.set_popover (add_target_popover);
-        } else {
-            add_target_button.set_popover (null);
-        }
-    }
-
-    public signal void drive_added ();
+    public signal void target_created (BackupTarget target);
 }

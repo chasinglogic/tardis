@@ -63,12 +63,17 @@ public class Tardis.App : Gtk.Application {
     protected override void activate () {
         settings = new GLib.Settings (id);
         volume_monitor = GLib.VolumeMonitor.@get ();
+
         target_manager = new Tardis.BackupTargetManager (volume_monitor, settings);
         backup_status = new Tardis.BackupStatus (target_manager);
         main_view = new Tardis.Widgets.MainView (target_manager);
         headerbar = new Tardis.Widgets.HeaderBar (volume_monitor, target_manager, settings);
 
         // Cross the Signals
+        headerbar.target_created.connect ((target) => {
+            target_manager.add_target (target);
+        });
+
         backup_status.target_is_backed_up.connect ((target) => {
             main_view.set_status (target.id, DriveStatusType.SAFE);
         });
@@ -112,7 +117,6 @@ public class Tardis.App : Gtk.Application {
 
         target_manager.target_removed.connect (() => {
             backup_status.get_backup_status.begin ();
-            headerbar.build_add_target_menu ();
         });
 
         target_manager.backup_started.connect ((target) => {
@@ -157,12 +161,10 @@ public class Tardis.App : Gtk.Application {
 
         volume_monitor.volume_added.connect (() => {
             backup_status.get_backup_status.begin ();
-            headerbar.build_add_target_menu ();
         });
 
         volume_monitor.volume_removed.connect (() => {
             backup_status.get_backup_status.begin ();
-            headerbar.build_add_target_menu ();
         });
 
         backup_status.get_backup_status.begin ();

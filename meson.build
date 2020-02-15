@@ -26,6 +26,7 @@ executable(
     'src/Widgets/SettingToggler.vala',
     'src/Widgets/DriveStatus.vala',
     'src/Widgets/MainView.vala',
+    'src/Widgets/DriveSelector.vala',
 
     dependencies: [
       dependency('gtk+-3.0'),
