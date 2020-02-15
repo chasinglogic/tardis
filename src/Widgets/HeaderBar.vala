@@ -178,12 +178,10 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
             var name = vol.get_drive ().get_name ();
             var uuid = vol.get_uuid ();
 
-            // TODO handle this case
             if (uuid == null) {
                 continue;
             }
 
-            // TODO needs to be updated to handle objects
             if (Tardis.Utils.contains_str (backup_targets, uuid)) {
                 continue;
             }

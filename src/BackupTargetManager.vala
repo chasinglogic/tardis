@@ -90,8 +90,8 @@ public class Tardis.BackupTargetManager {
 
     public async void restore_from (Tardis.BackupTarget target) {
         var mount = yield get_mount_for_target (target);
-        // TODO inform user that drive couldn't be mounted for restore.
         if (mount == null) {
+            backup_error (target, "Unable to mount drive");
             return;
         }
 
@@ -176,9 +176,6 @@ public class Tardis.BackupTargetManager {
 
     public async Mount? get_mount_for_target (BackupTarget target) {
         var volume = vm.get_volume_for_uuid (target.id);
-
-        // TODO handle the case that backup_target could be a folder, we
-        // don't support this in Views/Settings yet however.
         if (volume == null) {
             return null;
         }
