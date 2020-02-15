@@ -92,7 +92,7 @@ public class Tardis.BackupTargetManager {
     public async void restore_from (Tardis.BackupTarget target) {
         var mount = yield get_mount_for_target (target);
         if (mount == null) {
-            backup_error (target, "Unable to mount drive");
+            backup_error (target, "Unable to mount drive, is it plugged in?");
             return;
         }
 
@@ -188,7 +188,6 @@ public class Tardis.BackupTargetManager {
             try {
                 yield volume.mount (MountMountFlags.NONE, null);
             } catch (GLib.Error e) {
-                backup_error (target, e.message);
                 return null;
             }
 

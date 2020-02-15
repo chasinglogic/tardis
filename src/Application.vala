@@ -69,6 +69,58 @@ public class Tardis.App : Gtk.Application {
         main_view = new Tardis.Widgets.MainView (target_manager);
         headerbar = new Tardis.Widgets.HeaderBar (volume_monitor, target_manager, settings);
 
+        error_msg_label = new Gtk.Label (null);
+        error_msg_label.use_markup = true;
+
+        error_bar = new Gtk.InfoBar ();
+        error_bar.show_close_button = true;
+        error_bar.message_type = Gtk.MessageType.ERROR;
+        error_bar.revealed = false;
+        error_bar.get_content_area ().add (error_msg_label);
+
+        warning_msg_label = new Gtk.Label (null);
+        warning_msg_label.use_markup = true;
+
+        warning_bar = new Gtk.InfoBar ();
+        warning_bar.message_type = Gtk.MessageType.WARNING;
+        warning_bar.revealed = false;
+        warning_bar.show_close_button = true;
+        warning_bar.get_content_area ().add (warning_msg_label);
+
+        info_msg_label = new Gtk.Label (null);
+        info_msg_label.use_markup = true;
+
+        info_bar = new Gtk.InfoBar ();
+        info_bar.show_close_button = true;
+        info_bar.message_type = Gtk.MessageType.INFO;
+        info_bar.revealed = false;
+        info_bar.get_content_area ().add (info_msg_label);
+
+        var window_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+        window_box.add (info_bar);
+        window_box.add (warning_bar);
+        window_box.add (error_bar);
+        window_box.add (main_view);
+
+        // Construct the main window for our Application.
+        window = new Gtk.ApplicationWindow (this);
+        if (settings.get_boolean ("first-run")) {
+            settings.set_int ("window-width", default_window_width);
+            settings.set_int ("window-height", default_window_height);
+        }
+
+        if (settings.get_boolean ("window-maximized")) {
+            window.maximize ();
+        } else {
+            window.default_width = settings.get_int ("window-width");
+            window.default_height = settings.get_int ("window-height");
+        }
+
+        window.set_titlebar (headerbar);
+        window.add (window_box);
+        window.show_all ();
+        window.size_allocate.connect (() => { on_resize (); });
+
         // Cross the Signals
         headerbar.target_created.connect ((target) => {
             target_manager.add_target (target);
@@ -172,58 +224,6 @@ public class Tardis.App : Gtk.Application {
         });
 
         backup_status.get_backup_status.begin ();
-
-        error_msg_label = new Gtk.Label (null);
-        error_msg_label.use_markup = true;
-
-        error_bar = new Gtk.InfoBar ();
-        error_bar.show_close_button = true;
-        error_bar.message_type = Gtk.MessageType.ERROR;
-        error_bar.revealed = false;
-        error_bar.get_content_area ().add (error_msg_label);
-
-        warning_msg_label = new Gtk.Label (null);
-        warning_msg_label.use_markup = true;
-
-        warning_bar = new Gtk.InfoBar ();
-        warning_bar.message_type = Gtk.MessageType.WARNING;
-        warning_bar.revealed = false;
-        warning_bar.show_close_button = true;
-        warning_bar.get_content_area ().add (warning_msg_label);
-
-        info_msg_label = new Gtk.Label (null);
-        info_msg_label.use_markup = true;
-
-        info_bar = new Gtk.InfoBar ();
-        info_bar.show_close_button = true;
-        info_bar.message_type = Gtk.MessageType.INFO;
-        info_bar.revealed = false;
-        info_bar.get_content_area ().add (info_msg_label);
-
-        var window_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-        window_box.add (info_bar);
-        window_box.add (warning_bar);
-        window_box.add (error_bar);
-        window_box.add (main_view);
-
-        // Construct the main window for our Application.
-        window = new Gtk.ApplicationWindow (this);
-        if (settings.get_boolean ("first-run")) {
-            settings.set_int ("window-width", default_window_width);
-            settings.set_int ("window-height", default_window_height);
-        }
-
-        if (settings.get_boolean ("window-maximized")) {
-            window.maximize ();
-        } else {
-            window.default_width = settings.get_int ("window-width");
-            window.default_height = settings.get_int ("window-height");
-        }
-
-        window.set_titlebar (headerbar);
-        window.add (window_box);
-        window.show_all ();
-        window.size_allocate.connect (() => { on_resize (); });
     }
 
     public void error_message (string msg) {
