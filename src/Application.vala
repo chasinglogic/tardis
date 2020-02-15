@@ -168,10 +168,6 @@ public class Tardis.App : Gtk.Application {
             target_manager.backup_all ();
         });
 
-        target_manager.target_removed.connect (() => {
-            backup_status.get_backup_status.begin ();
-        });
-
         target_manager.backup_started.connect ((target) => {
             hide_warning ();
             if (!info_bar.revealed) {
@@ -218,11 +214,6 @@ public class Tardis.App : Gtk.Application {
 
         volume_monitor.volume_added.connect (() => {
             error_bar.hide ();
-            backup_status.get_backup_status.begin ();
-        });
-
-        volume_monitor.volume_removed.connect (() => {
-            backup_status.get_backup_status.begin ();
         });
 
         backup_status.get_backup_status.begin ();
