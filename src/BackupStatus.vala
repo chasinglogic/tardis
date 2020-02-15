@@ -11,7 +11,6 @@ public class Tardis.BackupStatus {
         var needs_backup = false;
         var safe_drive_found = false;
 
-        var backup_sources = backups.get_sources (true);
         foreach (Tardis.BackupTarget target in backups.get_targets ()) {
             if (target.out_of_date ()) {
                 needs_backup = true;
