@@ -1,0 +1,8 @@
+com.github.chasinglogic.tardis (0.1ubuntu1) bionic; urgency=low
+
+  * Initial Release.
+    * Support backing up to multiple drives
+    * Support automatic backups
+    * Support restore and management of backup drives
+
+ -- Mathew Robinson <mathew@chasinglogic.io>  Fri, 14 Feb 2020 21:20:11 -0500
