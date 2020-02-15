@@ -217,6 +217,7 @@ public class Tardis.App : Gtk.Application {
         });
 
         volume_monitor.volume_added.connect (() => {
+            error_bar.hide ();
             backup_status.get_backup_status.begin ();
         });
 
