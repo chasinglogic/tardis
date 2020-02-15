@@ -85,7 +85,6 @@ public class Tardis.BackupTargetManager {
 
     public void add_target (Tardis.BackupTarget target) {
         targets.append (target);
-        write_state ();
         target_added (target);
     }
 
@@ -156,23 +155,10 @@ public class Tardis.BackupTargetManager {
     }
 
     public async void backup_all () {
-        string[] currently_backing_up = new string[(int) targets.length ()];
         var backups = get_backups ();
-
         foreach (BackupTarget target in targets) {
-            // It's possible for multiple targets to point to the same mount and
-            // other strange bad states get us here. So we prevent creating
-            // multiple rsync processes to the same location by storing what
-            // we've already began a backup to.
-            if (Tardis.Utils.contains_str (currently_backing_up, target.id)) {
-                continue;
-            }
-
-            currently_backing_up += target.id;
             yield do_backup (backups, target);
         }
-
-        write_state ();
     }
 
     public async Mount? get_mount_for_target (BackupTarget target) {
@@ -215,7 +201,6 @@ public class Tardis.BackupTargetManager {
     public void remove_target (BackupTarget target_to_remove) {
         targets.remove (target_to_remove);
         target_removed (target_to_remove);
-        write_state ();
     }
 
     public signal void save_error (string err_msg);
