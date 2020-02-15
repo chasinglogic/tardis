@@ -127,8 +127,8 @@ public class Tardis.App : Gtk.Application {
 
             var notification = new Notification (_ ("Backup started!"));
             var icon = new GLib.ThemedIcon (id);
-            notification.set_icon  (icon);
-            notification.set_body (_ ("Backing up to: %s").printf (target.display_name));
+            notification.set_icon (icon);
+            notification.set_body (_("Backing up to: %s").printf (target.display_name));
             this.send_notification (id, notification);
 
             main_view.set_status (target.id, DriveStatusType.IN_PROGRESS);
@@ -143,8 +143,8 @@ public class Tardis.App : Gtk.Application {
 
             var notification = new Notification (_ ("Backup complete!"));
             var icon = new GLib.ThemedIcon (id);
-            notification.set_icon  (icon);
-            notification.set_body (_ ("%s is now up to date.").printf (target.display_name));
+            notification.set_icon (icon);
+            notification.set_body (_("%s is now up to date.").printf (target.display_name));
             this.send_notification (id, notification);
         });
 
