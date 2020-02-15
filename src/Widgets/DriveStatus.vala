@@ -5,7 +5,7 @@ public enum DriveStatusType {
     IN_PROGRESS,
 }
 
-public class Tardis.Widgets.DriveStatus : Gtk.Box {
+public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
     private Gtk.Grid button_grid;
     private Gtk.Label button_title;
     private Gtk.Image drive_icon;
@@ -120,13 +120,16 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
             set_status (DriveStatusType.SAFE);
         }
 
-        get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
-        margin_top = 6;
-        margin_bottom = 6;
-        hexpand = true;
-        orientation = Gtk.Orientation.HORIZONTAL;
-        add (button_grid);
-        add (action_grid);
+        var content_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        content_box.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+        content_box.margin_top = 6;
+        content_box.margin_bottom = 6;
+        content_box.hexpand = true;
+        content_box.add (button_grid);
+        content_box.add (action_grid);
+
+        selectable = false;
+        add (content_box);
     }
 
     public void set_status (DriveStatusType status) {

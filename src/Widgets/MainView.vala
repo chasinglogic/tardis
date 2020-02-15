@@ -1,6 +1,6 @@
 public class Tardis.Widgets.MainView : Gtk.Box {
     private Gtk.Grid content;
-    private Gtk.Grid drive_window_content;
+    private Gtk.ListBox drive_window_content;
     private Gtk.ScrolledWindow drive_window;
 
     private Tardis.BackupTargetManager target_manager;
@@ -14,15 +14,14 @@ public class Tardis.Widgets.MainView : Gtk.Box {
 
         var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
 
-        drive_window_content = new Gtk.Grid ();
+        drive_window_content = new Gtk.ListBox ();
         drive_window_content.expand = true;
         drive_window_content.margin = 12;
-        drive_window_content.orientation = Gtk.Orientation.VERTICAL;
+        // drive_window_content.orientation = Gtk.Orientation.VERTICAL;
 
         foreach (BackupTarget target in target_manager.get_targets ()) {
             add_target (target);
         }
-        drive_window_content.show_all ();
 
         drive_window = new Gtk.ScrolledWindow (null, null);
         drive_window.add (drive_window_content);
@@ -39,14 +38,12 @@ public class Tardis.Widgets.MainView : Gtk.Box {
         add (content);
     }
 
-    public signal void drive_removed (BackupTarget target);
-    public signal void restore_from (BackupTarget target);
-
     public void add_target (BackupTarget target) {
         var drive_status = new Tardis.Widgets.DriveStatus (target);
         drive_status.drive_removed.connect ((target) => drive_removed (target));
         drive_status.restore_from.connect ((target) => restore_from (target));
         drive_window_content.add (drive_status);
+        drive_window_content.show_all ();
     }
 
     public void set_all (DriveStatusType status) {
@@ -64,4 +61,7 @@ public class Tardis.Widgets.MainView : Gtk.Box {
             }
         });
     }
+
+    public signal void drive_removed (BackupTarget target);
+    public signal void restore_from (BackupTarget target);
 }
