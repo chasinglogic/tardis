@@ -67,10 +67,13 @@ public class Tardis.Widgets.DriveStatus : Gtk.Box {
             dialog.response.connect ((response_id) => {
                 if (response_id == 1) {
                     drive_removed (target);
+                    dialog.destroy ();
                     this.destroy ();
                 }
+
                 dialog.destroy ();
             });
+
             dialog.show_all ();
         });
 
