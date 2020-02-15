@@ -114,11 +114,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
         action_grid.attach (remove_button, 0, 0, 2, 2);
         action_grid.attach (restore_button, 2, 0, 2, 2);
 
-        if (target.out_of_date ()) {
-            set_status (DriveStatusType.NEEDS_BACKUP);
-        } else {
-            set_status (DriveStatusType.SAFE);
-        }
+        set_status (DriveStatusType.SAFE);
 
         var content_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
         content_box.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
