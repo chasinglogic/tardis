@@ -7,11 +7,11 @@ public class Tardis.BackupTargetManager {
     private GLib.VolumeMonitor vm;
 
     private Tardis.Backups backups;
-    private Tardis.BackupTarget[] targets;
+    private List<Tardis.BackupTarget> targets;
 
     public BackupTargetManager (GLib.VolumeMonitor vm, GLib.Settings settings) {
         this.vm = vm;
-        targets = new BackupTarget[0];
+        targets = new List<BackupTarget> ();
 
         state_file = Path.build_filename (
             Environment.get_user_config_dir (),
@@ -32,7 +32,7 @@ public class Tardis.BackupTargetManager {
                     var real = (Json.Array) root;
                     real.foreach_element ((_arr, _idx, obj) => {
                         var t = new BackupTarget.from_json ((Json.Object) obj.get_object ());
-                        targets += t;
+                        targets.append (t);
                     });
                 }
             } catch (GLib.Error e) {
@@ -43,7 +43,7 @@ public class Tardis.BackupTargetManager {
 
 
     public string[] get_target_ids () {
-        string[] ids = new string[targets.length];
+        string[] ids = new string[(int) targets.length ()];
 
         foreach (BackupTarget target in targets) {
             ids += target.id;
@@ -52,7 +52,7 @@ public class Tardis.BackupTargetManager {
         return ids;
     }
 
-    public BackupTarget[] get_targets () {
+    public unowned List<BackupTarget> get_targets () {
         return targets;
     }
 
@@ -83,7 +83,7 @@ public class Tardis.BackupTargetManager {
     }
 
     public void add_target (Tardis.BackupTarget target) {
-        targets += target;
+        targets.append (target);
         write_state ();
         target_added (target);
     }
@@ -155,7 +155,7 @@ public class Tardis.BackupTargetManager {
     }
 
     public async void backup_all () {
-        string[] currently_backing_up = new string[targets.length];
+        string[] currently_backing_up = new string[(int) targets.length ()];
         var backups = get_backups ();
 
         foreach (BackupTarget target in targets) {
@@ -213,24 +213,9 @@ public class Tardis.BackupTargetManager {
     }
 
     public void remove_target (BackupTarget target_to_remove) {
-        BackupTarget[] new_targets = new BackupTarget[targets.length - 1];
-        BackupTarget? removed_target = null;
-        foreach (BackupTarget target in targets) {
-            if (target.id == target_to_remove.id) {
-                removed_target = target;
-                continue;
-            }
-
-            new_targets += target;
-        }
-
-        targets = new_targets;
-
-        // If we actually removed something
-        if (removed_target != null) {
-            target_removed (removed_target);
-            write_state ();
-        }
+        targets.remove (target_to_remove);
+        target_removed (target_to_remove);
+        write_state ();
     }
 
     public signal void save_error (string err_msg);
