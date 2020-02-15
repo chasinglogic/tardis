@@ -223,12 +223,20 @@ public class Tardis.App : Gtk.Application {
     }
 
     public void error_message (string msg) {
+        if (warning_bar.revealed) {
+            warning_bar.hide ();
+        }
+
         error_msg_label.set_markup ("<b>%s</b>".printf (msg));
         error_bar.revealed = true;
         error_bar.response.connect ((_id) => error_bar.hide ());
     }
 
     public void warning_message (string msg, Gtk.Widget? action) {
+        if (error_bar.revealed) {
+            return;
+        }
+
         warning_msg_label.set_markup ("<b>%s</b>".printf (msg));
         warning_bar.revealed = true;
         warning_bar.response.connect ((_id) => warning_bar.hide ());
