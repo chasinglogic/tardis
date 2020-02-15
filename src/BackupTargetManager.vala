@@ -119,15 +119,7 @@ public class Tardis.BackupTargetManager {
             return -1;
         }
 
-        try {
-            var sources = backups.get_sources ();
-            target.last_backup_sources = sources;
-        } catch (GLib.Error e) {
-            backup_error (target, e.message);
-            return -1;
-        }
-
-        var curtime = get_monotonic_time ();
+        var curtime = get_real_time ();
         target.last_backup_time = curtime;
 
         backup_complete (target);

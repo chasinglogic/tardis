@@ -1,7 +1,4 @@
 public class Tardis.BackupTarget : GLib.Object {
-    // 86400 is 24 hours in seconds
-    private static int64 24_hours = 86400;
-
     public string id;
     public string display_name;
     public string icon_name;
@@ -95,8 +92,8 @@ public class Tardis.BackupTarget : GLib.Object {
     }
 
     public bool out_of_date () {
-        var curtime = GLib.get_monotonic_time ();
+        var curtime = GLib.get_real_time ();
         return (last_backup_time == 0) ||
-            (last_backup_time - curtime) > 24_hours;
+            (curtime - last_backup_time) > GLib.TimeSpan.DAY;
     }
 }
