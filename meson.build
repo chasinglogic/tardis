@@ -1,4 +1,4 @@
-project ('com.github.chasinglogic.tardis', 'vala', 'c')
+project ('com.github.chasinglogic.tardis', 'vala', 'c', version: '1.0.0')
 
 i18n = import ('i18n')
 
