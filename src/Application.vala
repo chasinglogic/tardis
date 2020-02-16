@@ -186,7 +186,7 @@ public class Tardis.App : Gtk.Application {
         target_manager.target_added.connect ((target) => {
             backup_status.get_backup_status.begin ();
             main_view.add_target (target);
-            target_manager.backup_all ();
+            target_manager.backup_all.begin ();
         });
 
         target_manager.backup_started.connect ((target) => {
