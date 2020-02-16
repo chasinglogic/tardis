@@ -1,7 +1,7 @@
 <div align="center">
   <span align="center"> <img width="80" height="70" class="center" src="https://github.com/chasinglogic/tardis/blob/master/data/icons/128/com.github.chasinglogic.tardis.svg" alt="Icon"></span>
   <h1 align="center">Tardis</h1>
-  <h3 align="center">A simple backup application for Elementary OS</h3>
+  <h3 align="center">A simple backup application for elementary OS</h3>
 
   <a href="https://appcenter.elementary.io/com.github.chasinglogic.tardis"><img src="https://appcenter.elementary.io/badge.svg?new" alt="Get it on AppCenter" /></a>
 </div>

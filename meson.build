@@ -1,73 +1,28 @@
-# project name and programming language
-project('com.github.chasinglogic.tardis', 'vala', 'c')
+project ('com.github.chasinglogic.tardis', 'vala', 'c')
 
-gettext_name = meson.project_name()
-add_project_arguments(
-    '-DGETTEXT_PACKAGE="@0@"'.format(gettext_name),
-    language:'c'
+i18n = import ('i18n')
+
+add_project_arguments (
+    '-DGETTEXT_PACKAGE="@0@"'.format (meson.project_name ()),
+    language: 'c'
 )
 
-i18n = import('i18n')
+dependencies = [
+    dependency ('gtk+-3.0'),
+    dependency ('granite'),
+    dependency ('gio-2.0'),
+    dependency ('json-glib-1.0')
+]
 
-# Create a new executable, list the files we want to compile, list the dependencies we need, and install
+subdir ('src')
+
 executable(
     meson.project_name(),
-
-    # Primary Classes
-    'src/Application.vala',
-    'src/Backups.vala',
-    'src/BackupTargetManager.vala',
-    'src/BackupTarget.vala',
-    'src/BackupStatus.vala',
-    'src/Utils.vala',
-
-    # Custom Widgets
-    'src/Widgets/HeaderBar.vala',
-    'src/Widgets/SettingToggler.vala',
-    'src/Widgets/DriveStatus.vala',
-    'src/Widgets/MainView.vala',
-    'src/Widgets/DriveSelector.vala',
-
-    dependencies: [
-      dependency('gtk+-3.0'),
-      dependency('granite'),
-      dependency('gio-2.0'),
-      dependency('json-glib-1.0'),
-    ],
-
+    sources,
+    dependencies: dependencies,
     install: true
 )
 
-#Install our .desktop file so the Applications Menu will see it
-install_data(
-    join_paths('data', meson.project_name() + '.desktop'),
-    install_dir: join_paths(get_option('datadir'), 'applications')
-)
+subdir ('data')
 
-#Install our .appdata.xml file so AppCenter will see it
-install_data(
-    join_paths('data', meson.project_name() + '.appdata.xml'),
-    install_dir: join_paths(get_option('datadir'), 'metainfo')
-)
-
-icon_sizes = ['48', '64', '128']
-icon_names = [meson.project_name(), meson.project_name() + '.add-backup-drive']
-foreach i : icon_sizes
-  foreach name : icon_names
-      install_data(
-          join_paths('data', 'icons', i, name + '.svg'),
-          install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', i + 'x' + i, 'apps')
-      )
-
-      install_data(
-          join_paths('data', 'icons', i, name + '.svg'),
-          install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', i + 'x' + i + '@2', 'apps')
-      )
-  endforeach
-endforeach
-
-install_data(
-  join_paths('data', meson.project_name() + '.gschema.xml'),
-  install_dir: join_paths(get_option('datadir'), 'glib-2.0', 'schemas'),
-  rename: meson.project_name() + '.gschema.xml'
-)
+meson.add_install_script('meson/post_install.py')
