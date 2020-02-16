@@ -15,4 +15,4 @@ Standards-Version: 3.9.3
 Package: com.github.chasinglogic.tardis
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
-Description: A simple and powerful backup application for Elementary OS
+Description: A simple and powerful backup application for elementary OS

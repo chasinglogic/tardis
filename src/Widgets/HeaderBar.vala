@@ -197,7 +197,7 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
                   "\n    - Robert Green (UX Architect)" +
                   "\n    - Our open source contributors" +
                   "\n    - Anyone who has paid for this application" +
-                  "\n\nBased on the awesome work of the Elementary OS team.")
+                  "\n\nBased on the awesome work of the elementary OS team.")
             );
 
             diag_box.add (diag_title);
