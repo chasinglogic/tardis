@@ -29,9 +29,9 @@ public class Tardis.App : Gtk.Application {
     public static int default_window_height = 512;
     public static int default_window_width = 700;
 
-    public static string unsafe_msg = "A backup is needed and no backup drives are available.";
-    public static string out_of_date_msg = "We've detected some of your backups are out of date.";
-    public static string in_progress = "Backup in progress. Please don't unplug any storage devices.";
+    public static string unsafe_msg = _("A backup is needed and no backup drives are available.");
+    public static string out_of_date_msg = _("We've detected some of your backups are out of date.");
+    public static string in_progress = _("Backup in progress. Please don't unplug any storage devices.");
 
     // Main ApplicationWindow, is static so it can be referenced by Dialogs.
     public static Gtk.ApplicationWindow window;
@@ -192,10 +192,10 @@ public class Tardis.App : Gtk.Application {
         target_manager.backup_started.connect ((target) => {
             hide_warning ();
             if (!info_bar.revealed) {
-                info_message ("Backup in progress. Please do not unplug any storage devices.");
+                info_message (_("Backup in progress. Please do not unplug any storage devices."));
             }
 
-            var notification = new Notification (_ ("Backup started!"));
+            var notification = new Notification (_("Backup started!"));
             var icon = new GLib.ThemedIcon (id);
             notification.set_icon (icon);
             notification.set_body (_("Backing up to:") + " %s".printf (target.display_name));
@@ -211,10 +211,10 @@ public class Tardis.App : Gtk.Application {
                 info_bar.hide ();
             }
 
-            var notification = new Notification (_ ("Backup complete!"));
+            var notification = new Notification (_("Backup complete!"));
             var icon = new GLib.ThemedIcon (id);
             notification.set_icon (icon);
-            notification.set_body ("%s ".printf (target.display_name) + _("is now up to date."));
+            notification.set_body (_("%s is now up to date.").printf (target.display_name));
 
             this.send_notification (id, notification);
         });
@@ -223,13 +223,13 @@ public class Tardis.App : Gtk.Application {
             main_view.set_status (target.id, DriveStatusType.IN_PROGRESS);
 
             if (info_bar.revealed) {
-                info_message ("Restore in progress. Please do not unplug any storage devices. Your system may behave strangely until the restore is complete.");
+                info_message (_("Restore in progress. Please do not unplug any storage devices. Your system may behave strangely until the restore is complete."));
             }
 
-            var notification = new Notification (_ ("Restore started!"));
+            var notification = new Notification (_("Restore started!"));
             var icon = new GLib.ThemedIcon (id);
             notification.set_icon (icon);
-            notification.set_body (_("Restoring your system from: " + " %s".printf (target.display_name)));
+            notification.set_body (_("Restoring your system from: %s").printf (target.display_name));
 
             this.send_notification (id, notification);
         });
@@ -241,10 +241,10 @@ public class Tardis.App : Gtk.Application {
                 info_bar.hide ();
             }
 
-            var notification = new Notification (_ ("Restore complete!"));
+            var notification = new Notification (_("Restore complete!"));
             var icon = new GLib.ThemedIcon (id);
             notification.set_icon (icon);
-            notification.set_body (_("Your system data now matches: " + " %s".printf (target.display_name)));
+            notification.set_body (_("Your system data now matches: %s").printf (target.display_name));
 
             this.send_notification (id, notification);
         });

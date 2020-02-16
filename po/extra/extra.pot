@@ -1,0 +1,48 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the extra package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: extra\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-16 17:51+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/com.github.chasinglogic.tardis.desktop.in:3
+#: data/com.github.chasinglogic.tardis.appdata.xml.in:7
+msgid "Tardis"
+msgstr ""
+
+#: data/com.github.chasinglogic.tardis.desktop.in:4
+msgid "Tardis Backups"
+msgstr ""
+
+#: data/com.github.chasinglogic.tardis.desktop.in:5
+#: data/com.github.chasinglogic.tardis.appdata.xml.in:8
+msgid "Automatically manage backups"
+msgstr ""
+
+#: data/com.github.chasinglogic.tardis.desktop.in:8
+msgid "com.github.chasinglogic.tardis"
+msgstr ""
+
+#: data/com.github.chasinglogic.tardis.desktop.in:11
+msgid "Backup;Tardis;System;"
+msgstr ""
+
+#: data/com.github.chasinglogic.tardis.appdata.xml.in:10
+msgid "A simple backup application for elementary OS"
+msgstr ""
+
+#: data/com.github.chasinglogic.tardis.appdata.xml.in:15
+msgid "Mathew Robinson"
+msgstr ""

@@ -29,7 +29,7 @@ public class Tardis.Widgets.MainView : Gtk.Box {
     public MainView (Tardis.BackupTargetManager target_manager) {
         this.target_manager = target_manager;
 
-        var title_label = new Gtk.Label ("Backups");
+        var title_label = new Gtk.Label (_("Backups"));
         title_label.margin = 12;
         title_label.get_style_context ().add_class (Granite.STYLE_CLASS_H1_LABEL);
 

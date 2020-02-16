@@ -36,7 +36,7 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         this.vm = vm;
         this.backup_target_manager = backup_target_manager;
 
-        var title = new Gtk.Label ("<b>Tardis</b>");
+        var title = new Gtk.Label ("<b>" + _("Tardis") + "</b>");
         title.use_markup = true;
 
         var backup_data = new Tardis.Widgets.SettingToggler (
@@ -138,12 +138,13 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
             var add_target_selector = new Tardis.Widgets.DriveSelector (backup_target_manager, vm);
             add_target_selector.margin = 12;
 
-            var add_target_msg = new Gtk.Label (_(
-                    "To ensure a successful backup to the selected drive, " +
-                    "make sure you have permissions to create folders " +
-                    "and files on the drive. Additionally, if the drive " +
-                    "is encrypted make sure that's already mounted via " +
-                    "the Files app."));
+            var add_target_msg = new Gtk.Label (
+                _("To ensure a successful backup to the selected drive, " +
+                  "make sure you have permissions to create folders " +
+                  "and files on the drive. Additionally, if the drive " +
+                  "is encrypted make sure that's already mounted via " +
+                  "the Files app.")
+            );
             add_target_msg.margin = 12;
             add_target_msg.wrap = true;
             add_target_msg.max_width_chars = 20;
@@ -160,10 +161,10 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
                 add_target_dlg.destroy ();
             });
 
-            var confirm_button = new Gtk.Button.with_label ("Backup to this Drive");
+            var confirm_button = new Gtk.Button.with_label (_("Backup to this Drive"));
             confirm_button.get_style_context ().add_class (Gtk.STYLE_CLASS_SUGGESTED_ACTION);
 
-            var cancel_button = new Gtk.Button.with_label ("Cancel");
+            var cancel_button = new Gtk.Button.with_label (_("Cancel"));
 
             add_target_dlg.add_action_widget (cancel_button, 0);
             add_target_dlg.add_action_widget (confirm_button, 1);
