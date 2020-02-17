@@ -112,7 +112,7 @@ public class Tardis.App : Gtk.Application {
         info_msg_label.use_markup = true;
 
         info_bar = new Gtk.InfoBar ();
-        info_bar.show_close_button = true;
+        info_bar.show_close_button = false;
         info_bar.message_type = Gtk.MessageType.INFO;
         info_bar.revealed = false;
         info_bar.get_content_area ().add (info_msg_label);
@@ -223,7 +223,9 @@ public class Tardis.App : Gtk.Application {
             main_view.set_status (target.id, DriveStatusType.IN_PROGRESS);
 
             if (info_bar.revealed) {
-                info_message (_("Restore in progress. Please do not unplug any storage devices. Your system may behave strangely until the restore is complete."));
+                info_message (
+                    "Restore in progress. Please do not unplug any storage devices. " +
+                    "Your system may behave strangely until the restore is complete.");
             }
 
             var notification = new Notification (_("Restore started!"));
@@ -268,7 +270,12 @@ public class Tardis.App : Gtk.Application {
             error_bar.hide ();
         });
 
-        backup_status.get_backup_status.begin ();
+        if (settings.get_boolean ("first-run")) {
+            var onboarding = new Onboarding (this);
+            onboarding.show_all ();
+        } else {
+            backup_status.get_backup_status.begin ();
+        }
     }
 
     public void error_message (string msg) {
@@ -299,10 +306,6 @@ public class Tardis.App : Gtk.Application {
         info_msg_label.set_markup ("<b>%s</b>".printf (msg));
         info_bar.revealed = true;
         info_bar.response.connect ((_id) => info_bar.hide ());
-    }
-
-    public void hide_info () {
-        info_bar.revealed = false;
     }
 
     public static int main (string[] args) {

@@ -6,6 +6,23 @@
   <project_license>GPL-3.0+</project_license>
   <name>Tardis</name>
   <summary>Automatically manage backups</summary>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Welcome to Tardis</caption>
+      <image>https://github.com/chasinglogic/tardis/blob/master/data/screenshots/welcome_to_tardis.png</image>
+    <screenshot>
+      <caption>Backup is out of date.</caption>
+      <image>https://github.com/chasinglogic/tardis/blob/master/data/screenshots/backup_out_of_date.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Backup in progress.</caption>
+      <image>https://github.com/chasinglogic/tardis/blob/master/data/screenshots/backup_in_progress.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Backup complete!</caption>
+      <image>https://github.com/chasinglogic/tardis/blob/master/data/screenshots/backup_complete.png</image>
+    </screenshot>
+  </screenshots>
   <description>
     <p>A simple backup application for elementary OS</p>
   </description>

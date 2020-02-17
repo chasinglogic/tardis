@@ -73,9 +73,9 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
 
         var automatic_backups = new Tardis.Widgets.SettingToggler (
             _("Automatically Backup"),
-            _("When backup targets are available and application is running" +
-              "automatically start a backup without prompting. While convenient" +
-              "this can cause issues when you want to restore from a drive. This" +
+            _("When backup targets are available and application is running " +
+              "automatically start a backup without prompting. While convenient " +
+              "this can cause issues when you want to restore from a drive. This " +
               "settings is only recommended for advanced users."),
             settings,
             "automatic-backups"
@@ -154,10 +154,9 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
 
             add_target_dlg.response.connect ((id) => {
                 if (id == 1) {
-                    var uuid = add_target_selector.get_active_text ();
-                    var volume = vm.get_volume_for_uuid (uuid);
-                    target_created (new Tardis.BackupTarget.from_volume (volume));
+                    target_created (add_target_selector.create_backup_target ());
                 }
+
                 add_target_dlg.destroy ();
             });
 
