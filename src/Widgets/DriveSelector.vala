@@ -23,9 +23,22 @@ using Gee;
 
 public class Tardis.Widgets.DriveSelector : Gtk.ComboBoxText {
     private HashMap<string, string> drive_map;
+    private GLib.VolumeMonitor vm;
+    private Tardis.BackupTargetManager backup_target_manager;
 
     public DriveSelector (Tardis.BackupTargetManager backup_target_manager, GLib.VolumeMonitor vm) {
+        this.vm = vm;
+        this.backup_target_manager = backup_target_manager;
         drive_map = new HashMap<string, string> ();
+
+        vm.volume_added.connect (get_available_drives);
+        vm.volume_removed.connect (get_available_drives);
+
+        get_available_drives ();
+    }
+
+    private void get_available_drives () {
+        remove_all ();
 
         var volumes = vm.get_volumes ();
         var backup_targets = backup_target_manager.get_target_ids ();
@@ -47,8 +60,10 @@ public class Tardis.Widgets.DriveSelector : Gtk.ComboBoxText {
         }
     }
 
-    public new string get_active_text () {
-        var name = base.get_active_text ();
-        return drive_map.@get (name);
+    public BackupTarget create_backup_target () {
+        var name = get_active_text ();
+        var uuid = drive_map.@get (name);
+        var volume = vm.get_volume_for_uuid (uuid);
+        return new Tardis.BackupTarget.from_volume (volume);
     }
 }
