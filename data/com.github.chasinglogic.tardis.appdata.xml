@@ -8,6 +8,9 @@
   <summary>Automatically manage backups</summary>
   <screenshots>
     <screenshot type="default">
+      <caption>Welcome to Tardis</caption>
+      <image>https://github.com/chasinglogic/tardis/blob/master/data/screenshots/welcome_to_tardis.png</image>
+    <screenshot>
       <caption>Backup is out of date.</caption>
       <image>https://github.com/chasinglogic/tardis/blob/master/data/screenshots/backup_out_of_date.png</image>
     </screenshot>
