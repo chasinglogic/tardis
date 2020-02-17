@@ -73,9 +73,9 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
 
         var automatic_backups = new Tardis.Widgets.SettingToggler (
             _("Automatically Backup"),
-            _("When backup targets are available and application is running" +
-              "automatically start a backup without prompting. While convenient" +
-              "this can cause issues when you want to restore from a drive. This" +
+            _("When backup targets are available and application is running " +
+              "automatically start a backup without prompting. While convenient " +
+              "this can cause issues when you want to restore from a drive. This " +
               "settings is only recommended for advanced users."),
             settings,
             "automatic-backups"
