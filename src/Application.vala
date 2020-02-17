@@ -223,7 +223,9 @@ public class Tardis.App : Gtk.Application {
             main_view.set_status (target.id, DriveStatusType.IN_PROGRESS);
 
             if (info_bar.revealed) {
-                info_message ("Restore in progress. Please do not unplug any storage devices. Your system may behave strangely until the restore is complete.");
+                info_message (
+                    "Restore in progress. Please do not unplug any storage devices. " +
+                    "Your system may behave strangely until the restore is complete.");
             }
 
             var notification = new Notification (_ ("Restore started!"));

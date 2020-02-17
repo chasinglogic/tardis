@@ -77,4 +77,3 @@ public class Tardis.Onboarding : Gtk.Window {
 
     public signal void target_created (Tardis.BackupTarget target);
 }
-
