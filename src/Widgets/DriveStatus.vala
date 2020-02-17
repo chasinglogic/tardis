@@ -65,11 +65,11 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
 
         var remove_button = new Gtk.Button.from_icon_name ("user-trash");
         remove_button.set_size_request (24, 24);
-        remove_button.tooltip_text = "Stop backing up to this hard drive.";
+        remove_button.tooltip_text = _("Stop backing up to this hard drive.");
         remove_button.clicked.connect (() => {
             var dialog = new Granite.MessageDialog.with_image_from_icon_name (
-                _ ("You are about to stop backing up to this drive"),
-                _ ("This will not remove any existing backups on this drive but " +
+                _("You are about to stop backing up to this drive"),
+                _("This will not remove any existing backups on this drive but " +
                   "will prevent future backups from being stored there. If you " +
                   "would like to also delete the backups you can remove the " +
                   "Tardis folder from the drive after removal from Tardis."),
@@ -77,10 +77,10 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
                   Gtk.ButtonsType.NONE
             );
 
-            var really_remove = new Gtk.Button.with_label ("Don't backup to this drive");
+            var really_remove = new Gtk.Button.with_label (_("Don't backup to this drive"));
             really_remove.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
 
-            var nope = new Gtk.Button.with_label ("Cancel");
+            var nope = new Gtk.Button.with_label (_("Cancel"));
 
             dialog.add_action_widget (nope, 0);
             dialog.add_action_widget (really_remove, 1);
@@ -100,11 +100,11 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
 
         var restore_button = new Gtk.Button.from_icon_name ("edit-undo");
         restore_button.set_size_request (24, 24);
-        restore_button.tooltip_text = "Restore your system from this backup drive.";
+        restore_button.tooltip_text = _("Restore your system from this backup drive.");
         restore_button.clicked.connect (() => {
             var dialog = new Granite.MessageDialog.with_image_from_icon_name (
-                _ ("You are about to restore your system from this drive"),
-                _ ("This will not remove any new files on your system which " +
+                _("You are about to restore your system from this drive"),
+                _("This will not remove any new files on your system which " +
                   "aren't in the backup. However, it will overwrite any " +
                   "files on your system which exist in the backup. Note " +
                   "that while a restore is running your system may " +
@@ -115,10 +115,10 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
                   Gtk.ButtonsType.NONE
             );
 
-            var really_restore = new Gtk.Button.with_label ("Restore from this backup");
+            var really_restore = new Gtk.Button.with_label (_("Restore from this backup"));
             really_restore.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
 
-            var nope = new Gtk.Button.with_label ("Cancel");
+            var nope = new Gtk.Button.with_label (_("Cancel"));
 
             dialog.add_action_widget (nope, 0);
             dialog.add_action_widget (really_restore, 1);

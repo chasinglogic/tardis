@@ -1,0 +1,4 @@
+src/Widgets/DriveStatus.vala
+src/Widgets/HeaderBar.vala
+src/Widgets/MainView.vala
+src/Application.vala

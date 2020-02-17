@@ -1,0 +1,200 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.chasinglogic.tardis package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.chasinglogic.tardis\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-16 17:51+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/Widgets/DriveStatus.vala:68
+msgid "Stop backing up to this hard drive."
+msgstr ""
+
+#: src/Widgets/DriveStatus.vala:71
+msgid "You are about to stop backing up to this drive"
+msgstr ""
+
+#: src/Widgets/DriveStatus.vala:72
+msgid ""
+"This will not remove any existing backups on this drive but will prevent "
+"future backups from being stored there. If you would like to also delete the "
+"backups you can remove the Tardis folder from the drive after removal from "
+"Tardis."
+msgstr ""
+
+#: src/Widgets/DriveStatus.vala:80
+msgid "Don't backup to this drive"
+msgstr ""
+
+#: src/Widgets/DriveStatus.vala:83 src/Widgets/DriveStatus.vala:121
+#: src/Widgets/HeaderBar.vala:167
+msgid "Cancel"
+msgstr ""
+
+#: src/Widgets/DriveStatus.vala:103
+msgid "Restore your system from this backup drive."
+msgstr ""
+
+#: src/Widgets/DriveStatus.vala:106
+msgid "You are about to restore your system from this drive"
+msgstr ""
+
+#: src/Widgets/DriveStatus.vala:107
+msgid ""
+"This will not remove any new files on your system which aren't in the "
+"backup. However, it will overwrite any files on your system which exist in "
+"the backup. Note that while a restore is running your system may behave in "
+"unexpected ways until it is complete. It's best to not use your computer "
+"while a restore is in progress."
+msgstr ""
+
+#: src/Widgets/DriveStatus.vala:118
+msgid "Restore from this backup"
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:39 src/Widgets/HeaderBar.vala:190
+msgid "Tardis"
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:44
+msgid "Backup Data"
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:45
+msgid ""
+"Indicates backups should include all non-hidden directories. It is "
+"recommended to leave this setting on."
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:59
+msgid "Backup Configuration"
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:60
+msgid ""
+"Indicates backups should include hidden directories. This is recommended for "
+"most users however, can sometimes cause issues when restoring backups."
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:75
+msgid "Automatically Backup"
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:76
+msgid ""
+"When backup targets are available and application is runningautomatically "
+"start a backup without prompting. While convenientthis can cause issues when "
+"you want to restore from a drive. Thissettings is only recommended for "
+"advanced users."
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:93
+msgid "Backup Settings"
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:117
+msgid "Start a Backup"
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:129
+msgid "Add Backup Drives"
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:142
+msgid ""
+"To ensure a successful backup to the selected drive, make sure you have "
+"permissions to create folders and files on the drive. Additionally, if the "
+"drive is encrypted make sure that's already mounted via the Files app."
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:164
+msgid "Backup to this Drive"
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:191
+msgid "A simple and powerful backup application."
+msgstr ""
+
+#: src/Widgets/HeaderBar.vala:196
+msgid ""
+"Tardis is brought to you by the work of these fine folks:\n"
+"\n"
+"    - Mathew Robinson (Lead Developer)\n"
+"    - Robert Green (UX Architect)\n"
+"    - Our open source contributors\n"
+"    - Anyone who has paid for this application\n"
+"\n"
+"Based on the awesome work of the elementary OS team."
+msgstr ""
+
+#: src/Widgets/MainView.vala:32
+msgid "Backups"
+msgstr ""
+
+#: src/Application.vala:32
+msgid "A backup is needed and no backup drives are available."
+msgstr ""
+
+#: src/Application.vala:33
+msgid "We've detected some of your backups are out of date."
+msgstr ""
+
+#: src/Application.vala:34
+msgid "Backup in progress. Please don't unplug any storage devices."
+msgstr ""
+
+#: src/Application.vala:195
+msgid "Backup in progress. Please do not unplug any storage devices."
+msgstr ""
+
+#: src/Application.vala:198
+msgid "Backup started!"
+msgstr ""
+
+#: src/Application.vala:201
+msgid "Backing up to:"
+msgstr ""
+
+#: src/Application.vala:214
+msgid "Backup complete!"
+msgstr ""
+
+#: src/Application.vala:217
+#, c-format
+msgid "%s is now up to date."
+msgstr ""
+
+#: src/Application.vala:226
+msgid ""
+"Restore in progress. Please do not unplug any storage devices. Your system "
+"may behave strangely until the restore is complete."
+msgstr ""
+
+#: src/Application.vala:229
+msgid "Restore started!"
+msgstr ""
+
+#: src/Application.vala:232
+#, c-format
+msgid "Restoring your system from: %s"
+msgstr ""
+
+#: src/Application.vala:244
+msgid "Restore complete!"
+msgstr ""
+
+#: src/Application.vala:247
+#, c-format
+msgid "Your system data now matches: %s"
+msgstr ""
