@@ -6,6 +6,17 @@
   <a href="https://appcenter.elementary.io/com.github.chasinglogic.tardis"><img src="https://appcenter.elementary.io/badge.svg?new" alt="Get it on AppCenter" /></a>
 </div>
 
+## Usage
+
+### Adding a Backup Drive
+
+![gif on how to add a backup drive](https://github.com/chasinglogic/tardis/blob/master/data/gifs/add_a_new_backup_drive.gif)
+
+### Running a Backup
+
+
+![gif on how to run a backup](https://github.com/chasinglogic/tardis/blob/master/data/gifs/backing_up.gif)
+
 ## Building
 
 The following dependencies are required to build Tardis:
