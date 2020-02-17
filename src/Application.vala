@@ -268,7 +268,12 @@ public class Tardis.App : Gtk.Application {
             error_bar.hide ();
         });
 
-        backup_status.get_backup_status.begin ();
+        if (settings.get_boolean ("first-run")) {
+            var onboarding = new Onboarding (this);
+            onboarding.show_all ();
+        } else {
+            backup_status.get_backup_status.begin ();
+        }
     }
 
     public void error_message (string msg) {

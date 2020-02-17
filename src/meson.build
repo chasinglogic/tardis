@@ -5,6 +5,7 @@ sources = files (
     'BackupTarget.vala',
     'BackupStatus.vala',
     'Utils.vala',
+    'Onboarding.vala',
 
     'Widgets/HeaderBar.vala',
     'Widgets/SettingToggler.vala',
