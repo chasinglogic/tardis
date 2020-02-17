@@ -112,7 +112,7 @@ public class Tardis.App : Gtk.Application {
         info_msg_label.use_markup = true;
 
         info_bar = new Gtk.InfoBar ();
-        info_bar.show_close_button = true;
+        info_bar.show_close_button = false;
         info_bar.message_type = Gtk.MessageType.INFO;
         info_bar.revealed = false;
         info_bar.get_content_area ().add (info_msg_label);
@@ -299,10 +299,6 @@ public class Tardis.App : Gtk.Application {
         info_msg_label.set_markup ("<b>%s</b>".printf (msg));
         info_bar.revealed = true;
         info_bar.response.connect ((_id) => info_bar.hide ());
-    }
-
-    public void hide_info () {
-        info_bar.revealed = false;
     }
 
     public static int main (string[] args) {
