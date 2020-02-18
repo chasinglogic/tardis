@@ -2,7 +2,7 @@
 Name=Tardis
 GenericName=Tardis Backups
 Comment=Automatically manage backups
-Categories=Utility;System;Backup;
+Categories=Utility;System;X-Backup;
 Exec=com.github.chasinglogic.tardis
 Icon=com.github.chasinglogic.tardis
 Terminal=false
