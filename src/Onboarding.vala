@@ -8,7 +8,7 @@ public class Tardis.Onboarding : Gtk.Window {
         title_label.halign = Gtk.Align.CENTER;
 
         var description_label = new Gtk.Label (
-            _("At it's core Tardis manages backup targets. You can have " +
+            _("At its core Tardis manages backup targets. You can have " +
             "multiple backup targets in Tardis. But to start, let's " +
             "add a single drive. Plug in the storage device you " +
             "would like to store backups on and select it from the " +
