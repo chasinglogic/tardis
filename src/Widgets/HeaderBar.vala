@@ -27,6 +27,8 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
     private Gtk.MenuButton backup_settings_button;
     private Gtk.Popover backup_settings_popover;
 
+    private Gtk.Dialog? info_dialog = null;
+
     private Tardis.BackupTargetManager backup_target_manager;
 
     public HeaderBar (GLib.VolumeMonitor vm,
@@ -175,10 +177,16 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         info_button.image = new Gtk.Image.from_icon_name ("dialog-information",
                                                           Gtk.IconSize.LARGE_TOOLBAR);
         info_button.clicked.connect (() => {
-            var dialog = new Gtk.Dialog ();
-            dialog.set_transient_for (Tardis.App.window);
+            if (info_dialog != null) {
+                info_dialog.destroy ();
+                info_dialog = null;
+                return;
+            }
 
-            var diag_box = dialog.get_content_area ();
+            info_dialog = new Gtk.Dialog ();
+            info_dialog.set_transient_for (Tardis.App.window);
+
+            var diag_box = info_dialog.get_content_area ();
             diag_box.orientation = Gtk.Orientation.VERTICAL;
             diag_box.margin = 12;
 
@@ -203,7 +211,7 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
             diag_box.add (diag_title);
             diag_box.add (diag_body);
 
-            dialog.show_all ();
+            info_dialog.show_all ();
         });
 
         show_close_button = true;
