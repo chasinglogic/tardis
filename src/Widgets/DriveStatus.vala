@@ -27,10 +27,13 @@ public enum DriveStatusType {
 }
 
 public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
+
+    private Gtk.Button restore_button;
+    private Gtk.Button remove_button;
     private Gtk.Grid button_grid;
-    private Gtk.Label button_title;
     private Gtk.Image drive_icon;
     private Gtk.Image status_icon;
+    private Gtk.Label button_title;
     private Gtk.Spinner in_progress;
 
     private DriveStatusType last_status;
@@ -63,7 +66,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
         action_grid.column_spacing = 6;
         action_grid.orientation = Gtk.Orientation.HORIZONTAL;
 
-        var remove_button = new Gtk.Button.from_icon_name ("user-trash");
+        remove_button = new Gtk.Button.from_icon_name ("user-trash");
         remove_button.set_size_request (24, 24);
         remove_button.tooltip_text = _("Stop backing up to this hard drive.");
         remove_button.clicked.connect (() => {
@@ -98,7 +101,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
             dialog.show_all ();
         });
 
-        var restore_button = new Gtk.Button.from_icon_name ("edit-undo");
+        restore_button = new Gtk.Button.from_icon_name ("edit-undo");
         restore_button.set_size_request (24, 24);
         restore_button.tooltip_text = _("Restore your system from this backup drive.");
         restore_button.clicked.connect (() => {
@@ -165,12 +168,18 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
             // size request to be a little bigger than 48.
             in_progress.set_size_request (52, 52);
             button_grid.attach (in_progress, 0, 0, 1, 2);
+
+            restore_button.set_sensitive (false);
+            remove_button.set_sensitive (false);
+
             button_grid.show_all ();
             last_status = status;
             return;
         }
 
         string icon_name = "";
+        restore_button.set_sensitive (true);
+        remove_button.set_sensitive (true);
 
         // If we're going to anything other than SAFE from ERROR then remain in
         // the error state.
