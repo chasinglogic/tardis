@@ -143,8 +143,8 @@ public class Tardis.App : Gtk.Application {
         window.size_allocate.connect (() => { on_resize (); });
 
         // Cross the Signals
-        headerbar.target_created.connect ((target) => {
-            target_manager.add_target (target);
+        headerbar.volume_added.connect ((volume) => {
+            target_manager.add_volume (volume);
         });
 
         backup_status.target_is_backed_up.connect ((target) => {
@@ -183,10 +183,13 @@ public class Tardis.App : Gtk.Application {
             target_manager.restore_from.begin (target);
         });
 
-        target_manager.target_added.connect ((target) => {
+        target_manager.target_added.connect ((target, start_backup) => {
             backup_status.get_backup_status.begin ();
             main_view.add_target (target);
-            target_manager.backup_all.begin ();
+            if (start_backup) {
+                GLib.print("Starting a backup!\n");
+                // target_manager.backup_all.begin ();
+            }
         });
 
         target_manager.backup_started.connect ((target) => {

@@ -86,8 +86,8 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         automatic_backups_model.get_child ().destroy ();
         automatic_backups_model.add (automatic_backups);
         automatic_backups_model.button_release_event.connect (() => {
-                automatic_backups.toggler_switch.activate ();
-                return Gdk.EVENT_STOP;
+            automatic_backups.toggler_switch.activate ();
+            return Gdk.EVENT_STOP;
         });
 
         backup_settings_button = new Gtk.MenuButton ();
@@ -156,7 +156,7 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
 
             add_target_dlg.response.connect ((id) => {
                 if (id == 1) {
-                    target_created (add_target_selector.create_backup_target ());
+                    volume_added (add_target_selector.get_volume ());
                 }
 
                 add_target_dlg.destroy ();
@@ -222,5 +222,5 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         pack_end (backup_settings_button);
     }
 
-    public signal void target_created (BackupTarget target);
+    public signal void volume_added (GLib.Volume volume);
 }

@@ -60,10 +60,9 @@ public class Tardis.Widgets.DriveSelector : Gtk.ComboBoxText {
         }
     }
 
-    public BackupTarget create_backup_target () {
+    public GLib.Volume get_volume () {
         var name = get_active_text ();
         var uuid = drive_map.@get (name);
-        var volume = vm.get_volume_for_uuid (uuid);
-        return new Tardis.BackupTarget.from_volume (volume);
+        return vm.get_volume_for_uuid (uuid);
     }
 }

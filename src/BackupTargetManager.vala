@@ -87,6 +87,10 @@ public class Tardis.BackupTargetManager {
         }
         builder.end_array ();
 
+        write_json_file (state_file, builder);
+    }
+
+    private void write_json_file (string filename, Json.Builder builder) {
         Json.Generator generator = new Json.Generator ();
         Json.Node root = builder.get_root ();
         generator.set_root (root);
@@ -94,19 +98,58 @@ public class Tardis.BackupTargetManager {
         string targets_json = generator.to_data (null);
 
         try {
-            FileUtils.set_contents (state_file, targets_json, -1);
+            FileUtils.set_contents (filename, targets_json, -1);
         } catch (GLib.FileError e) {
             save_error (e.message);
         }
     }
 
-    public void add_volume (GLib.Volume volume) {
-        add_target (new Tardis.BackupTarget.from_volume (volume));
+    private string get_on_disk_json_file (Mount mount) {
+        var root = mount.get_root ().get_path ();
+        return Path.build_filename (root, "Tardis", "target.json");
     }
 
-    public void add_target (Tardis.BackupTarget target) {
+    public async void add_volume (GLib.Volume volume) {
+        var mount = yield Tardis.Utils.get_mount (volume);
+        if (mount == null) {
+            add_target (new Tardis.BackupTarget.from_volume (volume));
+            return;
+        }
+
+        bool existing_backups = false;
+        try {
+            var backups_path = Tardis.Backups.get_backups_path (mount, false);
+            if (FileUtils.test (backups_path, FileTest.EXISTS)) {
+                existing_backups = true;
+            }
+        } catch (GLib.Error e) {
+            // Nothing to do, probably means the backup path doesn't exist.
+        }
+
+        GLib.print("existing backups: %s\n", existing_backups ? "t" : "f");
+
+        var target_json = get_on_disk_json_file (mount);
+        BackupTarget target = null;
+        if (FileUtils.test (target_json, FileTest.EXISTS)) {
+            var parser = new Json.Parser ();
+            try {
+                parser.load_from_file (target_json);
+                target = new BackupTarget.from_json ((Json.Object)
+                                                     parser.get_root ());
+            } catch (GLib.Error e) {
+                target = new BackupTarget.from_volume (volume);
+            }
+        } else {
+            target = new BackupTarget.from_volume (volume);
+        }
+
+        add_target (target, !existing_backups);
+    }
+
+    public void add_target (Tardis.BackupTarget target,
+                            bool? should_backup = true) {
         targets.append (target);
-        target_added (target);
+        target_added (target, should_backup);
     }
 
     public async void restore_from (Tardis.BackupTarget target) {
@@ -142,6 +185,17 @@ public class Tardis.BackupTargetManager {
 
         var curtime = get_real_time ();
         target.last_backup_time = curtime;
+
+        try {
+            // Build a path like /path/to/drive/Tardis/target.json
+            var on_disk_target_file = get_on_disk_json_file (mount);
+            var builder = new Json.Builder ();
+            target.build_json (builder);
+            write_json_file (on_disk_target_file, builder);
+        } catch (Error e) {
+            backup_error (target, e.message);
+            return -1;
+        }
 
         backup_complete (target);
         return 0;
@@ -182,20 +236,7 @@ public class Tardis.BackupTargetManager {
             return null;
         }
 
-        var mount = volume.get_mount ();
-
-        // If it was null try to mount it
-        if (mount == null) {
-            try {
-                yield volume.mount (MountMountFlags.NONE, null);
-            } catch (GLib.Error e) {
-                return null;
-            }
-
-            mount = volume.get_mount ();
-        }
-
-        return mount;
+        return yield Tardis.Utils.get_mount (volume);
     }
 
     public async Mount[] get_available_backup_drives () throws GLib.Error {
@@ -222,7 +263,7 @@ public class Tardis.BackupTargetManager {
     public signal void backup_error (BackupTarget target, string err_msg);
 
     public signal void target_removed (BackupTarget target);
-    public signal void target_added (BackupTarget target);
+    public signal void target_added (BackupTarget target, bool should_backup);
 
     public signal void backup_started (BackupTarget target);
     public signal void backup_complete (BackupTarget target);
