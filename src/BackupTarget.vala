@@ -46,7 +46,7 @@ public class Tardis.BackupTarget : GLib.Object {
 
     public BackupTarget.from_volume (GLib.Volume volume) {
         this.last_backup_time = 0;
-        this.display_name = volume.get_drive ().get_name ();
+        this.display_name = Utils.display_name (volume);
 
         // Try to get icon name
         var icon = new Gtk.Image.from_gicon (volume.get_icon (), Gtk.IconSize.SMALL_TOOLBAR);
