@@ -44,7 +44,7 @@ public class Tardis.Widgets.DriveSelector : Gtk.ComboBoxText {
         var backup_targets = backup_target_manager.get_target_ids ();
 
         foreach (Volume vol in volumes) {
-            var name = vol.get_drive ().get_name ();
+            var name = Utils.display_name (vol);
             var uuid = vol.get_uuid ();
 
             if (uuid == null) {

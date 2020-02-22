@@ -81,4 +81,15 @@ public class Tardis.Utils {
 
         return new_list;
     }
+
+    public static string display_name (GLib.Volume volume) {
+        var volume_name = volume.get_name ();
+        var drive = volume.get_drive ();
+
+        if (drive == null) {
+            return volume_name;
+        }
+
+        return @"$volume_name ($(drive.get_name ()))";
+    }
 }
