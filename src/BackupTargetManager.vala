@@ -126,16 +126,15 @@ public class Tardis.BackupTargetManager {
             // Nothing to do, probably means the backup path doesn't exist.
         }
 
-        GLib.print ("existing backups: %s\n", existing_backups ? "t" : "f");
-
         var target_json = get_on_disk_json_file (mount);
         BackupTarget target = null;
         if (FileUtils.test (target_json, FileTest.EXISTS)) {
             var parser = new Json.Parser ();
             try {
                 parser.load_from_file (target_json);
-                target = new BackupTarget.from_json ((Json.Object)
-                                                     parser.get_root ());
+                target = new BackupTarget.from_json (
+                    parser.get_root ().get_object ()
+                );
             } catch (GLib.Error e) {
                 target = new BackupTarget.from_volume (volume);
             }
