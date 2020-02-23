@@ -24,6 +24,7 @@ public enum DriveStatusType {
     BACKUP_ERROR,
     NEEDS_BACKUP,
     IN_PROGRESS,
+    ADD_BUTTON,
 }
 
 public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
@@ -36,9 +37,111 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
     private Gtk.Label button_title;
     private Gtk.Spinner in_progress;
 
-    private DriveStatusType last_status;
+    private DriveStatusType current_status;
 
     public BackupTarget target;
+
+    private BackupTargetManager backup_target_manager;
+    private GLib.VolumeMonitor vm;
+
+    public DriveStatus.add_drive_button (
+        BackupTargetManager backup_target_manager,
+        GLib.VolumeMonitor vm
+    ) {
+        this.target = new BackupTarget(
+            "add-button",
+            "add-button",
+            "",
+            0
+        );
+        this.backup_target_manager = backup_target_manager;
+        this.vm = vm;
+
+        // Title label
+        button_title = new Gtk.Label ("<span size='large'>Add a new backup target</span>");
+		button_title.use_markup = true;
+        button_title.halign = Gtk.Align.START;
+		button_title.vexpand = true;
+        button_title.valign = Gtk.Align.CENTER;
+
+        // Drive icon
+        drive_icon = new Gtk.Image.from_icon_name ("list-add", Gtk.IconSize.SMALL_TOOLBAR);
+        drive_icon.set_pixel_size (48);
+		button_title.vexpand = true;
+        button_title.valign = Gtk.Align.CENTER;
+
+        // Button contents wrapper
+        button_grid = new Gtk.Grid ();
+        button_grid.column_spacing = 12;
+		button_grid.hexpand = true;
+
+        button_grid.attach (button_title, 2, 0, 1, 1);
+        button_grid.attach (drive_icon, 1, 0, 1, 2);
+
+        var add_target_button = new Gtk.Button ();
+
+		var button_style_context = add_target_button.get_style_context ();
+		button_style_context.add_class (Gtk.STYLE_CLASS_FLAT);
+
+		add_target_button.add (button_grid);
+        add_target_button.tooltip_text = _("Add a new backup target");
+        add_target_button.clicked.connect (() => {
+            var add_target_dlg = new Gtk.Dialog ();
+            add_target_dlg.set_default_size (200, 100);
+            add_target_dlg.set_transient_for (Tardis.App.window);
+
+            var add_target_box = add_target_dlg.get_content_area ();
+            add_target_box.margin = 12;
+
+            var add_target_selector = new Tardis.Widgets.DriveSelector (backup_target_manager, vm);
+            add_target_selector.margin = 12;
+
+            var add_target_msg = new Gtk.Label (
+                _("To ensure a successful backup to the selected drive, " +
+                  "make sure you have permissions to create folders " +
+                  "and files on the drive. Additionally, if the drive " +
+                  "is encrypted make sure that's already mounted via " +
+                  "the Files app.")
+            );
+            add_target_msg.margin = 12;
+            add_target_msg.wrap = true;
+            add_target_msg.max_width_chars = 20;
+
+            add_target_box.add (add_target_selector);
+            add_target_box.add (add_target_msg);
+
+            add_target_dlg.response.connect ((id) => {
+                if (id == 1) {
+                    volume_added (add_target_selector.get_volume ());
+                }
+
+                add_target_dlg.destroy ();
+            });
+
+            var confirm_button = new Gtk.Button.with_label (_("Backup to this Drive"));
+            confirm_button.get_style_context ().add_class (Gtk.STYLE_CLASS_SUGGESTED_ACTION);
+
+            var cancel_button = new Gtk.Button.with_label (_("Cancel"));
+
+            add_target_dlg.add_action_widget (cancel_button, 0);
+            add_target_dlg.add_action_widget (confirm_button, 1);
+
+            add_target_dlg.show_all ();
+        });
+
+        var content_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+        content_box.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+        content_box.margin_top = 6;
+        content_box.margin_bottom = 6;
+        content_box.hexpand = true;
+        content_box.add (add_target_button);
+
+        current_status = DriveStatusType.ADD_BUTTON;
+
+		activatable = false;
+        selectable = false;
+        add (content_box);
+    }
 
     public DriveStatus (Tardis.BackupTarget target) {
         this.target = target;
@@ -67,7 +170,9 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
         action_grid.orientation = Gtk.Orientation.HORIZONTAL;
 
         remove_button = new Gtk.Button.from_icon_name ("user-trash");
-        remove_button.set_size_request (48, 48);
+        remove_button.vexpand = true;
+        remove_button.valign = Gtk.Align.CENTER;
+        remove_button.set_size_request (32, 32);
         remove_button.tooltip_text = _("Stop backing up to this hard drive.");
         remove_button.clicked.connect (() => {
             var dialog = new Granite.MessageDialog.with_image_from_icon_name (
@@ -102,7 +207,9 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
         });
 
         restore_button = new Gtk.Button.from_icon_name ("edit-undo");
-        restore_button.set_size_request (48, 48);
+        restore_button.vexpand = true;
+        restore_button.valign = Gtk.Align.CENTER;
+        restore_button.set_size_request (32, 32);
         restore_button.tooltip_text = _("Restore your system from this backup drive.");
         restore_button.clicked.connect (() => {
             var dialog = new Granite.MessageDialog.with_image_from_icon_name (
@@ -153,6 +260,10 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
     }
 
     public void set_status (DriveStatusType status) {
+        if (current_status == DriveStatusType.ADD_BUTTON) {
+            return;
+        }
+
         if (in_progress != null) {
             in_progress.destroy ();
         }
@@ -173,7 +284,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
             remove_button.set_sensitive (false);
 
             button_grid.show_all ();
-            last_status = status;
+            current_status = status;
             return;
         }
 
@@ -184,7 +295,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
         // If we're going to anything other than SAFE from ERROR then remain in
         // the error state.
         if (
-            last_status == DriveStatusType.BACKUP_ERROR &&
+            current_status == DriveStatusType.BACKUP_ERROR &&
             status != DriveStatusType.SAFE
         ) {
             icon_name = "process-stop";
@@ -202,7 +313,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
             }
         }
 
-        last_status = status;
+        current_status = status;
 
         status_icon = new Gtk.Image.from_icon_name (icon_name,
                                                     Gtk.IconSize.SMALL_TOOLBAR);
@@ -212,6 +323,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
         button_grid.show_all ();
     }
 
+    public signal void volume_added (GLib.Volume volume);
     public signal void drive_removed (BackupTarget target);
     public signal void restore_from (BackupTarget target);
 }
