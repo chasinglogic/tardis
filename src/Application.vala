@@ -187,8 +187,7 @@ public class Tardis.App : Gtk.Application {
             backup_status.get_backup_status.begin ();
             main_view.add_target (target);
             if (start_backup) {
-                GLib.print ("Starting a backup!\n");
-                // target_manager.backup_all.begin ();
+                target_manager.backup_all.begin ();
             }
         });
 
