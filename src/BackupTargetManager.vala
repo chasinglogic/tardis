@@ -126,7 +126,7 @@ public class Tardis.BackupTargetManager {
             // Nothing to do, probably means the backup path doesn't exist.
         }
 
-        GLib.print("existing backups: %s\n", existing_backups ? "t" : "f");
+        GLib.print ("existing backups: %s\n", existing_backups ? "t" : "f");
 
         var target_json = get_on_disk_json_file (mount);
         BackupTarget target = null;
