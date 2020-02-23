@@ -67,7 +67,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
         action_grid.orientation = Gtk.Orientation.HORIZONTAL;
 
         remove_button = new Gtk.Button.from_icon_name ("user-trash");
-        remove_button.set_size_request (24, 24);
+        remove_button.set_size_request (48, 48);
         remove_button.tooltip_text = _("Stop backing up to this hard drive.");
         remove_button.clicked.connect (() => {
             var dialog = new Granite.MessageDialog.with_image_from_icon_name (
@@ -102,7 +102,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
         });
 
         restore_button = new Gtk.Button.from_icon_name ("edit-undo");
-        restore_button.set_size_request (24, 24);
+        restore_button.set_size_request (48, 48);
         restore_button.tooltip_text = _("Restore your system from this backup drive.");
         restore_button.clicked.connect (() => {
             var dialog = new Granite.MessageDialog.with_image_from_icon_name (
