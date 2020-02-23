@@ -218,8 +218,8 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         set_custom_title (title);
         pack_start (backup_button);
         pack_start (add_target_button);
-        pack_end (info_button);
         pack_end (backup_settings_button);
+        pack_end (info_button);
     }
 
     public signal void volume_added (GLib.Volume volume);
