@@ -87,7 +87,7 @@ public class Tardis.App : Gtk.Application {
 
         target_manager = new Tardis.BackupTargetManager (volume_monitor, settings);
         backup_status = new Tardis.BackupStatus (target_manager);
-        main_view = new Tardis.Widgets.MainView (target_manager);
+        main_view = new Tardis.Widgets.MainView (target_manager, volume_monitor);
         headerbar = new Tardis.Widgets.HeaderBar (volume_monitor, target_manager, settings);
 
         error_msg_label = new Gtk.Label (null);

@@ -94,6 +94,15 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         backup_settings_button.image = new Gtk.Image.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR);
         backup_settings_button.tooltip_text = _("Backup Settings");
 
+        var info_label = new Gtk.Label ("About Tardis");
+        var info_icon = new Gtk.Image.from_icon_name (
+			"dialog-information-symbolic",
+			Gtk.IconSize.SMALL_TOOLBAR
+			);
+		var info_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+		info_box.add (info_icon);
+		info_box.add (info_label);
+
         var menu_grid = new Gtk.Grid ();
         menu_grid.margin_top = 12;
         menu_grid.margin_bottom = 12;
@@ -217,7 +226,7 @@ public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
         show_close_button = true;
         set_custom_title (title);
         pack_start (backup_button);
-        pack_start (add_target_button);
+        // pack_start (add_target_button);
         pack_end (backup_settings_button);
         pack_end (info_button);
     }
