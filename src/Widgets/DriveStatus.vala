@@ -59,32 +59,32 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
 
         // Title label
         button_title = new Gtk.Label ("<span size='large'>Add a new backup target</span>");
-		button_title.get_style_context ().add_class (Granite.STYLE_CLASS_H3_LABEL);
-		button_title.use_markup = true;
+        button_title.get_style_context ().add_class (Granite.STYLE_CLASS_H3_LABEL);
+        button_title.use_markup = true;
         button_title.halign = Gtk.Align.START;
-		button_title.vexpand = true;
+        button_title.vexpand = true;
         button_title.valign = Gtk.Align.CENTER;
 
         // Drive icon
         drive_icon = new Gtk.Image.from_icon_name ("list-add", Gtk.IconSize.SMALL_TOOLBAR);
         drive_icon.set_pixel_size (48);
-		button_title.vexpand = true;
+        button_title.vexpand = true;
         button_title.valign = Gtk.Align.CENTER;
 
         // Button contents wrapper
         button_grid = new Gtk.Grid ();
         button_grid.column_spacing = 12;
-		button_grid.hexpand = true;
+        button_grid.hexpand = true;
 
         button_grid.attach (button_title, 2, 0, 1, 1);
         button_grid.attach (drive_icon, 1, 0, 1, 2);
 
         var add_target_button = new Gtk.Button ();
 
-		var button_style_context = add_target_button.get_style_context ();
-		button_style_context.add_class (Gtk.STYLE_CLASS_FLAT);
+        var button_style_context = add_target_button.get_style_context ();
+        button_style_context.add_class (Gtk.STYLE_CLASS_FLAT);
 
-		add_target_button.add (button_grid);
+        add_target_button.add (button_grid);
         add_target_button.tooltip_text = _("Add a new backup target");
         add_target_button.clicked.connect (() => {
             var add_target_dlg = new Gtk.Dialog ();
@@ -113,7 +113,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
 
             add_target_dlg.response.connect ((id) => {
                 if (id == 1) {
-					var volume = add_target_selector.get_volume ();
+                    var volume = add_target_selector.get_volume ();
                     volume_added (volume);
                 }
 
@@ -140,7 +140,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
 
         current_status = DriveStatusType.ADD_BUTTON;
 
-		activatable = false;
+        activatable = false;
         selectable = false;
         add (content_box);
     }

@@ -38,7 +38,7 @@ public class Tardis.Onboarding : Gtk.Window {
         var finish_button = new Gtk.Button.with_label (_("Start Protecting My Data"));
         finish_button.get_style_context ().add_class (Gtk.STYLE_CLASS_SUGGESTED_ACTION);
         finish_button.clicked.connect (() => {
-			app.target_manager.add_volume.begin (add_backup_selector.get_volume ());
+            app.target_manager.add_volume.begin (add_backup_selector.get_volume ());
             destroy ();
         });
         finish_button.grab_focus ();
