@@ -59,6 +59,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
 
         // Title label
         button_title = new Gtk.Label ("<span size='large'>Add a new backup target</span>");
+		button_title.get_style_context ().add_class (Granite.STYLE_CLASS_H2_LABEL);
 		button_title.use_markup = true;
         button_title.halign = Gtk.Align.START;
 		button_title.vexpand = true;
