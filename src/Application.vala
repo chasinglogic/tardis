@@ -172,7 +172,7 @@ public class Tardis.App : Gtk.Application {
         });
 
         main_view.volume_added.connect ((volume) => {
-				target_manager.add_volume (volume);
+				target_manager.add_volume (volume).begin ();
         });
 
         main_view.drive_removed.connect ((target) => {
