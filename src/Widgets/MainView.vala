@@ -41,8 +41,8 @@ public class Tardis.Widgets.MainView : Gtk.Box {
             add_target (target);
         }
 
-		var add_button = new DriveStatus.add_drive_button (target_manager, vm);
-		add_button.volume_added.connect ((volume) => volume_added (volume));
+        var add_button = new DriveStatus.add_drive_button (target_manager, vm);
+        add_button.volume_added.connect ((volume) => volume_added (volume));
         drive_window_content.add (add_button);
 
         drive_window = new Gtk.ScrolledWindow (null, null);

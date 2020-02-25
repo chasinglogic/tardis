@@ -224,15 +224,15 @@ public class Tardis.BackupTargetManager {
 
     public async void backup_all () {
         var backups = get_backups ();
-		string[] backing_up = new string[targets.length ()];
+        string[] backing_up = new string[targets.length ()];
 
         foreach (BackupTarget target in targets) {
-			// Don't backup to the same target twice
-			if (Utils.contains_str (backing_up, target.id)) {
-				continue;
-			}
+            // Don't backup to the same target twice
+            if (Utils.contains_str (backing_up, target.id)) {
+                continue;
+            }
 
-			backing_up += target.id;
+            backing_up += target.id;
             yield do_backup (backups, target);
         }
     }
