@@ -48,7 +48,7 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
         BackupTargetManager backup_target_manager,
         GLib.VolumeMonitor vm
     ) {
-        this.target = new BackupTarget(
+        this.target = new BackupTarget (
             "add-button",
             "add-button",
             "",
