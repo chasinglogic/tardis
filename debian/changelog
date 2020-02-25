@@ -1,11 +1,21 @@
-com.github.chasinglogic.tardis (0.1ubuntu2) UNRELEASED; urgency=medium
+com.github.chasinglogic.tardis (0.1ubuntu1) bionic; urgency=medium
+
+  * v1.2.0 Release.
+    * Redesign the main view, make it more obvious and easier to add drives
+    * Remove add-drive icon which did not scale correctly
+    * Don't overwrite backups if starting from a clean state and re-adding an
+      existing backup drive
+
+ -- Mathew Robinson <mathew@chasinglogic.io>  Tue, 25 Feb 2020 16:47:53 -0500
+
+com.github.chasinglogic.tardis (0.1ubuntu1) bionic; urgency=low
 
   * v1.1.0 Release.
     * Add onboarding welcome screen to help set up the first backup target
     * Add screenshots and submit to app store
     * Make everything translatable
 
- -- Mathew Robinson <chasinglogic@rocinante>  Mon, 17 Feb 2020 10:06:10 -0500
+ -- Mathew Robinson <mathew@chasinglogic.io>  Tue, 25 Feb 2020 16:47:53 -0500
 
 com.github.chasinglogic.tardis (0.1ubuntu1) bionic; urgency=low
 
