@@ -112,7 +112,8 @@ public class Tardis.Widgets.DriveStatus : Gtk.ListBoxRow {
 
             add_target_dlg.response.connect ((id) => {
                 if (id == 1) {
-                    volume_added (add_target_selector.get_volume ());
+					var volume = add_target_selector.get_volume ();
+                    volume_added (volume);
                 }
 
                 add_target_dlg.destroy ();

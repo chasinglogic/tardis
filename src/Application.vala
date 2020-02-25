@@ -143,10 +143,6 @@ public class Tardis.App : Gtk.Application {
         window.size_allocate.connect (() => { on_resize (); });
 
         // Cross the Signals
-        headerbar.volume_added.connect ((volume) => {
-            target_manager.add_volume (volume);
-        });
-
         backup_status.target_is_backed_up.connect ((target) => {
             main_view.set_status (target.id, DriveStatusType.SAFE);
         });
@@ -173,6 +169,10 @@ public class Tardis.App : Gtk.Application {
 
         backup_status.calculating.connect (() => {
             main_view.set_all (DriveStatusType.IN_PROGRESS);
+        });
+
+        main_view.volume_added.connect ((volume) => {
+				target_manager.add_volume (volume);
         });
 
         main_view.drive_removed.connect ((target) => {
