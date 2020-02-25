@@ -9,15 +9,6 @@ foreach i : icon_sizes
         join_paths ('icons', i, meson.project_name () + '.svg'),
         install_dir: join_paths (get_option ('datadir'), 'icons', 'hicolor', i + 'x' + i + '@2', 'apps')
     )
-
-    install_data  (
-        join_paths ('icons', i, meson.project_name() + '.add-backup-drive' + '.svg'),
-        install_dir: join_paths (get_option ('datadir'), 'icons', 'hicolor', i + 'x' + i, 'apps')
-    )
-    install_data (
-        join_paths ('icons', i, meson.project_name() + '.add-backup-drive' + '.svg'),
-        install_dir: join_paths (get_option ('datadir'), 'icons', 'hicolor', i + 'x' + i + '@2', 'apps')
-    )
 endforeach
 
 i18n.merge_file (
