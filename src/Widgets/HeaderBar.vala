@@ -22,8 +22,6 @@
 public class Tardis.Widgets.HeaderBar : Gtk.HeaderBar {
     private GLib.VolumeMonitor vm;
 
-    private Gtk.Button add_target_button;
-
     private Gtk.MenuButton backup_settings_button;
     private Gtk.Popover backup_settings_popover;
 
