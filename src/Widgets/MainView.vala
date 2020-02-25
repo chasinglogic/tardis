@@ -41,7 +41,9 @@ public class Tardis.Widgets.MainView : Gtk.Box {
             add_target (target);
         }
 
-        drive_window_content.add (new DriveStatus.add_drive_button (target_manager, vm));
+		var add_button = new DriveStatus.add_drive_button (target_manager, vm);
+		add_button.volume_added.connect ((volume) => volume_added (volume));
+        drive_window_content.add (add_button);
 
         drive_window = new Gtk.ScrolledWindow (null, null);
         drive_window.add (drive_window_content);
@@ -59,7 +61,6 @@ public class Tardis.Widgets.MainView : Gtk.Box {
 
     public void add_target (BackupTarget target) {
         var drive_status = new Tardis.Widgets.DriveStatus (target);
-		drive_statux.volume_added.connect ((volume) => volume_added (volume));
         drive_status.drive_removed.connect ((target) => drive_removed (target));
         drive_status.restore_from.connect ((target) => restore_from (target));
         num_targets += 1;
