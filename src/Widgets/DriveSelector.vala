@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 Marco Betschart (http://chasinglogic.io)
+* Copyright (c) 2020 Mathew Robinson (http://chasinglogic.io)
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public
