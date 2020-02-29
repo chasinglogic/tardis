@@ -27,6 +27,16 @@
   <description>
     <p>A simple backup application for elementary OS</p>
   </description>
+  <releases>
+    <release version="v1.2.1" date="2020-02-29">
+      <description>
+        * Redesign the main view, make it more obvious and easier to add drives
+        * Remove add-drive icon which did not scale correctly
+        * Don't overwrite backups if starting from a clean state and re-adding an
+          existing backup drive
+      </description>
+    </release>
+  </releases>
   <provides>
     <binary>com.github.chasinglogic.tardis</binary>
   </provides>
