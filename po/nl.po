@@ -1,0 +1,230 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.chasinglogic.tardis package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.chasinglogic.tardis\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-16 17:51+0100\n"
+"PO-Revision-Date: 2020-04-25 13:30+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: nl\n"
+
+#: src/Widgets/DriveStatus.vala:68
+msgid "Stop backing up to this hard drive."
+msgstr "Back-uppen naar deze schijf afbreken."
+
+#: src/Widgets/DriveStatus.vala:71
+msgid "You are about to stop backing up to this drive"
+msgstr "Je staat op het punt de back-up naar deze schijf af te breken"
+
+#: src/Widgets/DriveStatus.vala:72
+msgid ""
+"This will not remove any existing backups on this drive but will prevent "
+"future backups from being stored there. If you would like to also delete the "
+"backups you can remove the Tardis folder from the drive after removal from "
+"Tardis."
+msgstr ""
+"Dit verwijdert geen bestaande back-ups, maar voorkomt wel dat toekomstige "
+"back-ups er kunnen worden opgeslagen. Als je de reeds aanwezige back-ups ook "
+"wilt verwijderen, dan kun je nadien de Tardis-map verwijderen van de schijf."
+
+#: src/Widgets/DriveStatus.vala:80
+msgid "Don't backup to this drive"
+msgstr "Niet back-uppen naar deze schijf"
+
+#: src/Widgets/DriveStatus.vala:83 src/Widgets/DriveStatus.vala:121
+#: src/Widgets/HeaderBar.vala:167
+msgid "Cancel"
+msgstr "Afbreken"
+
+#: src/Widgets/DriveStatus.vala:103
+msgid "Restore your system from this backup drive."
+msgstr "Herstel je systeem vanaf deze back-upschijf."
+
+#: src/Widgets/DriveStatus.vala:106
+msgid "You are about to restore your system from this drive"
+msgstr "Je staat op het punt om je systeem te herstellen vanaf deze schijf"
+
+#: src/Widgets/DriveStatus.vala:107
+msgid ""
+"This will not remove any new files on your system which aren't in the "
+"backup. However, it will overwrite any files on your system which exist in "
+"the backup. Note that while a restore is running your system may behave in "
+"unexpected ways until it is complete. It's best to not use your computer "
+"while a restore is in progress."
+msgstr ""
+"Dit verwijdert geen nieuwe bestanden die de back-up niet bevat, maar "
+"overschrijft wel alle bestanden die de back-up wél bevat. Let op: het "
+"herstel kan tot aan het afronden leiden tot onverwacht systeemgedrag. "
+"Gebruik je computer bij voorkeur niet zolang de back-up wordt hersteld."
+
+#: src/Widgets/DriveStatus.vala:118
+msgid "Restore from this backup"
+msgstr "Herstellen vanaf deze back-up"
+
+#: src/Widgets/HeaderBar.vala:39 src/Widgets/HeaderBar.vala:190
+msgid "Tardis"
+msgstr "Tardis"
+
+#: src/Widgets/HeaderBar.vala:44
+msgid "Backup Data"
+msgstr "Gegevens back-uppen"
+
+#: src/Widgets/HeaderBar.vala:45
+msgid ""
+"Indicates backups should include all non-hidden directories. It is "
+"recommended to leave this setting on."
+msgstr ""
+"Geeft aan dat back-ups alle niet-verborgen mappen moeten opnemen. Het is "
+"aanbevolen deze instelling niet uit te schakelen."
+
+#: src/Widgets/HeaderBar.vala:59
+msgid "Backup Configuration"
+msgstr "Configuratie back-uppen"
+
+#: src/Widgets/HeaderBar.vala:60
+msgid ""
+"Indicates backups should include hidden directories. This is recommended for "
+"most users however, can sometimes cause issues when restoring backups."
+msgstr ""
+"Geeft aan dat back-ups verborgen mappen moeten opnemen. Dit is aanbevolen "
+"voor de meeste gebruikers, maar kan soms tot storingen leiden tijdens het "
+"herstel."
+
+#: src/Widgets/HeaderBar.vala:75
+msgid "Automatically Backup"
+msgstr "Automatisch back-uppen"
+
+#: src/Widgets/HeaderBar.vala:76
+msgid ""
+"When backup targets are available and application is runningautomatically "
+"start a backup without prompting. While convenientthis can cause issues when "
+"you want to restore from a drive. Thissettings is only recommended for "
+"advanced users."
+msgstr ""
+"Als er back-updoelen beschikbaar zijn en de toepassing automatisch is "
+"opgestart, dan wordt het back-uppen gestart zonder bevestigingsvraag. Dit "
+"kan handig zijn, maar ook problemen veroorzaken als je wilt herstellen vanaf "
+"een schijf. Gebruik dit alleen als je weet wat je doet!"
+
+#: src/Widgets/HeaderBar.vala:93
+msgid "Backup Settings"
+msgstr "Back-upinstellingen"
+
+#: src/Widgets/HeaderBar.vala:117
+msgid "Start a Backup"
+msgstr "Back-up starten"
+
+#: src/Widgets/HeaderBar.vala:129
+msgid "Add Backup Drives"
+msgstr "Back-upschijven toevoegen"
+
+#: src/Widgets/HeaderBar.vala:142
+msgid ""
+"To ensure a successful backup to the selected drive, make sure you have "
+"permissions to create folders and files on the drive. Additionally, if the "
+"drive is encrypted make sure that's already mounted via the Files app."
+msgstr ""
+"Zorg er voor dat je over je juiste rechten beschikt om mappen en bestanden "
+"aan te maken op de schijf. Zorg er ook voor dat je schijf is aangekoppeld "
+"middels je bestandsbeheerder."
+
+#: src/Widgets/HeaderBar.vala:164
+msgid "Backup to this Drive"
+msgstr "Back-uppen naar deze schijf"
+
+#: src/Widgets/HeaderBar.vala:191
+msgid "A simple and powerful backup application."
+msgstr "Een eenvoudige, maar krachtige back-uptoepassing."
+
+#: src/Widgets/HeaderBar.vala:196
+msgid ""
+"Tardis is brought to you by the work of these fine folks:\n"
+"\n"
+"    - Mathew Robinson (Lead Developer)\n"
+"    - Robert Green (UX Architect)\n"
+"    - Our open source contributors\n"
+"    - Anyone who has paid for this application\n"
+"\n"
+"Based on the awesome work of the elementary OS team."
+msgstr ""
+"Tardis wordt mede mogelijk gemaakt door het werk van deze geweldige mensen:\n"
+"\n"
+"    - Mathew Robinson (hoofdontwikkelaar)\n"
+"    - Robert Green (ontwerper)\n"
+"    - Onze opensource-bijdragers\n"
+"    - Iedereen die deze toepassing heeft aangeschaft\n"
+"\n"
+"Based on the awesome work of the elementary OS team."
+
+#: src/Widgets/MainView.vala:32
+msgid "Backups"
+msgstr "Back-ups"
+
+#: src/Application.vala:32
+msgid "A backup is needed and no backup drives are available."
+msgstr "Er is een back-up nodig, maar er zijn geen schijven beschikbaar."
+
+#: src/Application.vala:33
+msgid "We've detected some of your backups are out of date."
+msgstr "Enkele van je back-ups zijn verouderd."
+
+#: src/Application.vala:34
+msgid "Backup in progress. Please don't unplug any storage devices."
+msgstr "Bezig met back-uppen - koppel geen opslagapparaten af."
+
+#: src/Application.vala:195
+msgid "Backup in progress. Please do not unplug any storage devices."
+msgstr "Bezig met back-uppen - koppel geen opslagapparaten af."
+
+#: src/Application.vala:198
+msgid "Backup started!"
+msgstr "De back-up is gestart!"
+
+#: src/Application.vala:201
+msgid "Backing up to:"
+msgstr "Back-uppen naar:"
+
+#: src/Application.vala:214
+msgid "Backup complete!"
+msgstr "Het back-uppen is voltooid!"
+
+#: src/Application.vala:217
+#, c-format
+msgid "%s is now up to date."
+msgstr "%s is nu up-to-date."
+
+#: src/Application.vala:226
+msgid ""
+"Restore in progress. Please do not unplug any storage devices. Your system "
+"may behave strangely until the restore is complete."
+msgstr ""
+"Bezig met herstellen - koppel geen opslagapparaten af. Let op: het herstel "
+"kan tot aan het afronden leiden tot onverwacht systeemgedrag."
+
+#: src/Application.vala:229
+msgid "Restore started!"
+msgstr "Het herstellen is gestart!"
+
+#: src/Application.vala:232
+#, c-format
+msgid "Restoring your system from: %s"
+msgstr "Je systeem wordt hersteld vanaf %s"
+
+#: src/Application.vala:244
+msgid "Restore complete!"
+msgstr "Het herstellen is voltooid!"
+
+#: src/Application.vala:247
+#, c-format
+msgid "Your system data now matches: %s"
+msgstr "Je systeemdata komt nu overeen met %s"
