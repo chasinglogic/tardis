@@ -1,0 +1,233 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.chasinglogic.tardis package.
+# Mirko Brombin <send@mirko.pm>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.chasinglogic.tardis\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-04-26 16:38+0000\n"
+"PO-Revision-Date: 2020-04-26 16:57+0200\n"
+"Last-Translator: Mirko Brombin <send@mirko.pm>\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#: src/Widgets/DriveStatus.vala:68
+msgid "Stop backing up to this hard drive."
+msgstr "Smetti di creare backup su questo disco."
+
+#: src/Widgets/DriveStatus.vala:71
+msgid "You are about to stop backing up to this drive"
+msgstr "Je staat op het punt de back-up naar deze schijf af te breken"
+
+#: src/Widgets/DriveStatus.vala:72
+msgid ""
+"This will not remove any existing backups on this drive but will prevent "
+"future backups from being stored there. If you would like to also delete the "
+"backups you can remove the Tardis folder from the drive after removal from "
+"Tardis."
+msgstr ""
+"Dit verwijdert geen bestaande back-ups, maar voorkomt wel dat toekomstige "
+"back-ups er kunnen worden opgeslagen. Als je de reeds aanwezige back-ups ook "
+"wilt verwijderen, dan kun je nadien de Tardis-map verwijderen van de schijf."
+
+#: src/Widgets/DriveStatus.vala:80
+msgid "Don't backup to this drive"
+msgstr "Niet back-uppen naar deze schijf"
+
+#: src/Widgets/DriveStatus.vala:83 src/Widgets/DriveStatus.vala:121
+#: src/Widgets/HeaderBar.vala:167
+msgid "Cancel"
+msgstr "Afbreken"
+
+#: src/Widgets/DriveStatus.vala:103
+msgid "Restore your system from this backup drive."
+msgstr "Herstel je systeem vanaf deze back-upschijf."
+
+#: src/Widgets/DriveStatus.vala:106
+msgid "You are about to restore your system from this drive"
+msgstr "Je staat op het punt om je systeem te herstellen vanaf deze schijf"
+
+#: src/Widgets/DriveStatus.vala:107
+msgid ""
+"This will not remove any new files on your system which aren't in the "
+"backup. However, it will overwrite any files on your system which exist in "
+"the backup. Note that while a restore is running your system may behave in "
+"unexpected ways until it is complete. It's best to not use your computer "
+"while a restore is in progress."
+msgstr ""
+"Dit verwijdert geen nieuwe bestanden die de back-up niet bevat, maar "
+"overschrijft wel alle bestanden die de back-up wél bevat. Let op: het "
+"herstel kan tot aan het afronden leiden tot onverwacht systeemgedrag. "
+"Gebruik je computer bij voorkeur niet zolang de back-up wordt hersteld."
+
+#: src/Widgets/DriveStatus.vala:118
+msgid "Restore from this backup"
+msgstr "Herstellen vanaf deze back-up"
+
+#: src/Widgets/HeaderBar.vala:39 src/Widgets/HeaderBar.vala:190
+msgid "Tardis"
+msgstr "Tardis"
+
+#: src/Widgets/HeaderBar.vala:44
+msgid "Backup Data"
+msgstr "Gegevens back-uppen"
+
+#: src/Widgets/HeaderBar.vala:45
+msgid ""
+"Indicates backups should include all non-hidden directories. It is "
+"recommended to leave this setting on."
+msgstr ""
+"Geeft aan dat back-ups alle niet-verborgen mappen moeten opnemen. Het is "
+"aanbevolen deze instelling niet uit te schakelen."
+
+#: src/Widgets/HeaderBar.vala:59
+msgid "Backup Configuration"
+msgstr "Configuratie back-uppen"
+
+#: src/Widgets/HeaderBar.vala:60
+msgid ""
+"Indicates backups should include hidden directories. This is recommended for "
+"most users however, can sometimes cause issues when restoring backups."
+msgstr ""
+"Geeft aan dat back-ups verborgen mappen moeten opnemen. Dit is aanbevolen "
+"voor de meeste gebruikers, maar kan soms tot storingen leiden tijdens het "
+"herstel."
+
+#: src/Widgets/HeaderBar.vala:75
+msgid "Automatically Backup"
+msgstr "Automatisch back-uppen"
+
+#: src/Widgets/HeaderBar.vala:76
+msgid ""
+"When backup targets are available and application is runningautomatically "
+"start a backup without prompting. While convenientthis can cause issues when "
+"you want to restore from a drive. Thissettings is only recommended for "
+"advanced users."
+msgstr ""
+"Quando i target per i backup sono disponibili e l'applicazione è in "
+"esecuzione, avviare automaticamente un backup senza chiedere conferma. Anche "
+"se è conveniente, questo può causare problemi quando si desidera eseguire il "
+"ripristino da un'unità. Questa impostazione è consigliata solo agli utenti "
+"avanzati."
+
+#: src/Widgets/HeaderBar.vala:93
+msgid "Backup Settings"
+msgstr "Impostazioni Backup"
+
+#: src/Widgets/HeaderBar.vala:117
+msgid "Start a Backup"
+msgstr "Inizia un Backup"
+
+#: src/Widgets/HeaderBar.vala:129
+msgid "Add Backup Drives"
+msgstr "Aggiungi dischi di Backup"
+
+#: src/Widgets/HeaderBar.vala:142
+msgid ""
+"To ensure a successful backup to the selected drive, make sure you have "
+"permissions to create folders and files on the drive. Additionally, if the "
+"drive is encrypted make sure that's already mounted via the Files app."
+msgstr ""
+"Per garantire il successo del backup sull'unità selezionata, assicurarsi di "
+"avere i permessi per creare cartelle e file sull'unità. Inoltre, se l'unità "
+"è criptata, assicurarsi che sia già montata tramite l'applicazione File."
+
+#: src/Widgets/HeaderBar.vala:164
+msgid "Backup to this Drive"
+msgstr "Crea un Backup su questo disco"
+
+#: src/Widgets/HeaderBar.vala:191
+msgid "A simple and powerful backup application."
+msgstr "Una semplice e potente applicazione per backup."
+
+#: src/Widgets/HeaderBar.vala:196
+msgid ""
+"Tardis is brought to you by the work of these fine folks:\n"
+"\n"
+"    - Mathew Robinson (Lead Developer)\n"
+"    - Robert Green (UX Architect)\n"
+"    - Our open source contributors\n"
+"    - Anyone who has paid for this application\n"
+"\n"
+"Based on the awesome work of the elementary OS team."
+msgstr ""
+"Il Tardis vi è portato dal lavoro di questa bella gente:\n"
+"\n"
+"    - Mathew Robinson (Lead Developer)\n"
+"    - Robert Green (UX Architect)\n"
+"    - I nostri collaboratori open source\n"
+"    - Chiunque abbia pagato per questa domanda\n"
+"\n"
+"Basato sul fantastico lavoro del team del sistema operativo elementare."
+
+#: src/Widgets/MainView.vala:32
+msgid "Backups"
+msgstr "Backup"
+
+#: src/Application.vala:32
+msgid "A backup is needed and no backup drives are available."
+msgstr "Un backup è necessario e nessun disco di backup è disponibile."
+
+#: src/Application.vala:33
+msgid "We've detected some of your backups are out of date."
+msgstr "Abbiamo rilevato che alcuni dei vostri backup non sono aggiornati."
+
+#: src/Application.vala:34
+msgid "Backup in progress. Please don't unplug any storage devices."
+msgstr ""
+"Backup in corso. Per cortesia non scollegare/rimuovere alcun dispositivo."
+
+#: src/Application.vala:195
+msgid "Backup in progress. Please do not unplug any storage devices."
+msgstr ""
+"Backup in corso. Per cortesia non scollegare/rimuovere alcun dispositivo."
+
+#: src/Application.vala:198
+msgid "Backup started!"
+msgstr "Backup iniziato!"
+
+#: src/Application.vala:201
+msgid "Backing up to:"
+msgstr "Crea backup su:"
+
+#: src/Application.vala:214
+msgid "Backup complete!"
+msgstr "Backup completato!"
+
+#: src/Application.vala:217
+#, c-format
+msgid "%s is now up to date."
+msgstr "%s è stato aggiornato."
+
+#: src/Application.vala:226
+msgid ""
+"Restore in progress. Please do not unplug any storage devices. Your system "
+"may behave strangely until the restore is complete."
+msgstr ""
+"Ripristino in corso. Si prega di non scollegare alcun dispositivo di "
+"memorizzazione. Il sistema potrebbe comportarsi in modo strano fino al "
+"completamento del ripristino."
+
+#: src/Application.vala:229
+msgid "Restore started!"
+msgstr "Ripristino avviato!"
+
+#: src/Application.vala:232
+#, c-format
+msgid "Restoring your system from: %s"
+msgstr "Ripristino del sistema da: %s"
+
+#: src/Application.vala:244
+msgid "Restore complete!"
+msgstr "Ripristino completato!"
+
+#: src/Application.vala:247
+#, c-format
+msgid "Your system data now matches: %s"
+msgstr "I dati del vostro sistema ora corrispondono a: %s"
