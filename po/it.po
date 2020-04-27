@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: com.github.chasinglogic.tardis\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-26 16:38+0000\n"
-"PO-Revision-Date: 2020-04-26 16:57+0200\n"
+"PO-Revision-Date: 2020-04-27 15:15+0200\n"
 "Last-Translator: Mirko Brombin <send@mirko.pm>\n"
 "Language-Team: Italian\n"
 "Language: it\n"
@@ -23,7 +23,7 @@ msgstr "Smetti di creare backup su questo disco."
 
 #: src/Widgets/DriveStatus.vala:71
 msgid "You are about to stop backing up to this drive"
-msgstr "Je staat op het punt de back-up naar deze schijf af te breken"
+msgstr "Stai per smettere di fare il backup di questo disco"
 
 #: src/Widgets/DriveStatus.vala:72
 msgid ""
@@ -32,26 +32,27 @@ msgid ""
 "backups you can remove the Tardis folder from the drive after removal from "
 "Tardis."
 msgstr ""
-"Dit verwijdert geen bestaande back-ups, maar voorkomt wel dat toekomstige "
-"back-ups er kunnen worden opgeslagen. Als je de reeds aanwezige back-ups ook "
-"wilt verwijderen, dan kun je nadien de Tardis-map verwijderen van de schijf."
+"Ciò non eliminerà i backup esistenti su questa unità, ma impedirà "
+"l'archiviazione di backup futuri. Se si desidera eliminare anche i backup, è "
+"possibile rimuovere la cartella Tardis dall'unità dopo la rimozione dal "
+"Tardis."
 
 #: src/Widgets/DriveStatus.vala:80
 msgid "Don't backup to this drive"
-msgstr "Niet back-uppen naar deze schijf"
+msgstr "Non creare backup su questo disco"
 
 #: src/Widgets/DriveStatus.vala:83 src/Widgets/DriveStatus.vala:121
 #: src/Widgets/HeaderBar.vala:167
 msgid "Cancel"
-msgstr "Afbreken"
+msgstr "Annulla"
 
 #: src/Widgets/DriveStatus.vala:103
 msgid "Restore your system from this backup drive."
-msgstr "Herstel je systeem vanaf deze back-upschijf."
+msgstr "Ripristina il sistema da questo disco."
 
 #: src/Widgets/DriveStatus.vala:106
 msgid "You are about to restore your system from this drive"
-msgstr "Je staat op het punt om je systeem te herstellen vanaf deze schijf"
+msgstr "Stai per ripristinare il tuo sistema da questo disco"
 
 #: src/Widgets/DriveStatus.vala:107
 msgid ""
@@ -61,14 +62,15 @@ msgid ""
 "unexpected ways until it is complete. It's best to not use your computer "
 "while a restore is in progress."
 msgstr ""
-"Dit verwijdert geen nieuwe bestanden die de back-up niet bevat, maar "
-"overschrijft wel alle bestanden die de back-up wél bevat. Let op: het "
-"herstel kan tot aan het afronden leiden tot onverwacht systeemgedrag. "
-"Gebruik je computer bij voorkeur niet zolang de back-up wordt hersteld."
+"Questa operazione non rimuoverà alcun nuovo file sul vostro sistema che non "
+"sia nel backup. Tuttavia, sovrascriverà tutti i file sul vostro sistema che "
+"esistono nel backup. Si noti che mentre è in esecuzione un ripristino il "
+"sistema può comportarsi in modo inaspettato fino al suo completamento. È "
+"meglio non utilizzare il computer mentre è in corso un ripristino."
 
 #: src/Widgets/DriveStatus.vala:118
 msgid "Restore from this backup"
-msgstr "Herstellen vanaf deze back-up"
+msgstr "Ripristina da questo backup"
 
 #: src/Widgets/HeaderBar.vala:39 src/Widgets/HeaderBar.vala:190
 msgid "Tardis"
@@ -76,28 +78,28 @@ msgstr "Tardis"
 
 #: src/Widgets/HeaderBar.vala:44
 msgid "Backup Data"
-msgstr "Gegevens back-uppen"
+msgstr "Dati di Backup"
 
 #: src/Widgets/HeaderBar.vala:45
 msgid ""
 "Indicates backups should include all non-hidden directories. It is "
 "recommended to leave this setting on."
 msgstr ""
-"Geeft aan dat back-ups alle niet-verborgen mappen moeten opnemen. Het is "
-"aanbevolen deze instelling niet uit te schakelen."
+"Indica che i backup devono includere tutte le directory non nascoste. Si "
+"raccomanda di lasciare questa impostazione attivata."
 
 #: src/Widgets/HeaderBar.vala:59
 msgid "Backup Configuration"
-msgstr "Configuratie back-uppen"
+msgstr "Configurazione Backup"
 
 #: src/Widgets/HeaderBar.vala:60
 msgid ""
 "Indicates backups should include hidden directories. This is recommended for "
 "most users however, can sometimes cause issues when restoring backups."
 msgstr ""
-"Geeft aan dat back-ups verborgen mappen moeten opnemen. Dit is aanbevolen "
-"voor de meeste gebruikers, maar kan soms tot storingen leiden tijdens het "
-"herstel."
+"Indica che i backup dovrebbero includere i percorsi nascosti. Questo è "
+"raccomandato per la maggior parte degli utenti, tuttavia, a volte può "
+"causare problemi durante il ripristino dei backup."
 
 #: src/Widgets/HeaderBar.vala:75
 msgid "Automatically Backup"
