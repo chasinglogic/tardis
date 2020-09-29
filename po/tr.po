@@ -1,0 +1,239 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the com.github.chasinglogic.tardis package.
+#
+# Safak <bjksafak45@gmail.com>, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: com.github.chasinglogic.tardis\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-16 17:51+0100\n"
+"PO-Revision-Date: 2020-09-29 05:37+0300\n"
+"Last-Translator: Safak <bjksafak45@gmail.com>\n"
+"Language-Team: Turkish\n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 2.0\n"
+
+#: src/Widgets/DriveStatus.vala:68
+msgid "Stop backing up to this hard drive."
+msgstr "Bu sabit sürücüye yedekleme yapmayı bırakın."
+
+#: src/Widgets/DriveStatus.vala:71
+msgid "You are about to stop backing up to this drive"
+msgstr "Bu sürücüye yedekleme yapmayı bırakmak üzeresiniz"
+
+#: src/Widgets/DriveStatus.vala:72
+msgid ""
+"This will not remove any existing backups on this drive but will prevent "
+"future backups from being stored there. If you would like to also delete the "
+"backups you can remove the Tardis folder from the drive after removal from "
+"Tardis."
+msgstr ""
+"Bu, bu sürücüdeki mevcut yedeklemeleri kaldırmaz, ancak gelecekteki"
+" yedeklemelerin burada depolanmasını engeller. Yedeklemeleri de silmek"
+" isterseniz, Tardis klasörünü bilgisayardan kaldırdıktan sonra sürücüden"
+" kaldırabilirsiniz."
+"Tardis."
+
+#: src/Widgets/DriveStatus.vala:80
+msgid "Don't backup to this drive"
+msgstr "Bu sürücüye yedekleme yapmayın"
+
+#: src/Widgets/DriveStatus.vala:83 src/Widgets/DriveStatus.vala:121
+#: src/Widgets/HeaderBar.vala:167
+msgid "Cancel"
+msgstr "İptal Et"
+
+#: src/Widgets/DriveStatus.vala:103
+msgid "Restore your system from this backup drive."
+msgstr "Sisteminizi bu yedekleme sürücüsünden geri yükleyin."
+
+#: src/Widgets/DriveStatus.vala:106
+msgid "You are about to restore your system from this drive"
+msgstr "Sisteminizi bu sürücüden geri yüklemek üzeresiniz"
+
+#: src/Widgets/DriveStatus.vala:107
+msgid ""
+"This will not remove any new files on your system which aren't in the "
+"backup. However, it will overwrite any files on your system which exist in "
+"the backup. Note that while a restore is running your system may behave in "
+"unexpected ways until it is complete. It's best to not use your computer "
+"while a restore is in progress."
+msgstr ""
+"Bu, sisteminizde yedeklemede olmayan yeni dosyaları kaldırmayacaktır."
+"Ancak, yedeklemede bulunan sisteminizdeki tüm dosyaların üzerine yazacaktır. "
+"Bir geri yükleme çalışırken, sisteminizin, tamamlanana kadar beklenmedik "
+"şekillerde davranabileceğini unutmayın.Bilgisayarınızı kullanmamak en iyisidir"
+"bir geri yükleme devam ederken."
+
+#: src/Widgets/DriveStatus.vala:118
+msgid "Restore from this backup"
+msgstr "Bu yedekten geri yükleme"
+
+#: src/Widgets/HeaderBar.vala:39 src/Widgets/HeaderBar.vala:190
+msgid "Tardis"
+msgstr "Tardis"
+
+#: src/Widgets/HeaderBar.vala:44
+msgid "Backup Data"
+msgstr "Yedekleme Verileri"
+
+#: src/Widgets/HeaderBar.vala:45
+msgid ""
+"Indicates backups should include all non-hidden directories. It is "
+"recommended to leave this setting on."
+msgstr ""
+"Yedeklemelerin tüm gizli olmayan dizinleri içermesi gerektiğini belirtir. "
+"Bu ayarı açık bırakmanız tavsiye edilir."
+
+#: src/Widgets/HeaderBar.vala:59
+msgid "Backup Configuration"
+msgstr "Yedekleme Yapılandırması"
+
+#: src/Widgets/HeaderBar.vala:60
+msgid ""
+"Indicates backups should include hidden directories. This is recommended for "
+"most users however, can sometimes cause issues when restoring backups."
+msgstr ""
+"Yedeklemelerin gizli dizinler içermesi gerektiğini belirtir. "
+"Bu çoğu kullanıcı için önerilir, ancak bazen yedekleri "
+"geri yüklerken sorunlara neden olabilir."
+
+#: src/Widgets/HeaderBar.vala:75
+msgid "Automatically Backup"
+msgstr "Otomatik Yedekleme"
+
+#: src/Widgets/HeaderBar.vala:76
+msgid ""
+"When backup targets are available and application is runningautomatically "
+"start a backup without prompting. While convenientthis can cause issues when "
+"you want to restore from a drive. Thissettings is only recommended for "
+"advanced users."
+msgstr ""
+"Yedekleme hedefleri mevcut olduğunda ve uygulama çalışırken, "
+"sormadan otomatik olarak bir yedekleme başlatın. "
+" Kullanışlı olsa da, bu, bir sürücüden geri yüklemek istediğinizde sorunlara"
+" neden olabilir. "
+"Bu ayarlar yalnızca ileri düzey kullanıcılar için önerilir."
+
+#: src/Widgets/HeaderBar.vala:93
+msgid "Backup Settings"
+msgstr "Yedekleme Ayarları"
+
+#: src/Widgets/HeaderBar.vala:117
+msgid "Start a Backup"
+msgstr "Yedeklemeyi Başlatın"
+
+#: src/Widgets/HeaderBar.vala:129
+msgid "Add Backup Drives"
+msgstr "Yedek Sürücüleri Ekleyin"
+
+#: src/Widgets/HeaderBar.vala:142
+msgid ""
+"To ensure a successful backup to the selected drive, make sure you have "
+"permissions to create folders and files on the drive. Additionally, if the "
+"drive is encrypted make sure that's already mounted via the Files app."
+msgstr ""
+"Seçili sürücüye başarılı bir yedekleme sağlamak için, "
+"sürücüde klasörler ve dosyalar oluşturma izinleriniz "
+"olduğundan emin olun. Ek olarak, sürücü şifrelenmişse, bunun "
+"Dosyalar uygulaması aracılığıyla önceden takılmış olduğundan emin olun."
+
+#: src/Widgets/HeaderBar.vala:164
+msgid "Backup to this Drive"
+msgstr "Bu Sürücüye yedekle"
+
+#: src/Widgets/HeaderBar.vala:191
+msgid "A simple and powerful backup application."
+msgstr "Basit ve güçlü bir yedekleme uygulaması."
+
+#: src/Widgets/HeaderBar.vala:196
+msgid ""
+"Tardis is brought to you by the work of these fine folks:\n"
+"\n"
+"    - Mathew Robinson (Lead Developer)\n"
+"    - Robert Green (UX Architect)\n"
+"    - Our open source contributors\n"
+"    - Anyone who has paid for this application\n"
+"\n"
+"Based on the awesome work of the elementary OS team."
+msgstr ""
+"Tardis size bu iyi insanların çalışmasıyla getirildi:\n"
+"\n"
+"     - Mathew Robinson (Baş Geliştirici)\n"
+"     - Robert Green (Kullanıcı Deneyimi Mimarı) \n"
+"     - Açık kaynak katılımcılarımız\n"
+"     - Bu uygulama için ödeme yapan herkes\n"
+"\n"
+"elemantrt OS işletim sistemi ekibinin harika çalışmasına dayanıyor."
+
+#: src/Widgets/MainView.vala:32
+msgid "Backups"
+msgstr "Yedeklemeler"
+
+#: src/Application.vala:32
+msgid "A backup is needed and no backup drives are available."
+msgstr ""
+"Yedeklemeye ihtiyaç vardır ve hiçbir yedekleme sürücüsü mevcut değildir."
+
+#: src/Application.vala:33
+msgid "We've detected some of your backups are out of date."
+msgstr "Bazı yedeklerinizin güncel olmadığını belirledik."
+
+#: src/Application.vala:34
+msgid "Backup in progress. Please don't unplug any storage devices."
+msgstr ""
+"Yedekleme devam ediyor. Lütfen herhangi bir depolama cihazını çıkarmayın."
+
+#: src/Application.vala:195
+msgid "Backup in progress. Please do not unplug any storage devices."
+msgstr ""
+"Yedekleme devam ediyor. Lütfen herhangi bir depolama cihazını çıkarmayın."
+
+#: src/Application.vala:198
+msgid "Backup started!"
+msgstr "Yedekleme başladı!"
+
+#: src/Application.vala:201
+msgid "Backing up to:"
+msgstr "Yedekleniyor:"
+
+#: src/Application.vala:214
+msgid "Backup complete!"
+msgstr "Yedekleme tamamlandı!"
+
+#: src/Application.vala:217
+#, c-format
+msgid "%s is now up to date."
+msgstr "%s artık güncel."
+
+#: src/Application.vala:226
+msgid ""
+"Restore in progress. Please do not unplug any storage devices. Your system "
+"may behave strangely until the restore is complete."
+msgstr ""
+"Geri yükleme devam ediyor. Lütfen herhangi bir depolama cihazını çıkarmayın."
+" Sisteminiz"
+"geri yükleme tamamlanana kadar garip davranabilir."
+
+#: src/Application.vala:229
+msgid "Restore started!"
+msgstr "Geri yükleme başladı!"
+
+#: src/Application.vala:232
+#, c-format
+msgid "Restoring your system from: %s"
+msgstr "Sisteminizi şuradan geri yükleniyor: %s"
+
+#: src/Application.vala:244
+msgid "Restore complete!"
+msgstr "Geri yükleme tamamlandı!"
+
+#: src/Application.vala:247
+#, c-format
+msgid "Your system data now matches: %s"
+msgstr "Sistem verileriniz eşleşiyor: %s"
+
